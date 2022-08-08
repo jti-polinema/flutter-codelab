@@ -1,0 +1,185 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#01 | Pengenalan Flutter Framework dan Persiapan Lingkungan Kerja Pengembangan</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="01-pengenalan"
+                  title="#01 | Pengenalan Flutter Framework dan Persiapan Lingkungan Kerja Pengembangan"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Pengantar Pemrograman Mobile (Flutter)" duration="0">
+        <p class="image-container"><img style="width: 624.00px" src="img\\5aa1b4d4e96891cd.png"></p>
+<p>Ilustrasi: <a href="https://flutter.dev/" target="_blank">https://flutter.dev/</a> </p>
+<p><strong>Terakhir diperbarui:</strong> 2022-02-15</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile</p>
+<h2 is-upgraded><strong>Apa itu framework ?</strong></h2>
+<p>Framework secara bahasa dalam <a href="https://www.oxfordlearnersdictionaries.com/definition/english/framework?q=framework" target="_blank">kamus Oxford</a> memiliki beberapa pengertian, yaitu:</p>
+<p>[1] <em>the parts of a building or an object that support its weight and give it shape</em>.</p>
+<p>[2] <em>a set of beliefs, ideas or rules that is used as the basis for making judgements, decisions, etc</em>.</p>
+<p>Dari pengertian nomor satu menjelaskan bahwa framework adalah bagian dari sebuah bangunan atau sebuah objek yang mendukung bobot dan memberikan suatu bentuk. Pengertian dari nomor dua menjelaskan bahwa framework adalah seperangkat panutan, ide atau aturan-aturan yang digunakan sebagai dasar untuk membuat hukum, keputusan, dsb.</p>
+<p>Framework (kerangka kerja) adalah sebuah kerangka program yang digunakan untuk membantu developer dalam mengembangkan kode secara konsisten. Adanya framework developer bisa mengurangi jumlah bug pada aplikasi yang dibuat. Karena, fungsi dan variabel yang sudah tersedia di dalam komponen framework tersebut.</p>
+<p>Sebelum belajar lebih jauh tentang framework, ada baiknya jika Anda memahami pengertian framework terlebih dahulu. Sesuai dengan namanya, framework adalah kerangka kerja yang digunakan untuk mengembangkan aplikasi berbasis desktop atau aplikasi berbasis website. </p>
+<p>Framework sengaja diciptakan untuk membantu developer mengembangkan aplikasi lebih cepat serta tersusun dan terstruktur. Dengan menggunakan framework Anda akan lebih mudah untuk membuat aplikasi, karena Anda hanya perlu menyusun komponen-komponen pemrograman yang sudah jadi. Sehingga developer dan programmer tidak perlu melakukan koding program yang diulang-ulang.</p>
+<h2 is-upgraded><strong>Apa yang Anda akan pelajari</strong></h2>
+<p>Di codelab ini Anda akan mempelajari tentang:</p>
+<ul>
+<li>Pengantar Pemrograman Mobile (Flutter).</li>
+<li>Instalasi dan konfigurasi perangkat lunak untuk pengembangan.</li>
+<li>Pemrograman dasar Dart</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Git adalah salah satu sistem pengontrol versi (Version Control System) pada proyek perangkat lunak yang diciptakan oleh Linus Torvalds. Pengontrol versi bertugas mencatat setiap perubahan pada file proyek yang dikerjakan oleh banyak orang maupun sendiri. Git dikenal juga dengan distributed revision control (VCS terdistribusi), artinya penyimpanan database Git tidak hanya berada dalam satu tempat saja.</p>
+</aside>
+<h2 is-upgraded><strong>Apa yang Anda perlu persiapkan</strong></h2>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Android Device atau iOS iPhone</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus dimiliki</strong></h2>
+<ul>
+<li>Pemrograman Dasar</li>
+<li>Standar instalasi dan konfigurasi perangkat lunak seperti Git, Visual Studio Code (VS Code), dan Android SDK</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Pengenalan Flutter" duration="2">
+        <h2 is-upgraded><strong>Apa itu Flutter?</strong></h2>
+<p>Flutter adalah sebuah framework open source yang dibuat oleh Google. Google membuat flutter dengan tujuan membangun sebuah framework untuk membuat UI yang modern, native dan reactive yang dapat berjalan di sistem operasi iOS maupun Android. Tidak hanya pada smartphone google juga membuat flutter untuk desktop, web dan embedded device.</p>
+<p>Flutter diprogram dengan menggunakan bahasa Dart sebuah bahasa modern yang dapat dicompile ke arsitektur processor ARM atau javascript. Flutter menggunakan Skia 2D rendering engine yang dapat bekerja pada hardware atau software yang berbeda platform.</p>
+<p>Dart menggunakan metode compilasi ahead of time (AOT) untuk mengubah kode Dart menjadi kode native untuk sistem operasi yang digunakan, oleh karena itu aplikasi yang dibangun menggunakan flutter memiliki kecepatan yang hampir sama dengan aplikasi native. Dart juga menggunakan konsep just-in-time (JIT) sehingga memungkinkan programmer dapat membuat perubahan pada kode program dan langsung melihat hasilnya melalui fitur hot reaload yang dimiliki Flutter.</p>
+<p>Flutter menggunakan Dart untuk membuat User Interface, sehingga memudahkan dalam membuat aplikasi karena menggunakan satu bahasa (Dart) dalam pembuatan UI maupun logika program. Flutter menggunakan pendekatan declarative dimana Flutter membangun UI mengikuti &#34;State&#34; yang dimiliki oleh aplikasi. Ketika state berubah maka UI akan digambar ulang.</p>
+<p>Flutter juga memudahkan programmer karena dari satu kode program dapat dikompilasi ke kode native ARM, menggunakan GPU dan mengakses fitur spesifik dari smartphone baik yang menggunakan sistem operasi iOS ataupun yang menggunakan sistem operasi Android. Jadi dengan satu kali membuat program dapat membuat 2 aplikasi yang sama untuk sistem operasi yang berbeda (iOS atau Android).</p>
+<h2 is-upgraded>Widget dan Element pada Flutter</h2>
+<p>Gaya pengembangan aplikasi menggunakan flutter sedikit berbeda dengan gaya pengembangan aplikasi pada umumnya, di mana UI pada flutter dibuat menggunakan Widget. Widget adalah sebuah konsep dimana UI dapat dianggap sebagai sebuah balok LEGO, sebuah bentuk baru dapat disusun dari beberapa balok dan masing masing kumpulan balok dapat dikombinasikan dengan kumpulan balok lain sehingga membentuk sebuah bentuk baru yang lebih kompleks. Flutter menggunakan widget ini sebagai balok dasar pembangunan aplikasi.</p>
+<p>Widget dapat disusun dan dikombinasikan dalam satu layar, sama halnya dengan xml pada pemrograman android native, widget dapat disusun dalam bentuk tree dimana satu widget menjadi parent dan widget lain menjadi child. Masing masing widget dapat diberikan konfigurasi sesuai dengan kebutuhan aplikasi.</p>
+<p>Flutter memiliki dua jenis widget yaitu <code>StatelessWidget</code> dan <code>StatefullWidget</code>. Stateless widget digunakan ketika value (state / konfigurasi) dari widget tersebut tidak pernah berubah, dan StatefullWidget digunakan ketika value (state / konfigurasi) dari widget dapat berubah. Baik <code>StatelessWidget</code> maupun <code>StatefullWidget</code> sama sama memiliki sebuah method bernama &#34;build&#34; yang memiliki BuildContext untuk mengatur posisi widget di dalam widget tree detail mengenai widget dan bagaimana membuatnya akan dibahas pada bab selanjutnya.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Menyiapkan Perangkat Lunak Untuk Praktikum" duration="30">
+        <h2 is-upgraded><strong>Instalasi Git</strong></h2>
+<p>Jika Git belum terpasang pada komputer Anda, silakan unduh di web resminya: <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a> kemudian lakukan instalasi seperti biasa sesuai langkah-langkah pada proses install aplikasi.</p>
+<aside class="special"><p><strong>Catatan:</strong> Untuk memahami lebih baik tentang Git, Anda dapat mempelajarinya di tautan ini: <a href="https://www.petanikode.com/git-untuk-pemula/" target="_blank">https://www.petanikode.com/git-untuk-pemula/</a> </p>
+</aside>
+<h3 is-upgraded><strong>Verifikasi Hasil Instalasi Git</strong></h3>
+<p>Jika telah berhasil melakukan install Git, silakan verifikasi dengan membuka Command Prompt (CMD) atau Git Bash atau Terminal sesuai dengan sistem operasi Anda. Lalu ketikkan perintah berikut:</p>
+<p>git --version</p>
+<p class="image-container"><img style="width: 197.00px" src="img\\83430375bcd9aae8.png"></p>
+<aside class="warning"><p><strong>Perhatian:</strong> Pastikan versi Git telah tampil, jika tidak tampil maka perlu dicek variabel environment pada sistem operasi Anda. </p>
+</aside>
+<h3 is-upgraded><strong>Konfigurasi Akun Git di Sistem Operasi</strong></h3>
+<p>Jika telah berhasil melakukan instalasi Git, maka perlu diset akun secara global untuk mengidentifikasi bahwa akun yang ingin digunakan adalah milik Anda. Lakukan perintah berikut pada CMD, Git Bash atau Terminal.</p>
+<ol type="1" start="1">
+<li>Ketik perintah <code>git config --global user.name "username Anda"</code> untuk menset username Anda secara global pada sistem.</li>
+<li>Lalu perintah <code>git config --global user.email "email@email.com"</code> isi sesuai email yang Anda gunakan di akun GitHub.</li>
+</ol>
+<aside class="special"><p><strong>Catatan:</strong> Jika Anda hanya ingin menset username dan email secara lokal, maka dapat menghapus sintaks <code>--global</code>. Perintah lainnya tetap sama. Namun harus dilakukan pada folder root repository Anda.</p>
+</aside>
+<h2 is-upgraded>Instalasi Visual Studio Code (VS Code) dan Flutter Extention</h2>
+<ol type="1" start="1">
+<li>Untuk install VS Code dapat unduh pada link berikut: <a href="https://code.visualstudio.com/" target="_blank">https://code.visualstudio.com/</a> </li>
+<li>Silakan lakukan instalasi seperti biasa.</li>
+<li>Untuk memasang Flutter Extension, perhatikan gambar berikut:</li>
+</ol>
+<p class="image-container"><img style="width: 624.00px" src="img\\65c04e018e61f39f.png"></p>
+<ol type="1" start="4">
+<li>Pada kolom pencarian plugin, ketik flutter lalu pilih install pada bagian deskripsi plugin.</li>
+</ol>
+<h2 is-upgraded>Instalasi Flutter SDK</h2>
+<ol type="1" start="1">
+<li>Download Flutter SDK, Silakan klik tautan berikut dan pilih sesuai dengan Sistem Operasi pada Laptop atau komputer Anda:</li>
+</ol>
+<p><a href="https://docs.flutter.dev/get-started/install" target="_blank">https://docs.flutter.dev/get-started/install</a> </p>
+<ol type="1" start="2">
+<li>Extract file yang di download ke harddisk anda contoh lokasi ke C:\src\flutter ( <strong>JANGAN</strong> di install ke folder C:\Program Files\ karena membutuhkan akses admin )</li>
+<li>(Cara lain untuk install Flutter) atau jika anda sudah menginstall git buatlah folder src di dalam drive C kemudian buka terminal di folder tersebut dan ketik</li>
+</ol>
+<pre><code>git clone https://github.com/flutter/flutter.git -b stable</code></pre>
+<ol type="1" start="4">
+<li>Update Windows PATH tambahkan path menuju folder C:\src\flutter\bin<img style="width: 624.00px" src="img\\cf1ea37fd78a0cc3.png"></li>
+</ol>
+<p class="image-container"><img style="width: 624.00px" src="img\\72b34cf18eaae1f6.png"><img style="width: 624.00px" src="img\\7666c4050c377971.png"></p>
+<h2 is-upgraded><strong>Instalasi Android Studio dan SDK</strong></h2>
+<ol type="1" start="1">
+<li>Silakan unduh dan install Android Studio pada link berikut: <a href="https://developer.android.com/studio" target="_blank">https://developer.android.com/studio</a> </li>
+<li>Setelah berhasil install, buka Android Studio kemudian jalankan ‘Android Studio Setup Wizard&#39;. Ini akan melakukan pemasangan:</li>
+</ol>
+<ol type="1" start="1">
+<li>Android SDK terbaru</li>
+<li>Android SDK Command-line Tools</li>
+<li>Android SDK Build-Tools</li>
+<li>Perangkat tersebut dibutuhkan Flutter ketika mengembangkan aplikasi Android</li>
+</ol>
+<ol type="1" start="3">
+<li>Jalankan <code>flutter doctor</code> di PowerShell untuk memastikan semua telah terinstal dengan benar.</li>
+</ol>
+<pre><code>flutter doctor</code></pre>
+<p class="image-container"><img style="width: 624.00px" src="img\\a72b7c0911b7db43.png"></p>
+<ol type="1" start="4">
+<li>Jika perintah flutter doctor mengeluarkan hasil seperti gambar di atas maka anda perlu menerima lisensi android SDK dengan mengetikkan perintah berikut ini di terminal.</li>
+</ol>
+<pre><code>flutter doctor –android-licenses</code></pre>
+<ol type="1" start="5">
+<li>Jika tidak ada error lanjutkan ke langkah praktikum selanjutnya, jika muncul error seperti gambar dibawah ini.</li>
+</ol>
+<p class="image-container"><img style="width: 568.71px" src="img\\43dc3fb6273ec340.png"></p>
+<p>12. Lakukan update di Android SDK pada Android Studio dengan menginstall Android Command Line Tools pada android SDK langkah melakukannya lihat gambar selanjutnya.</p>
+<p class="image-container"><img style="width: 574.00px" src="img\\eabaf5584fcb4806.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\9d36d8f05afaf414.png"><img style="width: 624.00px" src="img\\cb54e6658088246c.png"></p>
+<aside class="special"><p><strong>Tip: </strong></p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai langkah awal untuk pengetahuan tentang dasar-dasar framework flutter dan persiapan praktikum selanjutnya.</p>
+<p>Pada codelab berikutnya, Anda akan diperkenalkan dengan  konsep widget pada flutter, rendering, composability, immutability, dan widget tree.</p>
+<h2 is-upgraded>Apa selanjutnya<strong>?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://docs.flutter.dev/get-started/install" target="_blank">https://docs.flutter.dev/get-started/install</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, 2021</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
