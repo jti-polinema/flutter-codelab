@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-08-09T15:35:35Z",
+  "id": "02-konsep-widget-flutter",
+  "duration": 192,
+  "title": "#02 | Konsep Widget di Flutter",
+  "authors": "Tim Pengajar Mobile TSA 2022",
+  "summary": "Modul kedua ini berisi konsep widget pada flutter, rendering, composability, immutability, widget tree.",
+  "source": "16s8izeL3oL3IVwpgisrLU41_bWM9Sbi5ygLTG8uCxpM",
+  "theme": "mobile-flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile Flutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "02-konsep-widget-flutter"
+}

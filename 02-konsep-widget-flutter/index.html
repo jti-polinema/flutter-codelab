@@ -1,0 +1,185 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#02 | Konsep Widget di Flutter</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="02-konsep-widget-flutter"
+                  title="#02 | Konsep Widget di Flutter"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Konsep Widget di Flutter" duration="30">
+        <p class="image-container"><img style="width: 552.00px" src="img\\fefbb3fc9b9a701e.png"></p>
+<p><strong>Terakhir diperbarui:</strong> 09 Agustus 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile</p>
+<h2 is-upgraded><strong>Apa itu Widget ?</strong></h2>
+<p>Gaya pengembangan aplikasi menggunakan flutter sedikit berbeda dengan gaya pengembangan aplikasi pada umumnya, dimana UI pada flutter dibuat menggunakan Widget.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\7318dc7be217cb65.png"></p>
+<p><strong>Widget adalah</strong> sebuah konsep dimana UI dapat dianggap sebagai sebuah balok LEGO, sebuah bentuk baru dapat disusun dari beberapa balok dan masing masing kumpulan balok dapat dikombinasikan dengan kumpulan balok lain sehingga membentuk sebuah bentuk baru yang lebih kompleks.</p>
+<p>Flutter menggunakan widget ini sebagai balok dasar pembangunan aplikasi. Widget dapat disusun dan dikombinasikan dalam satu layar, sama halnya dengan xml pada pemrograman android native, widget dapat disusun dalam bentuk tree dimana satu widget menjadi parent dan widget lain menjadi child. Masing masing widget dapat diberikan konfigurasi sesuai dengan kebutuhan aplikasi.</p>
+<p><strong>Flutter memiliki dua jenis widget yaitu StatelesWidget dan StatefullWidget.</strong> Stateless widget digunakan ketika value (state/konfigurasi) dari widget tersebut tidak pernah berubah, dan StatefullWidget digunakan ketika value (state/konfigurasi) dari widget dapat berubah. Baik StatelesWidget maupun StatefullWidget sama-sama memiliki sebuah method bernama &#34;<code>build</code>&#34; yang memiliki <code>BuildContext</code> untuk mengatur posisi widget di dalam widget tree, detail mengenai widget dan bagaimana membuatnya akan dibahas pada bab selanjutnya.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\e70f9ce8d927f25a.png"></p>
+<h2 is-upgraded><strong>Apa yang Anda akan pelajari</strong></h2>
+<p>Di codelab ini Anda akan mempelajari tentang:</p>
+<ul>
+<li>Konsep widget pada flutter</li>
+<li>Flutter rendering</li>
+<li>Composability</li>
+<li>Immutability</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema.</p>
+</aside>
+<h2 is-upgraded><strong>Apa yang Anda perlu persiapkan</strong></h2>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Android Device atau iOS iPhone</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus dimiliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Widgets, widgets, everywhere" duration="2">
+        <p>Widget Flutter adalah bagian inti dari framework dan digunakan terus-menerus di seluruh kode. Anda akan mendengar pepatah &#34;Semuanya adalah widget,&#34; dan itu benar di Flutter. Di bagian ini, kita akan melihat bagaimana Flutter merender antarmuka pengguna dan bagaimana Flutter menerapkan ide widget ke pengembangan aplikasi untuk membuat UI yang mengagumkan. Widget dapat dipahami sebagai representasi visual (tetapi tidak hanya itu) dari bagian-bagian aplikasi. Banyak widget disatukan untuk menyusun UI aplikasi. Anda dapat membayangkan widget di Flutter seperti bermain puzzle.</p>
+<p>Tujuan widget adalah untuk menyediakan cara agar aplikasi Anda menjadi modular, dapat diskalakan (<em>scalable</em>), dan ekspresif dengan lebih sedikit kode dan tanpa batasan. Karakteristik utama dari UI widget di Flutter adalah <em>composability </em>dan <em>immutability </em>(kekal/tidak pernah berubah/statis).</p>
+<h2 is-upgraded>Flutter rendering</h2>
+<p>Salah satu aspek utama yang membuat Flutter unik adalah cara menggambar visual komponen ke layar. Pembeda utama untuk kerangka kerja yang ada adalah bagaimana aplikasi berkomunikasi dengan SDK platform, apa yang diminta SDK untuk dilakukan, dan dilakukan dengan sendirinya:</p>
+<p class="image-container"><img style="width: 281.00px" src="img\\7926167644cf995a.png"></p>
+<p>Platform SDK dapat dilihat sebagai antarmuka antara aplikasi, sistem operasi dan layanan. Setiap sistem menyediakan SDK-nya sendiri dengan kemampuan yang dimiliki dan berdasarkan bahasa pemrograman yang digunakan (yaitu, Kotlin/Java untuk Android SDK dan Swif/Objective C untuk iOS SDK).</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Flutter – rendering by itself" duration="30">
+        <p>Flutter memilih untuk melakukan semua pekerjaan rendering dengan sendirinya. Satu-satunya hal yang dibutuhkan dari SDK platform adalah akses ke<strong> Services API</strong> dan kanvas untuk menggambar UI :</p>
+<p class="image-container"><img style="width: 472.00px" src="img\\c81fce00cf07b1b.png"></p>
+<p>Flutter memindahkan widget dan rendering ke aplikasi, di mana ia dapat disesuaikan dan ditambahkan (<em>extensibility</em>). Melalui kanvas, ia dapat menggambar apa saja dan juga dapat mengakses <em>event</em> untuk menangani masukan dan gerakan pengguna dengan sendirinya. Jembatan di Flutter dilakukan melalui platform channel.</p>
+<aside class="special"><p><strong>Catatan:</strong> Untuk memahami lebih baik tentang cara flutter melakukan <em>rendering</em>, silakan tonton video dari Flutter YouTube Channel di tautan ini: <a href="https://www.youtube.com/watch?v=996ZgFRENMs&list=PLjxrf2q8roU3wk7CDw4RfV3mEwOJbjx1k&index=12" target="_blank">How Flutter renders Widgets</a></p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Composability" duration="10">
+        <p>Untuk struktur widget antarmuka pengguna (UI), Flutter memilih komposisi daripada inheritance,</p>
+<p>dengan tujuan menjaga setiap widget tetap sederhana dan dengan tujuan yang jelas. Salah satu tujuan utama kerangka kerja, yaitu fleksibilitas, Flutter memungkinkan pengembang untuk membuat banyak kombinasi agar dapat mencapai hasil yang luar biasa.</p>
+<h2 is-upgraded><strong>Composition vs inheritance</strong></h2>
+<p>Inheritance menurunkan satu kelas dari yang lain. Misalnya, Anda mungkin memiliki kelas seperti Kendaraan, serta memiliki subkelas Mobil dan Sepeda Motor. Kelas Mobil dan Sepeda Motor akan mewarisi kemampuan kelas Kendaraan dan kemudian menambahkan spesialisasinya sendiri. Dalam hal ini, Mobil adalah Kendaraan dan Sepeda Motor adalah Kendaraan. </p>
+<p>Komposisi mendefinisikan kelas sebagai jumlah dari bagian-bagiannya. Misalnya, Anda mungkin memiliki kelas Engine dan kelas Roda. Dalam model ini, sebuah Mobil terdiri dari Mesin, Roda empat, dan spesialisasi lainnya; Mobil memiliki Mesin dan Mobil memiliki Roda. Inheritance lebih fleksibel daripada Composition. Composition memungkinkan untuk hal-hal seperti injeksi dependensi dan modifikasi saat runtime.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Immutability" duration="10">
+        <p>Flutter didasarkan pada gaya pemrograman reaktif, di mana instance widget berumur pendek dan mengubah deskripsinya (baik secara visual atau tidak) berdasarkan perubahan konfigurasi, sehingga ia bereaksi terhadap perubahan dan menyebarkan perubahan ini ke widget penyusunnya, dan seterusnya.</p>
+<p>Widget Flutter mungkin memiliki status yang terkait dengannya, dan saat status terkait berubah, widget dapat dibuat ulang agar sesuai dengan representasinya. </p>
+<p>Istilah <strong>state </strong>dan <strong>reaktif </strong>diperkenalkan dalam gaya pemrograman React, yang library-nya dibuat oleh Facebook.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Everything is a widget" duration="10">
+        <p>Widget Flutter ada di mana-mana dalam aplikasi. Mungkin tidak semuanya adalah widget, tapi hampir semuanya. Bahkan aplikasinya adalah widget di Flutter, dan itulah mengapa konsep ini begitu penting. Widget mewakili bagian dari UI, tetapi itu tidak berarti itu hanya sesuatu yang terlihat. Ini dapat berupa salah satu dari berikut ini:</p>
+<ul>
+<li>Elemen visual/struktural yang merupakan elemen struktural dasar, seperti Tombol atau Widget teks</li>
+<li>Elemen khusus tata letak yang dapat menentukan posisi, margin, atau padding, seperti widget Padding</li>
+<li>Sebuah elemen gaya yang dapat membantu untuk mewarnai dan tema elemen visual/struktural, seperti widget Tema</li>
+<li>Elemen interaksi yang membantu merespons interaksi pengguna dengan cara yang berbeda, seperti widget <code>GestureDetector</code></li>
+</ul>
+<p>Mari kita lihat sekilas contoh widget berikut sehingga Anda bisa memahami apa yang dimaksud. Silakan buka IDE VScode Anda dan lihat pada file <code>lib/main.dart</code>. Anda akan melihat bagian seperti ini:</p>
+<pre><code>class MyApp extends StatelessWidget {
+   Widget build(BuildContext context) {
+     return MaterialApp(
+       title: &#39;Flutter Demo&#39;,
+       theme: ThemeData(
+       primarySwatch: Colors.blue,
+     ),
+     home: const MyHomePage(title: &#39;Flutter Demo Home Page&#39;),
+   );
+  }
+}</code></pre>
+<p>Tidak hanya ini contoh pertama Anda dari widget Flutter, ini juga merupakan kesempatan pertama Anda untuk melihat bahasa pemrograman Dart. Jika Anda mempunyai dasar pemograman bahasa Java, C++, Objective-C, dan sebagainya, maka itu akan terlihat relatif akrab bagi anda. Komponen kode disimpan dalam definisi Class yang berisi Fields dan methods, dengan inheritance melalui kata kunci <code>extends</code>.</p>
+<p><code>MyApp</code> class ini di-run sebagai aplikasi dan ia sendiri merupakan widget. Dalam hal ini, itu adalah <code>StatelessWidget</code>, seperti yang Anda lihat pada bagian <code>extends</code>. Kita akan mengeksplorasi <code>StatelessWidgets</code> (dan lawannya, yaitu <code>StatefulWidget</code>) yang nanti akan dipelajari lebih mendalam, tetapi untuk saat ini, cukup mengetahui bahwa <code>StatelessWidget</code> tidak memiliki <code>state</code>, yang juga dapat dimanfaatkan untuk menggabungkan dengan widget lain.</p>
+<p>Salah satu poin penting yang perlu diperhatikan adalah method <code>build</code>. Method ini digunakan untuk memperbarui tampilan dan dipanggil ketika beberapa aktivitas eksternal terjadi – misalnya, pengguna berinteraksi dengan perangkat, beberapa data yang dikirim dari database, atau sebuah timer yang dipicu pada waktu yang telah ditentukan.</p>
+<p>Dalam method <code>build</code> ini, widget <code>MyApp</code> hanya mengembalikan widget lain, yaitu <code>MaterialApp</code>, yang sebenarnya ia juga memiliki method <code>build</code> yang mungkin juga dapat me-return beberapa widget. Pada akhirnya, Anda akan mendapatkan widget yang akan merender grafis pada tampilan.</p>
+<p>Widget adalah blok bangunan dasar dari sebuah antarmuka. Untuk membangun UI dengan benar, Flutter mengatur widget di dalam bentuk sebuah widget tree.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="The widget tree" duration="10">
+        <p>Ini adalah konsep penting lainnya dalam layout Flutter. Di situlah widget menjadi hidup. widget tree ini adalah representasi logika dari semua widget UI. Ini dihitung selama <strong>layout </strong>(pengukuran dan info struktural) dan digunakan selama <strong>rendering (</strong>frame to screen<strong>) </strong>dan <strong>hit testing</strong> (interaksi sentuh), dan inilah hal terbaik yang dilakukan Flutter. Dengan menggunakan banyak algoritma optimasi, ia mencoba untuk memanipulasi pohon sesedikit mungkin, mengurangi jumlah total pekerjaan yang dihabiskan untuk melakukan rendering, yang bertujuan untuk efisiensi yang lebih besar:</p>
+<p class="image-container"><img style="width: 549.00px" src="img\\73e66a1dd59f5b6f.png"></p>
+<p>Widget direpresentasikan tree sebagai node. Setiap widget mungkin memiliki state yang saling terkait dengan lainnya; setiap terjadi perubahan pada state, itu akan menghasilkan penyusunan ulang pada widget dan child yang terlibat didalamnya.</p>
+<p>Seperti yang Anda lihat, struktur tree&#39;s child itu tidak statis, dan telah ditentukan oleh masing-masing widget-nya. Relasi children di dalam widget membentuk sebuah pohon UI; hal itu terjadi karena dibuat dengan komposisi.</p>
+<p>Widget tree tidak bekerja sendiri di dalam sebuah framework. Ia dibantu dengan elemen tree; sebuah tree memiliki relasi dengan tree widget yang merepresentasikan susunan widget pada layar, jadi setiap widget akan memiliki elemen yang sesuai di dalam elemen tree setelah dilakukan proses build.</p>
+<p>Tree elemen memiliki tugas penting di Flutter. Ini membantu untuk memetakan elemen pada layar ke bentuk tree widget. Ini juga menentukan bagaimana rebuilding widget dilakukan ketika skenario update. Ketika sebuah widget berubah dan perlu dibangun ulang, ini akan menyebabkan pembaruan yang sesuai pada elemen. Elemen ini menyimpan jenis widget yang sesuai beserta referensinya pada elemen children. Ketika dilakukan perubahan posisi, misalnya, widget, elemen akan melakukan pemeriksaan pada jenis widget baru yang sesuai, dan jika ada yang sesuai, itu akan memperbarui sendiri dengan deskripsi widget yang baru.</p>
+<p>Element tree dapat dianggap sebagai pra-render auxiliary tree ke bentuk widget tree.</p>
+<p>Jika Anda memerlukan informasi lebih lanjut tentang itu, Anda dapat memeriksa dokumen resmi di <a href="https://api.flutter.dev/flutter/widgets/Element-class.html" target="_blank">https://api.flutter.dev/flutter/widgets/Element-class.html</a> </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Mandiri" duration="90">
+        <ol type="1" start="1">
+<li>Carilah kode aplikasi yang dibangun dengan Flutter di GitHub, lalu buatlah satu diagram tree yang menjelaskan salah satu file kode Dart!</li>
+<li>Jelaskan diagram yang telah Anda buat berdasarkan jawaban dari soal nomor satu!</li>
+</ol>
+<p>Kumpulkan dalam bentuk file PDF ke LMS yang telah disediakan.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai pengetahuan dasar tentang pemahaman widget pada framework flutter.</p>
+<p>Pada codelab berikutnya, Anda akan melakukan mode debug, release, profile, dan running sesuai target platform. Anda juga akan mempelajari konsep dari file <code>pubspec.yaml</code> termasuk mengelola aset dan library dependencies.</p>
+<h2 is-upgraded>Apa selanjutnya<strong>?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
