@@ -79,15 +79,15 @@
         <p>Flutter memilih untuk melakukan semua pekerjaan rendering dengan sendirinya. Satu-satunya hal yang dibutuhkan dari SDK platform adalah akses ke<strong> Services API</strong> dan kanvas untuk menggambar UI :</p>
 <p class="image-container"><img style="width: 472.00px" src="img\\c81fce00cf07b1b.png"></p>
 <p>Flutter memindahkan widget dan rendering ke aplikasi, di mana ia dapat disesuaikan dan ditambahkan (<em>extensibility</em>). Melalui kanvas, ia dapat menggambar apa saja dan juga dapat mengakses <em>event</em> untuk menangani masukan dan gerakan pengguna dengan sendirinya. Jembatan di Flutter dilakukan melalui platform channel.</p>
-<aside class="special"><p><strong>Catatan:</strong> Untuk memahami lebih baik tentang cara flutter melakukan <em>rendering</em>, silakan tonton video dari Flutter YouTube Channel di tautan ini: <a href="https://www.youtube.com/watch?v=996ZgFRENMs&list=PLjxrf2q8roU3wk7CDw4RfV3mEwOJbjx1k&index=12" target="_blank">How Flutter renders Widgets</a></p>
+<aside class="special"><p><strong>Catatan:</strong> Untuk memahami lebih baik tentang cara flutter melakukan <em>rendering</em>, silakan tonton video dari Flutter YouTube Channel di bawah ini.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/996ZgFRENMs?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Composability" duration="10">
-        <p>Untuk struktur widget antarmuka pengguna (UI), Flutter memilih komposisi daripada inheritance,</p>
-<p>dengan tujuan menjaga setiap widget tetap sederhana dan dengan tujuan yang jelas. Salah satu tujuan utama kerangka kerja, yaitu fleksibilitas, Flutter memungkinkan pengembang untuk membuat banyak kombinasi agar dapat mencapai hasil yang luar biasa.</p>
+        <p>Untuk struktur widget antarmuka pengguna (UI), Flutter memilih komposisi daripada inheritance, dengan tujuan menjaga setiap widget tetap sederhana dan dengan tujuan yang jelas. Salah satu tujuan utama kerangka kerja, yaitu fleksibilitas, Flutter memungkinkan pengembang untuk membuat banyak kombinasi agar dapat mencapai hasil yang luar biasa.</p>
 <h2 is-upgraded><strong>Composition vs inheritance</strong></h2>
 <p>Inheritance menurunkan satu kelas dari yang lain. Misalnya, Anda mungkin memiliki kelas seperti Kendaraan, serta memiliki subkelas Mobil dan Sepeda Motor. Kelas Mobil dan Sepeda Motor akan mewarisi kemampuan kelas Kendaraan dan kemudian menambahkan spesialisasinya sendiri. Dalam hal ini, Mobil adalah Kendaraan dan Sepeda Motor adalah Kendaraan. </p>
 <p>Komposisi mendefinisikan kelas sebagai jumlah dari bagian-bagiannya. Misalnya, Anda mungkin memiliki kelas Engine dan kelas Roda. Dalam model ini, sebuah Mobil terdiri dari Mesin, Roda empat, dan spesialisasi lainnya; Mobil memiliki Mesin dan Mobil memiliki Roda. Inheritance lebih fleksibel daripada Composition. Composition memungkinkan untuk hal-hal seperti injeksi dependensi dan modifikasi saat runtime.</p>
@@ -97,7 +97,7 @@
     
       <google-codelab-step label="Immutability" duration="10">
         <p>Flutter didasarkan pada gaya pemrograman reaktif, di mana instance widget berumur pendek dan mengubah deskripsinya (baik secara visual atau tidak) berdasarkan perubahan konfigurasi, sehingga ia bereaksi terhadap perubahan dan menyebarkan perubahan ini ke widget penyusunnya, dan seterusnya.</p>
-<p>Widget Flutter mungkin memiliki status yang terkait dengannya, dan saat status terkait berubah, widget dapat dibuat ulang agar sesuai dengan representasinya. </p>
+<p>Widget Flutter mungkin memiliki <code>state</code> yang saling berelasi, dan saat <code>state</code> yang berelasi berubah, widget akan dibuat ulang agar sesuai dengan representasinya. </p>
 <p>Istilah <strong>state </strong>dan <strong>reaktif </strong>diperkenalkan dalam gaya pemrograman React, yang library-nya dibuat oleh Facebook.</p>
 
 
