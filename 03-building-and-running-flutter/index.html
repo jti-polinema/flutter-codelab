@@ -1,0 +1,254 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#03 | Building and Running Flutter</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="03-building-and-running-flutter"
+                  title="#03 | Building and Running Flutter"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Building and running Flutter" duration="0">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/WLvpROMUjYQ?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p><strong>Terakhir diperbarui:</strong> 10 Agustus 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
+<p>Cara sebuah aplikasi dibangun adalah hal mendasar yang sangat penting untuk diperhatikan karena terkait dengan kinerjanya terhadap target platform yang diinginkan. Ini merupakan bagian langkah yang penting terkait kinerja pembangunan aplikasi. Meskipun Anda tidak perlu mengetahui hal ini untuk setiap jenis aplikasi. Dengan mengetahui bagaimana aplikasi tersebut dibangun, maka dapat membantu Anda untuk memahami dan mengukur kemungkinan terjadinya peningkatan/pengembangan fitur-fitur selanjutnya.</p>
+<p>Flutter mengandalkan kompilasi AOT (<strong><em>Ahead of Time</em></strong>) dari fitur Dart untuk mode rilis dan kompilasi JIT (<strong><em>Just in Time</em></strong>) dari fitur Dart untuk mode pengembangan/debug. Dart adalah satu dari beberapa bahasa pemrograman yang mampu mengompilasi kode ke AOT dan JIT, dan Flutter memanfaatkan kelebihan ini dengan baik.</p>
+<h2 is-upgraded><strong>Apa yang Anda akan pelajari</strong></h2>
+<p>Di codelab ini Anda akan mempelajari tentang:</p>
+<ul>
+<li>Building and running Flutter</li>
+<li>Debug mode</li>
+<li>Release mode</li>
+<li>Profile mode</li>
+<li>Supported platforms</li>
+<li>File <code>pubspec.yaml</code></li>
+<li>Running the generated project</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema.</p>
+</aside>
+<h2 is-upgraded><strong>Apa yang Anda perlu persiapkan</strong></h2>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Android Device atau iOS iPhone</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus dimiliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Debug mode" duration="2">
+        <p>Selama pengembangan, Flutter menggunakan kompilasi JIT dalam mode debug. Kompilasi mode debug dioptimalkan untuk memberikan umpan balik dengan cepat, namun kecepatan eksekusi menjadi tidak terlalu cepat serta ukuran binary menjadi lebih besar. Kelebihan yang dimiliki kompiler Dart membuat interaksi antara kode dan simulator/perangkat masih dirasa sangat cepat, dan alat debugging memungkinkan untuk membantu pengembang melakukan analisis kode program dan tata letak widget.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Release mode" duration="2">
+        <p>Dalam mode rilis, informasi debug tidak diperlukan, sehingga cukup fokus pada kinerja aplikasi. Flutter menggunakan teknik yang umum digunakan pada <em>game engine</em>. Dengan menggunakan mode AOT, kode Dart dikompilasi ke <em>native code</em>, dan aplikasi memuat library Flutter dan melakukan proses rendering, input, dan <em>event handling</em> dengan Skia engine.</p>
+<aside class="special"><p><strong>Skia graphics library</strong></p>
+<p>Skia adalah open source library yang menyediakan API untuk grafik 2D. Ini digunakan dalam</p>
+<p>Flutter termasuk aplikasi lain seperti Google Chrome, Android, Firefox, dan banyak lainnya. Itu juga diciptakan oleh Google, seperti Dart dan Flutter.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Profile mode" duration="3">
+        <p>Terkadang Anda perlu menganalisis performa aplikasi Anda. Mode profile cukup untuk melakukan proses debugging agar performa aplikasi Anda dapat dianalisis, yang seolah-olah aplikasi Anda digunakan oleh pengguna di dunia. Mode ini hanya tersedia pada perangkat fisik karena jika menggunakan emulator, itu tidak akan merepresentasikan yang sebenarnya.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Supported platforms" duration="3">
+        <p>Saat ini, Flutter mendukung perangkat Android dengan arsitektur prosesor ARM yang berjalan  minimal pada API 19 (Android 4.4 atau KitKat), dan perangkat iOS di iOS 9 atau lebih baru (termasuk iPhone 4S dan lebih baru). Seperti yang Anda harapkan, aplikasi Flutter dapat dijalankan di emulator, dan debugging berfungsi dengan baik seperti pada perangkat fisik.</p>
+<p>Selain itu, Flutter Web masih versi beta, dan dukungan untuk aplikasi desktop (Windows, macOS, dan Linux) tersedia pada versi Alpha. Seperti yang Anda lihat, visi Flutter adalah untuk pengembang dapat membuat satu kode untuk multi platform seperti mobile, web, dan desktop.</p>
+<aside class="special"><p>Pada codelab ini tidak akan membahas lebih detail tentang aspek kompilasi Flutter. Untuk informasi lebih lanjut, Anda dapat membaca tautan berikut ini:</p>
+<p><a href="https://docs.flutter.dev/resources/faq#run-android" target="_blank">https://docs.flutter.dev/resources/faq#run-android</a> </p>
+<p><a href="https://docs.flutter.dev/resources/faq#run-ios" target="_blank">https://docs.flutter.dev/resources/faq#run-ios</a> </p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="File pubspec.yaml" duration="15">
+        <p>File <code>pubspec.yaml</code> di Flutter sebenarnya adalah file yang digunakan untuk mendefinisikan library yang ada pada kode Dart aplikasi kita. Selain itu, juga berisi beberapa bagian tambahan untuk konfigurasi khusus pada aplikasi Flutter kita. Mari kita lihat isi file <code>pubspec.yaml</code> secara detail:  </p>
+<pre><code>name: konversi_suhu
+description: A new Flutter project.
+version: 1.0.0+1</code></pre>
+<p>Awal file masih sederhana. Seperti yang sudah kita ketahui, properti <code>name</code> didefinisikan ketika kita menjalankan perintah <code>pub create</code>. Berikutnya secara default terdapat bagian <code>description</code><em>;</em> Anda bebas untuk mengubah bagian deskripsi ini menjadi sesuatu yang lebih menarik. Perhatikan bahwa ketika Anda melakukan perubahan dan telah tersimpan pada file <code>pubspec.yaml</code>, IDE Anda mungkin tiba-tiba akan menjalankan perintah <code>flutter pub get</code></p>
+<aside class="special"><p><strong>Penjelasan ketika membuat project baru</strong></p>
+<p>Seperti pada beberapa bagian dari file <code>pubspec.yaml</code>, Anda dapat menentukan isi atribut deskripsi ketika membuat project baru dengan perintah <code>flutter create</code> ditambah argumen <code>–description</code> </p>
+</aside>
+<p>Bagian atribut <code>version</code> ini mengikuti konvensi dari paket Dart: nomor versi, ditambah nomor versi build opsional yang dipisahkan oleh tanda +. Selain itu, Flutter memungkinkan Anda untuk mengubah nilai ini selama proses build. Kita akan mempelajari ini nanti ketika proses rilis aplikasi ke versi production atau ke Play Store.</p>
+<p>Kemudian terdapat bagian dependensi dari file <code>pubspec</code>:</p>
+<pre><code>environment:
+  sdk: &#34;&gt;=2.16.1 &lt;3.0.0&#34;
+
+dependencies:
+  flutter:
+    sdk: flutter
+    cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter</code></pre>
+<p>Kita mulai pada atribut <code>environment</code>. Bagian ini menentukan versi kode Dart yang akan kita gunakan. Jika dilihat dari gambar di atas, kode akan memerlukan versi Dart 2.12.0 atau yang lebih tinggi, tetapi tidak akan berjalan di versi Dart 3.0.0. Sesuai standar versi, Anda berharap bahwa jika Dart 3.0.0 dirilis, akan terdapat beberapa perubahan yang tidak kompatibel sehingga dapat menghentikan kompilasi kode kita. Hal ini dapat terjadi ketika Dart diperbarui dari 1.x.x hingga 2.x.x. Dengan membatasi versi Dart, berarti kode Anda tidak perlu mendukung versi Dart 3.x.x sampai Anda siap melakukan perubahan pada kode aplikasi kita. Perhatikan bahwa sejak versi Dart 2.12 merupakan versi yang memperkenalkan konsep <em>null safety</em>. Nanti akan dibahas lebih rinci pada pertemuan yang akan datang terkait pemrograman Dart.</p>
+<p>Kemudian ada bagian <code>dependencies</code>. Bagian ini dimulai dengan dependensi utama aplikasi Flutter, kemudian SDK Flutter itu sendiri, yang berisi banyak paket inti dari framework Flutter. </p>
+<p>Sebagai dependensi tambahan, generator menambahkan paket <code>cupertino_icons</code>, yang berisi aset ikon yang digunakan oleh widget Flutter Cupertino.</p>
+<p>Saat Anda menambahkan dependensi lain (dan Anda pasti akan menambahkan banyak dependensi pada bagian ini), maka library-library tersebut juga akan muncul di sini.</p>
+<p>Bagian <code>dev_dependencies</code> hanya berisi paket <code>flutter_test</code> yaitu dependensi milik Flutter SDK itu sendiri, yang mana berisi ekstensi khusus untuk Dart <code>test package</code>. Kita akan eksplorasi lebih jauh pada materi tentang <em>testing dan debugging</em>.</p>
+<p>Di bagian blok terakhir pada file <code>pubspec.yaml</code>, ada bagian khusus untuk <code>flutter</code>:</p>
+<pre><code>flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific &#34;variants&#34;, see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this &#34;flutter&#34; section. Each entry in this list should have a
+  # &#34;family&#34; key with the font family name, and a &#34;fonts&#34; key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages</code></pre>
+<p>Bagian <code>flutter</code> ini memungkinkan kita untuk mengonfigurasi <em>resources </em>yang dibundel dalam aplikasi kita untuk digunakan selama runtime, seperti gambar, font, musik, efek suara, dan video.</p>
+<p>Mari kita lihat lebih dekat:</p>
+<ul>
+<li><code>use-material-design</code>: Kita akan membahas widget Material yang disediakan oleh Flutter di pertemuan berikutnya. Selain itu, kita juga dapat menggunakan ikon yang disediakan oleh Material Desain (<a href="https://fonts.google.com/icons?selected=Material+Icons" target="_blank">https://fonts.google.com/icons?selected=Material+Icons</a>), yang ada di bagian khusus format font. Agar ini dapat berfungsi dengan baik, kita perlu mengaktifkan bagian properti ini (atur ke nilai <code>true</code>) sehingga ikon dapat digunakan dalam aplikasi.</li>
+<li><code>assets</code>: bagian properti ini digunakan untuk membuat daftar alamat/lokasi <em>resource </em>yang akan dibungkus dengan aplikasi kita. File dan folder <code>assets</code> dapat diatur dengan cara apa pun; yang penting bagi Flutter adalah alamat/lokasi file sudah benar. Anda dapat menentukan alamat/lokasi file relatif ke file project root. Ini dapat digunakan nanti ketika dalam kode Dart Anda perlu merujuk ke file asset tersebut. Berikut ini contoh menambahkan satu gambar:</li>
+</ul>
+<pre><code>assets:
+    images/home_background.jpeg</code></pre>
+<p>Seringkali Anda ingin menambahkan banyak gambar, dan mencantumkannya satu per satu. Alternatifnya adalah memasukkan sebagai seluruh folder:</p>
+<pre><code>assets:
+   images/</code></pre>
+<p>Anda dapat menambahkan karakter / di akhir path yang digunakan untuk memasukkan semua file pada folder tersebut. Perhatikan bahwa ini tidak termasuk subfolder; Anda perlu mencantumkannya juga secara manual:</p>
+<pre><code>assets:
+    images/
+    images/icons/</code></pre>
+<ul>
+<li><code>fonts</code>: bagian properti ini memungkinkan kita untuk menambahkan font kustom ke aplikasi kita.</li>
+</ul>
+<p>Kita akan periksa bagaimana cara memuat aset dengan cara yang berbeda. Selain itu, Anda dapat membaca selengkapnya tentang detail spesifikasi aset di web Flutter docs: <a href="https://docs.flutter.dev/development/ui/assets-and-images" target="_blank">https://docs.flutter.dev/development/ui/assets-and-images</a> </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Running the generated project" duration="30">
+        <p>Aplikasi secara default yang kita buat sebelumnya memiliki gaya pemrograman React di Flutter. Kita akan melihat lebih detail pada kode Dart di pertemuan yang akan datang, tapi mari kita lihat file <code>main.dart</code> lebih rinci sebelum kita mencoba menjalankan aplikasi.</p>
+<h2 is-upgraded><strong>File lib/main.dart</strong></h2>
+<p>Kita eksplorasi file <code>main.dart</code> terlebih dahulu untuk melihat sebuah widget. File ini juga merupakan entri poin dari aplikasi Flutter kita:</p>
+<pre><code>void main() {
+  runApp(const MyApp());
+}</code></pre>
+<p>Fungsi <code>main</code> adalah bagian utama pada kode Dart untuk mulai menjalankan aplikasi kita; di sinilah eksekusi aplikasi Anda akan dimulai. Flutter kemudian mengambil alih eksekusi pada fungsi <code>runApp</code>, yaitu dipanggil dengan meneruskan widget tingkat atas (atau root) Anda sebagai sebuah parameter. Ini adalah widget yang kita lihat sebelumnya, yaitu widget <code>MyApp</code>.</p>
+<p><strong>Flutter run</strong></p>
+<p>Untuk mengeksekusi aplikasi Flutter, kita harus memiliki perangkat atau simulator yang terhubung. Untuk memeriksanya dapat dilakukan dengan menggunakan <code>flutter doctor</code> yang telah kita bahas di pertemuan sebelumnya, dan <code>flutter emulators tool</code>, yang akan menjalankan emulator/simulator di sistem Anda. Berikut ini adalah perintah yang perlu Anda ketahui untuk melihat ketersediaan emulator Android dan iOS yang dapat digunakan untuk mengeksekusi file project aplikasi kita:</p>
+<pre><code>flutter emulators</code></pre>
+<p>Anda akan melihat tampilan yang mirip seperti berikut</p>
+<p class="image-container"><img style="width: 458.00px" src="img\\985216bdd4aabc55.png"></p>
+<p>Anda dapat memeriksa bagaimana cara mengelola emulator Android Anda di <a href="https://developer.android.com/studio/run/managing-avds" target="_blank">https://developer.android.com/studio/run/managing-avds</a> . Untuk simulator perangkat iOS, Anda harus menggunakan alat pengembang Simulator Xcode.</p>
+<aside class="special"><p><strong>Emulator versus simulator</strong></p>
+<p>Anda akan melihat bahwa Android memiliki emulator dan iOS memiliki simulator. Emulator Android merupakan perangkat lunak dan perangkat keras tiruan seperti perangkat Android yang sebenarnya. Sebaliknya, simulator iOS hanya meniru perangkat lunak dari perangkat iOS. Oleh karena itu sangat disarankan agar Anda menguji aplikasi Anda di perangkat iOS yang sebenarnya sebelum merilisnya ke App Store untuk memastikan tidak ada masalah pada perangkat keras yang sebenarnya seperti konsumsi memori yang berlebihan. </p>
+</aside>
+<p>Sebagai alternatif, Anda dapat memilih untuk mengeksekusi aplikasi di perangkat fisik. Anda perlu mengatur perangkat Anda ke mode pengembangan (Developer Mode), jadi untuk saat ini mungkin lebih mudah menggunakan emulator atau simulator.</p>
+<p>Setelah memiliki perangkat yang terhubung untuk mengeksekusi aplikasi kita, Anda dapat menggunakan perintah berikut:</p>
+<pre><code>flutter run</code></pre>
+<p>Anda akan melihat output yang mirip seperti pada gambar berikut:</p>
+<p class="image-container"><img style="width: 415.00px" src="img\\553dee4829005cc.png"></p>
+<p>Perintah ini akan mengeksekusi debugger dan membuat fungsi <strong>hot reload</strong> aktif, seperti yang dapat Anda lihat. Eksekusi aplikasi pertama kali biasanya akan memakan waktu sedikit lebih lama dari eksekusi selanjutnya.</p>
+<p>Emulator atau simulator seharusnya sudah mulai tampil, setelah jeda untuk memuat sistem operasi, baru kemudian mengeksekusi aplikasi Flutter Anda. Jika Anda melihat layar seperti gambar berikut, maka selamat. Anda baru saja menjalankan aplikasi Flutter pertama Anda!</p>
+<p class="image-container"><img style="width: 228.09px" src="img\\59cec6fa2454183e.png"></p>
+<p>Aplikasi Anda telah aktif dan berjalan; Anda dapat melihat label debug berwarna merah di sudut kanan atas. Itu berarti aplikasi Anda saat ini bukan versi rilis yang sedang berjalan; aplikasi dalam mode debug, yang berarti Anda memiliki semua fitur pada mode debug yang tersedia untuk Anda, seperti <em>hot reload</em> dan fasilitas debug kode.</p>
+<p>Contoh gambar di atas menggunakan emulator Android, atau <strong>Android virtual device (AVD)</strong>.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <p>Silakan Anda mencoba mengeksekusi aplikasi Flutter pertama Anda boleh menggunakan emulator, simulator, atau device yang sebenarnya.</p>
+<p>Kemudian screenshot hasil running aplikasi Anda dan kirimkan ke LMS sebagai tugas mandiri.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai pengetahuan dasar tentang pemahaman widget pada framework flutter.</p>
+<p>Pada codelab berikutnya, Anda akan melakukan mode debug, release, profile, dan running sesuai target platform. Anda juga akan mempelajari konsep dari file <code>pubspec.yaml</code> termasuk mengelola aset dan library dependencies.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+<li><a href="https://docs.flutter.dev/create" target="_blank">https://docs.flutter.dev/create</a></li>
+<li><a href="https://docs.flutter.dev/testing/build-modes" target="_blank">https://docs.flutter.dev/testing/build-modes</a>  </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

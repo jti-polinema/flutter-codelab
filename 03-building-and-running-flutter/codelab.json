@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-08-10T23:24:02Z",
+  "id": "03-building-and-running-flutter",
+  "duration": 145,
+  "title": "#03 | Building and Running Flutter",
+  "authors": "Tim Pengajar Mobile TSA 2022",
+  "summary": "- Mahasiswa mampu melakukan mode debug, release, profile, dan running sesuai target platform\n- Mahasiswa mampu menggunakan dan menjelaskan konsep dari file pubspec.yaml termasuk mengelola aset, library dependencies",
+  "source": "1gEj7wjFrw6cIZog6GiMD05_TMw_erKGKeKhfRoXMp2c",
+  "theme": "mobile-flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile Flutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "03-building-and-running-flutter"
+}
