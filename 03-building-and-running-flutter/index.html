@@ -33,6 +33,7 @@
 <p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
 <p>Cara sebuah aplikasi dibangun adalah hal mendasar yang sangat penting untuk diperhatikan karena terkait dengan kinerjanya terhadap target platform yang diinginkan. Ini merupakan bagian langkah yang penting terkait kinerja pembangunan aplikasi. Meskipun Anda tidak perlu mengetahui hal ini untuk setiap jenis aplikasi. Dengan mengetahui bagaimana aplikasi tersebut dibangun, maka dapat membantu Anda untuk memahami dan mengukur kemungkinan terjadinya peningkatan/pengembangan fitur-fitur selanjutnya.</p>
 <p>Flutter mengandalkan kompilasi AOT (<strong><em>Ahead of Time</em></strong>) dari fitur Dart untuk mode rilis dan kompilasi JIT (<strong><em>Just in Time</em></strong>) dari fitur Dart untuk mode pengembangan/debug. Dart adalah satu dari beberapa bahasa pemrograman yang mampu mengompilasi kode ke AOT dan JIT, dan Flutter memanfaatkan kelebihan ini dengan baik.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/5rn_MAspYFM?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <h2 is-upgraded><strong>Apa yang Anda akan pelajari</strong></h2>
 <p>Di codelab ini Anda akan mempelajari tentang:</p>
 <ul>
@@ -62,29 +63,31 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Debug mode" duration="2">
+      <google-codelab-step label="Debug mode" duration="12">
         <p>Selama pengembangan, Flutter menggunakan kompilasi JIT dalam mode debug. Kompilasi mode debug dioptimalkan untuk memberikan umpan balik dengan cepat, namun kecepatan eksekusi menjadi tidak terlalu cepat serta ukuran binary menjadi lebih besar. Kelebihan yang dimiliki kompiler Dart membuat interaksi antara kode dan simulator/perangkat masih dirasa sangat cepat, dan alat debugging memungkinkan untuk membantu pengembang melakukan analisis kode program dan tata letak widget.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/J7s5bu49k3U?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Release mode" duration="2">
+      <google-codelab-step label="Release mode" duration="11">
         <p>Dalam mode rilis, informasi debug tidak diperlukan, sehingga cukup fokus pada kinerja aplikasi. Flutter menggunakan teknik yang umum digunakan pada <em>game engine</em>. Dengan menggunakan mode AOT, kode Dart dikompilasi ke <em>native code</em>, dan aplikasi memuat library Flutter dan melakukan proses rendering, input, dan <em>event handling</em> dengan Skia engine.</p>
 <aside class="special"><p><strong>Skia graphics library</strong></p>
-<p>Skia adalah open source library yang menyediakan API untuk grafik 2D. Ini digunakan dalam</p>
-<p>Flutter termasuk aplikasi lain seperti Google Chrome, Android, Firefox, dan banyak lainnya. Itu juga diciptakan oleh Google, seperti Dart dan Flutter.</p>
+<p>Skia adalah open source library yang menyediakan API untuk grafik 2D. Ini digunakan dalam Flutter termasuk aplikasi lain seperti Google Chrome, Android, Firefox, dan banyak lainnya. Itu juga diciptakan oleh Google, seperti Dart dan Flutter.</p>
 </aside>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/Uy-1cGUW0Mc?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Profile mode" duration="3">
+      <google-codelab-step label="Profile mode" duration="10">
         <p>Terkadang Anda perlu menganalisis performa aplikasi Anda. Mode profile cukup untuk melakukan proses debugging agar performa aplikasi Anda dapat dianalisis, yang seolah-olah aplikasi Anda digunakan oleh pengguna di dunia. Mode ini hanya tersedia pada perangkat fisik karena jika menggunakan emulator, itu tidak akan merepresentasikan yang sebenarnya.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/GL61CotxCmM?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Supported platforms" duration="3">
+      <google-codelab-step label="Supported platforms" duration="15">
         <p>Saat ini, Flutter mendukung perangkat Android dengan arsitektur prosesor ARM yang berjalan  minimal pada API 19 (Android 4.4 atau KitKat), dan perangkat iOS di iOS 9 atau lebih baru (termasuk iPhone 4S dan lebih baru). Seperti yang Anda harapkan, aplikasi Flutter dapat dijalankan di emulator, dan debugging berfungsi dengan baik seperti pada perangkat fisik.</p>
 <p>Selain itu, Flutter Web masih versi beta, dan dukungan untuk aplikasi desktop (Windows, macOS, dan Linux) tersedia pada versi Alpha. Seperti yang Anda lihat, visi Flutter adalah untuk pengembang dapat membuat satu kode untuk multi platform seperti mobile, web, dan desktop.</p>
 <aside class="special"><p>Pada codelab ini tidak akan membahas lebih detail tentang aspek kompilasi Flutter. Untuk informasi lebih lanjut, Anda dapat membaca tautan berikut ini:</p>
@@ -191,7 +194,7 @@ dev_dependencies:
   runApp(const MyApp());
 }</code></pre>
 <p>Fungsi <code>main</code> adalah bagian utama pada kode Dart untuk mulai menjalankan aplikasi kita; di sinilah eksekusi aplikasi Anda akan dimulai. Flutter kemudian mengambil alih eksekusi pada fungsi <code>runApp</code>, yaitu dipanggil dengan meneruskan widget tingkat atas (atau root) Anda sebagai sebuah parameter. Ini adalah widget yang kita lihat sebelumnya, yaitu widget <code>MyApp</code>.</p>
-<p><strong>Flutter run</strong></p>
+<h2 is-upgraded><strong>Flutter run</strong></h2>
 <p>Untuk mengeksekusi aplikasi Flutter, kita harus memiliki perangkat atau simulator yang terhubung. Untuk memeriksanya dapat dilakukan dengan menggunakan <code>flutter doctor</code> yang telah kita bahas di pertemuan sebelumnya, dan <code>flutter emulators tool</code>, yang akan menjalankan emulator/simulator di sistem Anda. Berikut ini adalah perintah yang perlu Anda ketahui untuk melihat ketersediaan emulator Android dan iOS yang dapat digunakan untuk mengeksekusi file project aplikasi kita:</p>
 <pre><code>flutter emulators</code></pre>
 <p>Anda akan melihat tampilan yang mirip seperti berikut</p>
@@ -217,13 +220,14 @@ dev_dependencies:
       <google-codelab-step label="Tugas Praktikum" duration="90">
         <p>Silakan Anda mencoba mengeksekusi aplikasi Flutter pertama Anda boleh menggunakan emulator, simulator, atau device yang sebenarnya.</p>
 <p>Kemudian screenshot hasil running aplikasi Anda dan kirimkan ke LMS sebagai tugas mandiri.</p>
+<p>(<strong>Opsional</strong>) Anda dapat mencoba melakukan tiga mode seperti yang telah dijelaskan dalam codelab ini, yaitu mode debug, release, dan profile.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Selamat" duration="0">
-        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai pengetahuan dasar tentang pemahaman widget pada framework flutter.</p>
-<p>Pada codelab berikutnya, Anda akan melakukan mode debug, release, profile, dan running sesuai target platform. Anda juga akan mempelajari konsep dari file <code>pubspec.yaml</code> termasuk mengelola aset dan library dependencies.</p>
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai langkah awal untuk menjalankan aplikasi flutter pertama Anda.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang teknologi pengembangan aplikasi mobile secara native, teknologi pengembangan aplikasi mobile dengan cross-platform framework, lokasi sumber daya kebutuhan dalam pengembangan aplikasi flutter serta kelebihan dan kelemahan dari framework flutter.</p>
 <h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
 <p>Silakan cek beberapa sumber belajar lainnya...</p>
 <ul>
@@ -231,6 +235,7 @@ dev_dependencies:
 <li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
 <li><a href="https://docs.flutter.dev/create" target="_blank">https://docs.flutter.dev/create</a></li>
 <li><a href="https://docs.flutter.dev/testing/build-modes" target="_blank">https://docs.flutter.dev/testing/build-modes</a>  </li>
+<li><a href="https://docs.flutter.dev/deployment/android" target="_blank">https://docs.flutter.dev/deployment/android</a> </li>
 </ul>
 <h2 is-upgraded><strong>Referensi</strong></h2>
 <ul>
