@@ -1,0 +1,283 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#06 | Pengantar Bahasa Pemrograman Dart - Bagian 1</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="06-pengantar-bahasa-pemrograman-dart-bag-1"
+                  title="#06 | Pengantar Bahasa Pemrograman Dart - Bagian 1"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Pengantar Bahasa Pemrograman Dart - Bagian 1" duration="0">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/NrO0CJCbYLA?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p><strong>Terakhir diperbarui:</strong> 15 Agustus 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
+<p>Bahasa Dart adalah inti dari framework Flutter. Kerangka kerja modern seperti Flutter membutuhkan bahasa modern tingkat tinggi agar bisa memberikan pengalaman terbaik kepada pengembang, serta memungkinkan untuk membuat aplikasi seluler yang luar biasa. Memahami Dart adalah dasar untuk bekerja dengan Flutter; pengembang perlu mengetahui asal-usul bahasa Dart, bagaimana komunitas mengerjakannya, kelebihannya, dan mengapa itu adalah bahasa pemrograman yang dipilih untuk Flutter.</p>
+<p>Dalam codelab ini, Anda akan meninjau dasar-dasar bahasa Dart dan mengidentifikasi sumber daya yang dapat membantu Anda dalam perjalanan Flutter Anda. Anda akan mempelajari tipe data dan operator bawaan Dart serta bagaimana Dart bekerja dengan pemrograman berorientasi objek (OOP). Dengan memahami bahasa Dart, Anda akan merasa nyaman untuk bereksperimen dengan Dart dan dapat memperluas pengetahuan Anda.</p>
+<h2 is-upgraded><strong>Apa yang Anda akan pelajari</strong></h2>
+<p>Di codelab ini Anda akan mempelajari tentang:</p>
+<ul>
+<li>Geeting started with Dart</li>
+<li>The evolution of Dart</li>
+<li>How Dart works</li>
+<li>Introducing the structure of the Dart language</li>
+<li>Hands-on with Dart</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Apa yang Anda perlu persiapkan</strong></h2>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Android Device atau iOS iPhone</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus dimiliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Getting started with Dart" duration="15">
+        <p>Dart bertujuan untuk menggabungkan kelebihan-kelebihan dari sebagian besar bahasa tingkat tinggi dengan fitur-fitur bahasa pemrograman terkini, antara lain sebagai berikut:</p>
+<ul>
+<li><strong>Productive tooling</strong>: merupakan fitur kakas (<em>tool</em>) untuk menganalisis kode, plugin IDE, dan ekosistem paket yang besar.</li>
+<li><strong>Garbage collection</strong>: untuk mengelola atau menangani dealokasi memori (terutama memori yang ditempati oleh objek yang tidak lagi digunakan).</li>
+<li><strong>Type annotations (opsional)</strong>: untuk keamanan dan konsistensi dalam mengontrol semua data dalam aplikasi.</li>
+<li><strong>Statically typed</strong>: Meskipun <em>type annotations</em> bersifat opsional, Dart tetap aman karena menggunakan fitur <em>type-safe</em> dan <em>type inference</em> untuk menganalisis <em>types </em>saat <em>runtime</em>. Fitur ini penting untuk menemukan <em>bug </em>selama kompilasi kode.</li>
+<li><strong>Portability</strong>: bahasa Dart tidak hanya untuk web (yang dapat diterjemahkan ke JavaScript) tetapi juga dapat dikompilasi secara <em>native</em> ke kode<strong> Advanced RISC Machines (ARM)</strong> dan x86.</li>
+</ul>
+<p>Semua pengembangan framework Flutter melibatkan pengetahuan/fitur mendalam dengan bahasa Dart; Kode aplikasi, kode plugin, dan manajemen dependensi semuanya menggunakan bahasa Dart beserta fitur-fiturnya. Memiliki pemahaman dasar yang kuat tentang Dart akan memudahkan Anda untuk menjadi lebih produktif dengan Flutter dan akan membuat Anda merasa nyaman dalam pengembangan Flutter. Ayo kita pelajari bahasa Dart lebih rinci, dimulai dari mana Dart berasal.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="The evolution of Dart" duration="10">
+        <p>Diluncurkan pada tahun 2011, Dart telah berkembang sejak saat itu. Dart merilis versi stabilnya pada tahun 2013, dengan perubahan besar termasuk dalam rilis Dart 2.0 menjelang akhir 2018, yang dapat diuraikan sebagai berikut:</p>
+<ul>
+<li>Awalnya berfokus pada pengembangan web, dengan tujuan utama menggantikan JavaScript, sekarang telah fokus pada mobile development, termasuk framework Flutter.</li>
+<li><strong>Mencoba memecahkan masalah pada JavaScript</strong>: JavaScript tidak menyediakan ketahanan seperti banyak bahasa pemrograman lainnya, sehingga Dart ingin menjadi penerus daripada JavaScript.</li>
+<li><strong>Menawarkan performa terbaik dan alat yang lebih baik untuk proyek berskala besar: </strong>Dart memiliki perkakas yang modern dan stabil yang telah disediakan oleh plugin IDE. Hal ini telah dirancang untuk mendapatkan performa terbaik dengan tetap menjaga nuansa bahasa yang dinamis.</li>
+<li><strong>Dibentuk agar kuat dan fleksibel:</strong> Dengan tetap mempertahankan type annotations bersifat opsional dan menambahkan fitur OOP, Dart dapat menyeimbangkan dua fitur utama yaitu fleksibilitas dan ketangguhan.</li>
+</ul>
+<p>Dart adalah bahasa modern yang luar biasa, mendukung lintas platform, dan memiliki tujuan umum dengan terus meningkatkan fitur-fiturnya, membuatnya lebih kekinian dan fleksibel. Itulah sebabnya tim Flutter framework memilih bahasa Dart untuk digunakan.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="How Dart works" duration="15">
+        <p>Untuk memahami dari mana fleksibilitas bahasa dart itu berasal, kita perlu tahu bagaimana cara mengeksekusi kode Dart. Ini dapat dilakukan dengan dua cara, seperti yang dijelaskan berikut ini:</p>
+<ul>
+<li>Dart <strong>virtual machines (VMs</strong>) </li>
+<li>JavaScript compilations</li>
+</ul>
+<p>Perhatikan gambar diagram berikut:</p>
+<p class="image-container"><img style="width: 568.00px" src="img\\d66fac1f3a37b4.png"></p>
+<p>Seperti yang Anda lihat, pada bagian atas diagram adalah kode Dart Anda. Perlu dicatat bahwa kode dan dependensi Anda bisa jadi tidak sesuai dengan cara Anda mengeksekusikan aplikasi; namun tidak perlu melakukan banyak perubahan pada kode Anda untuk dapat mendukung cross-platform.</p>
+<h2 is-upgraded><strong>Dart VM and JavaScript compilation</strong></h2>
+<p>Kode Dart dapat dieksekusi pada lingkungan yang mendukung bahasa Dart. Lingkungan yang mendukung bahasa Dart perlu memperhatikan fitur-fitur penting seperti berikut:</p>
+<ul>
+<li><em>Runtime systems </em></li>
+<li><em>Dart core libraries </em></li>
+<li><em>Garbage collectors</em></li>
+</ul>
+<p>Eksekusi kode Dart dapat beroperasi dalam dua mode — kompilasi <strong>Just-In-Time (JIT)</strong> atau Kompilasi <strong>Ahead-Of-Time (AOT). </strong>Dijelaskan secara lebih rinci sebagai berikut:</p>
+<ul>
+<li>Kompilasi JIT adalah tempat kode sumber dikompilasi sesuai kebutuhan—<em>Just in time</em>. Dart VM memuat dan mengkompilasi kode sumber ke kode mesin asli (<em>native</em>). Pendekatan ini digunakan untuk menjalankan kode pada <em>command line</em> atau selama proses pengembangan aplikasi mobile yang dapat memanfaatkan fitur seperti debugging dan <em>hot reload</em>.</li>
+<li>Kompilasi AOT adalah dimana Dart VM dan kode Anda dikompilasi sebelumnya, VM bekerja lebih seperti sistem runtime Dart, yang menyediakan <em>garbage collector</em> dan metode-metode <em>native</em> dari Dart <strong>software development kit (SDK) </strong>pada aplikasi. Pendekatan ini memiliki keuntungan performa yang sangat besar dibandingkan kompilasi JIT, tetapi fitur lain seperti debugging dan hot reload tidak tersedia.</li>
+</ul>
+<aside class="special"><p><strong>Hot reload</strong></p>
+<p>Dart banyak berkontribusi pada fitur Flutter yang paling terkenal, yaitu hot reload, yang didasarkan pada kompiler Dart JIT. Hal Ini memungkinkan pengembang untuk mendapatkan umpan balik yang sangat cepat terhadap perubahan kode yang dilakukan, sehingga memungkinkan untuk beralih lebih cepat. Dapat mendukung pengembangan perangkat lunak yang lebih cepat dan berkualitas tinggi.</p>
+</aside>
+<p>Sebelum kita menggunakan bahasa pemrograman Dart, sebaiknya kita pahami terlebih dahulu hal-hal mendasar terkait bahasa Dart.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Introducing the structure of the Dart language" duration="45">
+        <p>Jika Anda sudah mengetahui beberapa bahasa pemrograman seperti bahasa C atau memiliki beberapa pengalaman dengan JavaScript, sebagian besar sintaks Dart akan lebih mudah bagi Anda untuk memahaminya. Dart menyediakan sebagian besar operator standar untuk memanipulasi variabel; <em>built-in types</em> adalah yang paling umum ditemukan dalam bahasa pemrograman tingkat tinggi. <em>Control flow</em> dan <em>function </em>sangat mirip dengan bahasa pemrograman lainnya.</p>
+<h2 is-upgraded><strong>Object orientation</strong></h2>
+<p>Seperti kebanyakan bahasa modern, Dart dirancang untuk <strong>object-oriented (OO)</strong>. Secara singkat, Bahasa OOP didasarkan pada konsep <strong>objek </strong>yang menyimpan kedua data (disebut <strong>fields</strong>) dan kode (disebut <strong>methods</strong>). Objek-objek ini dibuat dari cetak biru yang disebut <strong>class </strong>yang mendefinisikan <em>field </em>dan <em>method </em>yang akan dimiliki oleh sebuah objek.</p>
+<p>Sesuai prinsip OO memastikan bahwa Dart memiliki fitur encapsulation, inheritance, composition, abstraction, dan polymorphism. Kita akan mempelajari kelas Dart lebih banyak lagi di pertemuan dengan topik<em> Class Dart </em>dan<em> Construct,</em> namun sudah cukup jika Anda telah belajar konsep OO dalam bahasa lain seperti Java, maka sebagian besar desain OO pada Dart akan sangat mirip.</p>
+<h2 is-upgraded><strong>Dart operators</strong></h2>
+<p>Di Dart, operator tidak lebih dari <em>method</em> yang didefinisikan dalam <em>class </em>dengan sintaks khusus.</p>
+<p>Jadi, ketika Anda menggunakan operator seperti <code>x == y</code>, seolah-olah Anda sedang memanggil</p>
+<p><code>x.==(y)</code> metode untuk melakukan perbandingan kesetaraan.</p>
+<p>Seperti yang mungkin telah Anda catat, kita menggunakan <em>method</em> pada <code>x</code>. Untuk semua tipe data, tidak seperti bahasa Java yang memiliki data primitif, <code>x</code> selalu berupa turunan dari kelas yang memiliki <em>method</em>. Ini berarti bahwa operator dapat diganti sesuai logika yang Anda inginkan.</p>
+<h2 is-upgraded><strong>Arithmetic operators</strong></h2>
+<p>Dart hadir dengan banyak operator <em>typical</em> yang bekerja seperti banyak bahasa pemrograman lainnya; yaitu sebagai berikut:</p>
+<ul>
+<li><code>+</code> untuk tambahan.</li>
+<li><code>-</code> untuk pengurangan.</li>
+<li><code>*</code> untuk perkalian.</li>
+<li><code>/</code> untuk pembagian.</li>
+<li><code>~/</code> untuk pembagian bilangan bulat. Di Dart, setiap pembagian sederhana dengan <code>/</code> menghasilkan nilai <em>double</em>. Untuk mendapatkan nilai bilangan bulat, Anda perlu membuat semacam transformasi (yaitu, <em>typecast</em>) dalam bahasa pemrograman lain; namun Dart sudah mendukung untuk operasi ini.</li>
+<li><code>%</code> untuk operasi modulus (sisa bagi dari bilangan bulat).</li>
+<li><code>-expression</code> untuk negasi (yang membalikkan suatu nilai).</li>
+</ul>
+<p>Beberapa operator memiliki perilaku yang berbeda tergantung pada jenis operan di sisi kiri; Misalnya, operator <code>+</code> dapat digunakan untuk menjumlahkan variabel dari tipe <code>num</code>, tetapi juga dapat digunakan untuk menggabungkan <code>string</code>. Karena <em>method</em> yang dirujuk diimplementasikan secara berbeda pada kelas yang berbeda.</p>
+<p>Dart juga menyediakan <em>shortcut</em> operator untuk menggabungkan variabel setelah operasi lainnya. Operator aritmatika atau <em>shortcut</em> operator adalah <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, dan <code>~/=</code>.</p>
+<h2 is-upgraded><strong>Increment and decrement operators</strong></h2>
+<p>Operator penambahan dan pengurangan juga merupakan operator umum dan diimplementasikan pada angka, sebagai berikut:</p>
+<ul>
+<li><code>++var</code> atau <code>var++</code> untuk menambah nilai variabel <code>var</code> sebesar 1</li>
+<li><code>--var</code> atau <code>var--</code> untuk mengurangi nilai variabel <code>var</code> sebesar 1</li>
+</ul>
+<p>Operator Dart increment dan decrement berperilaku mirip dengan bahasa lain. Penerapan operator increment dan decrement sangat baik untuk operasi perhitungan pada perulangan.</p>
+<h2 is-upgraded><strong>Equality and relational operators</strong></h2>
+<p>Persamaan operator Dart dijelaskan sebagai berikut:</p>
+<ul>
+<li><code>==</code> untuk memeriksa apakah operan sama</li>
+<li><code>!=</code> untuk memeriksa apakah operan berbeda</li>
+</ul>
+<p>Untuk melakukan pengujian relasional, maka gunakan operator sebagai berikut:</p>
+<ul>
+<li><code>></code> memeriksa apakah operan kiri lebih besar dari operan kanan</li>
+<li><code><</code> memeriksa apakah operan kiri lebih kecil dari operan kanan</li>
+<li><code>>=</code> memeriksa apakah operan kiri lebih besar dari atau sama dengan operan kanan</li>
+<li><code><=</code> memeriksa apakah operan kiri kurang dari atau sama dengan operan kanan</li>
+</ul>
+<p>Di Dart, tidak seperti Java dan bahasa lainnya, operator <code>==</code> tidak membandingkan referensi/alamat memori melainkan isi dari variabel tersebut.</p>
+<p>Juga, tidak seperti JavaScript, tidak ada operator === yang diperlukan pada Dart karena telah memiliki fitur <em>type safety</em> yang memastikan bahwa operator persamaan <code>==</code> hanya digunakan pada objek dengan tipe yang sama.</p>
+<h2 is-upgraded><strong>Logical operators</strong></h2>
+<p>Operator logika di Dart adalah operator yang diterapkan pada operan <code>bool</code>; bisa berupa  variabel, ekspresi, atau kondisi. Selain itu, dapat dikombinasikan dengan ekspresi kompleks dengan menggabungkan nilai ekspresi yang dievaluasi. Operator logika yang disediakan adalah sebagai berikut:</p>
+<ul>
+<li> <code>!expression</code> negasi atau kebalikan hasil ekspresi—yaitu, <code>true</code> menjadi <code>false</code> dan <code>false</code> menjadi <code>true</code>.</li>
+<li><code>||</code> menerapkan operasi logika <code>OR</code> antara dua ekspresi.</li>
+<li><code>&&</code> menerapkan operasi logika <code>AND</code> antara dua ekspresi.</li>
+</ul>
+<p>Sekarang kita telah mengetahui dasar-dasar bahasa pemrograman Dart, mari kita lihat beberapa contoh kode Dart!</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Hands-on with Dart" duration="30">
+        <p>Desain Flutter sangat dipengaruhi oleh bahasa Dart, jadi kita mempelajari bahasa Dart itu sangat penting untuk keberhasilan dalam menggunakan framework Flutter. Mari kita mulai dengan menulis beberapa kode untuk memahami dasar-dasar sintaks dan kakas yang tersedia untuk pengembangan Dart.</p>
+<h2 is-upgraded>DartPad</h2>
+<p>Cara termudah untuk memulai pemrograman Dart adalah dengan menggunakan kakas DartPad, yang dapat Anda akses di tautan berikut: <a href="https://dartpad.dartlang.org/" target="_blank">https://dartpad.dartlang.org/</a>.</p>
+<aside class="special"><p>Untuk memahami cara penggunaan DartPad lebih lanjut dapat mengakses tautan berikut</p>
+<p><a href="https://dart.dev/resources/dartpad-best-practices#what-is-dartpad" target="_blank">https://dart.dev/resources/dartpad-best-practices#what-is-dartpad</a> </p>
+</aside>
+<p>Ini adalah kakas online yang bagus untuk belajar dan bereksperimen dengan fitur bahasa Dart.</p>
+<p>Kakas ini mendukung <em>core library</em> Dart, kecuali untuk <em>library VM</em> seperti <code>dart:io</code>.</p>
+<p>Seperti inilah tampilan kakas DartPad, meskipun kode yang disajikan dalam kakas mungkin berbeda:</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\bf711585cf50ffef.png"></p>
+<p>Saat Anda membuka DartPad, Anda akan melihat potongan kode. Jika belum ada kode pada DartPad, Anda dapat mengganti dengan kode berikut, sehingga Anda dapat menjalankan kode Dart pertama Anda:</p>
+<pre><code>void main() { 
+   for (int i = 0; i &lt; 5; i++) { 
+    print(&#39;hello ${i + 1}&#39;); 
+  } 
+}</code></pre>
+<p>Kita akan menjelajahi potongan kode tersebut pada pembahasan subtopik berikutnya, jadi jangan khawatir jika itu terlihat sedikit rumit. Namun, coba jalankan pada kakas DartPad dengan menekan tombol <strong>Run</strong>, dan Anda akan melihat keluaran pada konsol yang mirip seperti berikut:</p>
+<pre><code>hello 1 
+hello 2 
+hello 3 
+hello 4 
+hello 5</code></pre>
+<aside class="special"><p><strong>Running locally</strong></p>
+<p>Jika Anda memilih untuk menjalankan kode tersebut secara lokal di PC/Laptop Anda, simpan kode ke file Dart dan eksekusi dengan Dart di terminal—misalnya, simpan ke file bernama <code>hello_world.dart</code> dan kemudian run perintah <code>dart hello_world.dart</code>. Ini akan mengeksekusi fungsi <code>main</code> dari kode Dart tersebut.</p>
+</aside>
+<p>Mari kita lihat kode di DartPad lebih detail.</p>
+<h2 is-upgraded><strong>Hello world Dart style</strong></h2>
+<p>Kode yang ada di DartPad terlihat mirip seperti berikut:</p>
+<pre><code>void main() { 
+   for (int i = 0; i &lt; 5; i++) { 
+     print(&#39;hello ${i + 1}&#39;); 
+   } 
+}</code></pre>
+<p>Kode ini berisi beberapa fitur dasar dalam bahasa Dart. Dalam pembahasan ini, kita akan menjelajahi dasar-dasar bahasa Dart yang mungkin Anda telah memiliki pengalaman dalam pemrograman dasar untuk menerapkan pengetahuan itu ke bahasa Dart.</p>
+<p>Jika Anda merasa membutuhkan pengenalan yang lebih dalam tentang dasar-dasar pemrograman, maka buku yang cocok adalah <em>Learning Dart</em>, oleh <em>Dzenan Ridjanovic</em>.</p>
+<h2 is-upgraded><strong>Main function</strong></h2>
+<p>Seperti kebanyakan bahasa modern, Dart menggunakan <em>function </em>dan <em>method</em> sebagai cara untuk memisahkan kode. Sebuah <em>function </em>atau <em>method </em>adalah potongan kode yang menerima beberapa data, eksekusi kode, dan kemudian mengembalikan beberapa data (<em>return</em>).</p>
+<p><em>Function</em> dari contoh <code>hello world</code> terlihat seperti ini:</p>
+<pre><code>void main() { 
+... 
+}</code></pre>
+<p>Baris pertama memiliki beberapa informasi penting, yang dijelaskan sebagai berikut:</p>
+<ul>
+<li>Tipe data yang dikembalikan dari <em>method</em> perlu didefinisikan terlebih dahulu. Pada kasus ini, <code>void</code> menunjukkan bahwa <em>method</em> tidak mengembalikan data apa pun ketika telah selesai eksekusi. <code>void</code> adalah <em>keyword</em> dalam bahasa Dart yang hanya dapat digunakan secara spesifik. Kita akan mempelajari tipe data pada pertemuan berikutnya.</li>
+<li>Berikutnya adalah nama <em>function</em> —dalam hal ini, <code>main</code>. Nama tersebut digunakan oleh kode lain untuk merujuk pada nama <em>method</em> ini. Dalam kasus ini, <code>main</code> adalah nama <em>function</em> utama yang dicari oleh Dart VM saat pertama kali mengeksekusi kode. Setiap aplikasi Dart harus memiliki <em>function </em><code>main</code> sehingga Dart VM tahu di mana harus memulai eksekusi kode.</li>
+<li>Tanda kurung kosong <code>( )</code> adalah tempat <em>function </em>untuk mendefinisikan data yang akan diterima. <em>Function </em><code>main</code> ini tidak menerima data apa pun, oleh karena itu tanda kurung ini kosong. Kita akan lihat cara sebuah <em>function</em> dapat menerima data sebagai parameter pada pertemuan berikutnya.</li>
+<li>Terakhir, kurung kurawal <code>{ }</code> di akhir baris pertama menentukan di mana kode <em>function </em><code>main</code> dimulai, dan kurung kurawal penutup setelah beberapa baris kemudian untuk menentukan di mana kode <em>function </em><code>main</code> berakhir. Berbeda dengan beberapa bahasa seperti Python, dia tidak menggunakan kurung kurawal.</li>
+</ul>
+<aside class="special"><p><strong><em>Function</em></strong><strong> versus </strong><strong><em>method</em></strong></p>
+<p><em>Function</em> dan <em>method</em> memiliki sintaks yang identik (aturan tentang struktur kodenya), dan sering kali penggunaan <strong><em>function </em></strong>dan <strong><em>method </em></strong>digunakan bergantian, lalu apa bedanya? Secara khusus, sebuah <em>function</em> berada di luar <em>class</em> (kita akan mempelajari tentang <em>class </em>pada pertemuan berikutnya). <em>Function </em><code>main</code> adalah contoh di sini. Sebaliknya, sebuah <em>method </em>terikat pada turunan <em>class </em>dan memiliki referensi secara implisit ke <em>instance class</em> melalui <em>keyword </em><code>this</code>.</p>
+</aside>
+<p>Jadi, Anda sekarang sudah tahu bahwa kode dapat dieksekusi karena Dart VM mencari <em>function </em><code>main</code>, yang kemudian memanggil <em>function</em> tersebut.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="120">
+        <h2 is-upgraded><strong>Soal 1</strong></h2>
+<p>Modifikasilah kode pada baris 3 di DartPad berikut ini agar mendapatkan keluaran (<em>output</em>) sesuai yang diminta!</p>
+<p class="image-container"><img style="width: 308.00px" src="img\\71269de4e0dd2e48.png"></p>
+<p>Output yang diminta:</p>
+<p class="image-container"><img style="width: 398.00px" src="img\\6b02cedc14441fb5.png"></p>
+<h2 is-upgraded><strong>Soal 2</strong></h2>
+<p>Mengapa sangat penting untuk memahami bahasa pemrograman Dart sebelum kita menggunakan framework Flutter ? Jelaskan!</p>
+<h2 is-upgraded><strong>Soal 3</strong></h2>
+<p>Rangkumlah materi dari codelab ini menjadi poin-poin penting yang dapat Anda gunakan untuk membantu proses pengembangan aplikasi mobile menggunakan framework Flutter.</p>
+<p>Kumpulkan jawaban Anda dengan <strong>format slide (.ppt/pptx)</strong> dari soal nomor 1 sampai 3 di LMS pada tautan yang telah disediakan.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai langkah awal untuk memahami bahasa pemrograman Dart yang digunakan dalam framework Flutter.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang mendekralasikan variabel, tipe data, Null Safety, Late variabel, null-aware method, dan built-in types.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+<li><a href="https://dart.dev/guides/language/type-system" target="_blank">The Dart type system</a></li>
+<li><a href="https://dart.dev/resources/dartpad-best-practices" target="_blank">DartPad in tutorials: Best practices</a></li>
+<li><a href="https://developers.google.com/codelabs/from-java-to-dart" target="_blank">Pengantar Dart untuk Developer Java (Codelab)</a></li>
+<li><a href="https://dart.dev/codelabs" target="_blank">https://dart.dev/codelabs</a> </li>
+<li><a href="https://dart.dev/resources/videos" target="_blank">https://dart.dev/resources/videos</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">https://dart.dev/guides/language/language-tour</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
