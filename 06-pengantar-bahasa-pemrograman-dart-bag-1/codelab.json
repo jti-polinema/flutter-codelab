@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2022-08-14T23:35:54Z",
+  "updated": "2022-08-17T19:05:49Z",
   "id": "06-pengantar-bahasa-pemrograman-dart-bag-1",
-  "duration": 235,
-  "title": "#06 | Pengantar Bahasa Pemrograman Dart - Bagian 1",
+  "duration": 240,
+  "title": "#08 | Pengantar Bahasa Pemrograman Dart - Bagian 3",
   "authors": "Tim Pengajar Mobile TSA 2022",
-  "summary": "Mahasiswa mampu menjelaskan evolusi dart, cara kerjanya, struktur bahasanya, operator dart, dan main function",
-  "source": "1h87vBIBKrU_Nei0RsHOcw6Amf0bk8TEi_GCVVUGDfMc",
+  "summary": "Mahasiswa mampu menerapkan control flows dan perulangan",
+  "source": "1nRgd0tzhO99mwrLuWFDnDgv1TzVKfI3oa5A7dsPBrCo",
   "theme": "mobile-flutter",
   "status": [
     "published"
