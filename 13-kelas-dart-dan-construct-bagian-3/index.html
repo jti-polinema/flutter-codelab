@@ -1,0 +1,262 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#13 | Kelas Dart dan Konstruktor - Bagian 3</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="13-kelas-dart-dan-construct-bagian-3"
+                  title="#13 | Kelas Dart dan Konstruktor - Bagian 3"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Kelas Dart dan Konstruktor - Bagian 3" duration="0">
+        <p><strong>Terakhir diperbarui:</strong> 23 Agustus 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
+<p>Pada codelab ini, Anda akan mempelajari konsep dan praktik untuk tipe data enum dan generics.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>Menerapkan enum type pada bahasa pemrograman Dart</li>
+<li>Menerapkan tipe data generic  pada bahasa pemrograman Dart</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
+<p>Tidak ada, hanya menggunakan Console di DartPad.</p>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+</ul>
+<h2 is-upgraded><strong>Daftar Perintah</strong></h2>
+<p>Pada praktikum ini, Anda akan menggunakan <a href="https://dartpad.dev/" target="_blank">DartPad</a> sebagai kakas untuk bereksperimen atau praktikum.</p>
+<h2 is-upgraded><strong>Bantuan</strong></h2>
+<p>Tidak ada.</p>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus dimiliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tipe Data Enum" duration="30">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/wVoYYlDJO-U?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p>Tipe data <code>enum</code> adalah tipe data umum yang digunakan oleh sebagian besar bahasa pemrograman untuk mewakili satu set terbatas pada suatu nilai konstan. Di Dart, itu tidak ada perbedaan. Dengan menggunakan kata kunci <code>enum</code>, diikuti oleh nilai konstanta, Anda dapat menentukan tipe data <code>enum</code>, seperti yang diilustrasikan dalam kode program berikut ini:</p>
+<pre><code>enum PersonType { student, employee }</code></pre>
+<p>Perhatikan kode tersebut bahwa Anda hanya menentukan nama dari suatu nilai. Tipe data enum adalah tipe data khusus yang memiliki satu set terbatas nilai dengan properti indeks yang mewakili nilainya. Sekarang, mari kita lihat bagaimana cara kerjanya.</p>
+<p>Pertama, kita tambahkan suatu field ke kelas <code>Person</code> yang telah ditentukan sebelumnya untuk menyimpan tipe datanya, seperti berikut:</p>
+<pre><code>class Person {
+  ...
+  PersonType? type;
+  ...
+}</code></pre>
+<p>Kemudian, kita dapat menggunakannya seperti pada field lainnya, yang diilustrasikan dalam kode program berikut:</p>
+<pre><code>main() {
+  print(PersonType.values);
+  Person somePerson = Person();
+  somePerson.type = PersonType.employee;
+  print(somePerson.type);
+  print(somePerson.type.index);
+  print(describeEnum(PersonType.employee));
+}</code></pre>
+<p>Pernyataan <code>print</code> pertama akan mencetak <code>[PersonType.student,PersonType.employee]</code>. Anda dapat melihat bahwa dapat memanggil <code>values</code> pada enum <code>PersonType</code> secara langsung. Ini adalah variabel statis dari tipe enum yang dapat mengembalikan semua nilai-nilainya.</p>
+<p>Pernyataan <code>print</code> kedua akan mencetak <code>PersonType.employee</code>.</p>
+<p>Pernyataan <code>print</code> berikutnya mencetak <code>1</code>. Anda dapat melihat bahwa properti <code>index</code> bernilai nol, berdasarkan posisi deklarasi dari nilai tersebut. Secara umum, Anda tidak dianjurkan untuk mengambil nilai <code>index</code> karena dapat berubah jika nilai enum disusun ulang atau ditambahkan nilai baru.</p>
+<p>Selain itu, Flutter menyediakan metode <code>describeEnum</code>, yang hanya mengembalikan nilai dari enum. Pada metode <code>print</code> terakhir, nilai yang akan dicetak adalah <code>employee</code>.</p>
+<p>Semakin banyak Anda menambahkan <em>type safety</em> pada kode Anda, maka semakin aman kode tersebut. Namun, terkadang Anda juga ingin menentukan suatu tipe data yang dapat ditampung oleh suatu <code>class</code>, solusinya Anda dapat melakukannya dengan <em>generics</em>.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tipe Data Generics" duration="30">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/L3rd5WOarso?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p>Sintaks <code>< ></code> digunakan untuk menentukan tipe data yang dapat didukung oleh suatu <code>class</code>. Jika Anda melihat contoh <em>List</em> dan <em>Maps</em> di <em>Pertemuan 7: Pengantar Bahasa Pemrograman Dart – Bagian 2</em>, Anda akan melihat bahwa belum ditentukan tipe data yang dapat dimuat. Hal ini karena informasi tipe data bersifat opsional, dan Dart memiliki fitur untuk menentukan sendiri tipe datanya berdasarkan isi elemen tersebut selama proses inisialisasi <em>collection</em>.</p>
+<h2 is-upgraded><strong>Kapan dan Mengapa menggunakan Generics</strong></h2>
+<p>Penggunaan tipe data <em>generics</em> dapat membantu pengembang untuk mengelola dan menjaga perilaku <em>collection</em> tetap terkontrol. Ketika kita menggunakan <em>collection</em> tanpa menentukan tipe data dari isi elemen yang dperbolehkan, maka itu perlu dilakukan secara manual untuk memeriksa elemen yang masuk ke dalam <em>collection </em>apakah sudah sesuai dengan tipe data yang diharapkan. Hal ini dapat menyebabkan <em>bug </em>ketika tipe data tidak sesuai dalam suatu <em>collection </em>atau asumsi yang salah untuk menambahkan elemen baru pada suatu <em>collection</em>.</p>
+<p>Perhatikan contoh kode berikut, di mana telah membuat sebuah <code>List</code> dengan nama variabel <code>placeNames</code>. Kita berharap variabel ini akan menjadi daftar nama dan tidak ada tipe data yang lain. Sayangnya, tanpa <em>generics</em>, kita dapat menambahkan tipe data apa saja ke dalam <code>List</code> tersebut, termasuk tipe data <em>number</em>. Hal ini dapat menyebabkan masalah saat mengambil nilai dari <code>List</code> tersebut:</p>
+<pre><code>main() {
+  List placeNames = [&#34;Middlesbrough&#34;, &#34;New York&#34;];
+  placeNames.add(1);
+  print(&#34;Place names: $placeNames&#34;);
+}
+// prints Place names: [Middlesbrough, New York, 1]</code></pre>
+<p>Namun, jika kita menentukan tipe data <code>string</code> untuk <code>List</code>, maka kode ini tidak akan dikompilasi, sehingga dapat meningkatkan kekuatan kode, seperti yang diilustrasikan pada kode program berikut ini:</p>
+<pre><code>main() {
+  List&lt;String&gt; placeNames = [&#34;Middlesbrough&#34;, &#34;New York&#34;];
+  placeNames.add(1);
+  // add() expects a String so this doesn&#39;t compile
+}</code></pre>
+<h2 is-upgraded><strong>Generics dan Dart Literals</strong></h2>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/f_Mshv3VnOI?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p>Pada contoh <em>list </em>dan <em>map </em>yang ada di <em>Pertemuan 7: Pengantar Bahasa Pemrograman Dart – Bagian 2</em>, Anda akan lihat itu menggunakan simbol literal yaitu <code>[ ]</code> dan <code>{ }</code> untuk proses inisialisasi. Dengan <em>generics</em>, sebagai alternatif pada pendekatan sebelumnya, kita dapat menentukan tipe data selama proses inisialisasi, dengan cara menambahkan awalan <code><elementType>[]</code> untuk tipe data <em>List</em> dan <code><keyType, valueType>{}</code> untuk tipe data <em>Maps</em>.</p>
+<p>Perhatikan contoh berikut:</p>
+<pre><code>main() {
+  var placeNames = &lt;String&gt;[&#34;Middlesbrough&#34;, &#34;New York&#34;];
+  var landmarks = &lt;String, String&gt;{
+    &#34;Middlesbrough&#34;: &#34;Transporter bridge&#34;,
+    &#34;New York&#34;: &#34;Statue of Liberty&#34;,
+  };
+}</code></pre>
+<p>Menentukan tipe data pada variabel list sepertinya berlebihan dalam kasus ini karena <em>Dart analyzer</em> akan dapat menduga bahwa itu merupakan tipe data string dari data literal yang ada. Namun, dalam beberapa kasus, hal ini penting, seperti ketika kita menginisialisasi variabel <em>collection </em>kosong, seperti pada contoh berikut:</p>
+<pre><code>var emptyStringArray = &lt;String&gt;[];</code></pre>
+<p>Jika kita tidak menentukan tipe data pada <em>collection </em>tersebut, maka itu bisa dimasukkan elemen dengan tipe data apa pun ke dalamnya karena itu tidak akan sesuai dengan tipe data generik yang ditentukan.</p>
+<h2 is-upgraded><strong>Nullability di dalam Generics</strong></h2>
+<p>Seperti yang telah kita pelajari di bagian <em>Null safety</em> pada <em>pertemuan Pengantar Bahasa Pemrograman Dart</em>, jika sebuah variabel dapat menerima nilai <code>null</code>, maka variabel itu harus dideklarasikan pada tipe data variabelnya. Ini juga berlaku pada tipe data <em>generics</em> jika tipe data <em>collection</em> dapat menerima nilai <code>null</code>.</p>
+<p>Misalnya, pada variabel map <code>landmarks</code>, beberapa tempat boleh tidak memiliki nilai (<code>null</code>). Kita perlu mendeklarasikan ini sehingga ketika kita mengakses variabel map, kita akan tahu bahwa <code>null</code> adalah nilai yang mungkin ada. Mari kita perbarui dari contoh sebelumnya untuk melihat apa yang mungkin bisa diubah seperti berikut:</p>
+<pre><code>main() {
+  var landmarks = &lt;String, String?&gt;{
+    &#34;Middlesbrough&#34;: &#34;Transporter bridge&#34;,
+    &#34;New York&#34;: &#34;Statue of Liberty&#34;,
+    &#34;Barnmouth&#34;: null,
+ };
+}</code></pre>
+<p>Kita telah menentukan bahwa nilai variabel map adalah <code>String?</code>, artinya itu dapat menerima nilai baik itu berupa <code>String</code> atau bernilai <code>null</code>. Kemudian kita tambahkan data baru ke variabel map yang berisi nilai <code>null</code>.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Menerapkan enum" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan DartPad di browser Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Ketik atau salin kode program berikut ke DartPad.</p>
+<pre><code>enum SkemaTSA { IoT, Mobile, Web }</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Buatlah sebuah <code>class</code> seperti kode berikut.</p>
+<pre><code>class TSA {
+  SkemaTSA? mySkema;
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Ketik atau salin kode program berikut ke <code>void main()</code></p>
+<pre><code>print(SkemaTSA.values);
+TSA myTSA = TSA();
+myTSA.type = SkemaTSA.Mobile;
+print(myTSA.type);
+print(myTSA.type.index);
+print(describeEnum(myTSA.Mobile));</code></pre>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Klik <strong>Run </strong>untuk mulai mengeksekusi kode. Analisis dan pahami dari kode program tersebut. Apa yang terjadi? Mengapa demikian? Jelaskan dalam laporan praktikum Anda!</p>
+<p>Pastikan keluaran pada <em>console </em>seperti berikut.</p>
+<p class="image-container"><img style="width: 408.00px" src="img\\c8d4af4df6cef6cc.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Menerapkan generic pada collection" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan DartPad di browser Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Ketik atau salin kode program berikut ke dalam <code>void main()</code>.</p>
+<pre><code>List namaKota = [&#34;Kota Malang&#34;, &#34;Kota Surabaya&#34;];
+namaKota.add(7);
+print(&#34;Nama Kota di Jawa Timur: $NamaKota&#34;);</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Klik <strong>Run </strong>untuk mulai mengeksekusi kode tersebut. Apa yang terjadi? Jika terjadi <em>error</em>, silakan diperbaiki. Mengapa ada angka 7 (tujuh) diantara nama kota tersebut? Jelaskan!</p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Ubah deklarasi List pada variabel <code>namaKota</code> seperti berikut.</p>
+<pre><code>List&lt;String&gt; namaKota = [&#34;Kota Malang&#34;, &#34;Kota Surabaya&#34;];</code></pre>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Lalu klik <strong>Run</strong> kembali. Analisis dan pahami dari kode program tersebut. Apa yang terjadi? Mengapa demikian? Jelaskan dalam laporan praktikum Anda!</p>
+<p>Pastikan keluaran pada console seperti berikut.</p>
+<p class="image-container"><img style="width: 499.00px" src="img\\43fc9b26e60e7525.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Menerapkan generic pada class" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan DartPad di browser Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Buatlah sebuah <code>class generic</code> di DartPad seperti berikut.</p>
+<pre><code>class MyData&lt;T&gt; {
+  
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Buat variabel generic di dalam <code>class MyData</code> dengan kode berikut.</p>
+<pre><code>T data;</code></pre>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Lalu buat konstruktornya.</p>
+<pre><code>MyData(this.data);</code></pre>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Buat method generic untuk mengembalikan nilai seperti kode berikut.</p>
+<pre><code>T getData(){
+  return data;
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<p>Salin atau ketik kode berikut ke <code>void main()</code></p>
+<pre><code>var namaSaya = MyData&lt;String&gt;(&#34;Fulan&#34;);
+var umurSaya = MyData(30);
+var genderSaya = MyData(true);</code></pre>
+<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<p>Klik <strong>Run </strong>untuk mulai mengeksekusi kode. Analisis dan pahami dari kode program tersebut. Apa yang terjadi? Mengapa demikian? Jelaskan dalam laporan praktikum Anda!</p>
+<p>Lengkapi kode pada Langkah 5, pastikan keluaran pada <em>console </em>seperti berikut.</p>
+<p class="image-container"><img style="width: 362.00px" src="img\\e4cd2f4d3a91ad40.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Silakan selesaikan Praktikum 1 sampai 3, lalu dokumentasikan berupa screenshot hasil pekerjaan beserta penjelasannya!</li>
+<li>Buatlah sebuah program yang terdiri dari class generic, enum, dan collection generic yang didalamnya terdapat indentitas nama lengkap dan alamat tinggal Anda!</li>
+<li>Kumpulkan dalam format PDF ke LMS pada tautan yang telah disediakan!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai langkah awal untuk memahami kelas dan konstruktor pada bahasa pemrograman Dart yang digunakan dalam framework Flutter.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang pemrograman <em>asynchronous </em>melalui Dart Futures dan Dart Isolates.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+<li><a href="https://dart.dev/guides/language/type-system" target="_blank">The Dart type system</a></li>
+<li><a href="https://dart.dev/resources/dartpad-best-practices" target="_blank">DartPad in tutorials: Best practices</a></li>
+<li><a href="https://developers.google.com/codelabs/from-java-to-dart" target="_blank">Pengantar Dart untuk Developer Java (Codelab)</a></li>
+<li><a href="https://dart.dev/codelabs" target="_blank">https://dart.dev/codelabs</a> </li>
+<li><a href="https://dart.dev/resources/videos" target="_blank">https://dart.dev/resources/videos</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">https://dart.dev/guides/language/language-tour</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
