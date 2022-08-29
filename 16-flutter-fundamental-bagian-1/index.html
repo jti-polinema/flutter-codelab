@@ -1,0 +1,730 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#16 | Flutter Fundamental - Bagian 1</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="16-flutter-fundamental-bagian-1"
+                  title="#16 | Flutter Fundamental - Bagian 1"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Flutter Fundamental - Bagian 1" duration="0">
+        <p class="image-container"><img style="width: 624.00px" src="img\\b590fae5453bfc2.png"></p>
+<p><strong>Terakhir diperbarui:</strong> 28 Agustus 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
+<p>Pada codelab ini, Anda akan mempelajari konsep dan praktik untuk dasar-dasar framework Flutter termasuk fitur penggunaan hot reload dan restart serta widget dasar dan temanya.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>menjelaskan bagian-bagian dari project file flutter</li>
+<li>menggunakan fitur hot reload dan restart</li>
+<li>menjelaskan perbedaan stateful dan stateless widget</li>
+<li>menerapkan widget-widget dasar flutter dan tema</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Daftar Perintah</strong></h2>
+<h2 is-upgraded><strong>Bantuan</strong></h2>
+<p>Tidak ada.</p>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Struktur Project Flutter" duration="15">
+        <p>Ketika membuat project flutter secara default berikut adalah struktur folder dan filenya. Dapat kita lihat strukturnya terdiri dari .dart_tool, .idea, android, ios, lib, test, .gitignore, .metadata, .packages, .flutter_basic.iml, pubspec.lock, pubspec.yaml, README.md.</p>
+<p class="image-container"><img style="width: 310.00px" src="img\\29c92fda609e8e3b.png"></p>
+<p>Berikut adalah penjelasan yang lebih detail tentang struktur files dari flutter.</p>
+<ol type="1" start="1">
+<li><strong>.dart_tools</strong>         : Konfigurasi untuk dart language</li>
+<li><strong>.idea</strong>                 : Konfigurasi untuk android studio</li>
+<li><strong>.gitignore</strong>        :        File git yang digunakan untuk mengelola source code. Hal ini akan </li>
+</ol>
+<p>                berguna jika developer sudah bekerja dengan git.</p>
+<ol type="1" start="4">
+<li><strong>metadata</strong>        : File yang berisi metadata dari project</li>
+<li><strong>packages</strong>        : File yang berisi alamat path</li>
+<li><strong>flutter_basic.iml</strong>: File yang berisi detail dari project.</li>
+<li><strong>pubspec.lock</strong>        :        File yang berisi versi library atau package yang digunakan pada </li>
+</ol>
+<p>                project yang degenerate sesuai dengan file pubspec.yaml.</p>
+<ol type="1" start="8">
+<li><strong>pubspec.yaml</strong>        :        File yang berisi library atau package yang dibutuhkan untuk </li>
+</ol>
+<p>                pengembangan aplikasi.</p>
+<ol type="1" start="9">
+<li><strong>README.md</strong>        : File markdown yang dapat digunakan untuk menjelaskan cara setup aplikasi atau informasi penting yang perlu untuk diketahui oleh developer lain.</li>
+</ol>
+<p>Untuk struktur folder akan dijelaskan pada bagian berikut.</p>
+<ol type="1" start="1">
+<li><strong>Multi os ios dan android</strong></li>
+</ol>
+<p>Perhatikan pada folder project flutter terdapat dua folder yaitu folder ios dan folder android, dengan menggunakan kedua folder tersebut flutter dapat membuat aplikasi berbasis ios dan berbasis android dalam satu project.</p>
+<ol type="1" start="2">
+<li><strong>Folder android</strong></li>
+</ol>
+<p>Folder android berisi file-file pendukung untuk mengenerate project android dan akan dikompilasi menjadi sebuah apk pada folder build. Namun anda jarang atau bahkan tidak perlu mengedit yang ada di folder android.  Anda akan banyak bekerja di folder lib.</p>
+<ol type="1" start="3">
+<li><strong>Folder ios</strong></li>
+</ol>
+<p>Berisi project ios, folder ini sama dengan folder android, sangat jarang dan bahkan tidak perlu untuk mengubah apapun pada folder ios. Folder ios dan android dikelola oleh flutter sdk yang akan dimerge (disatukan) dengan code yang ada di folder lib untuk membuat aplikasi ios dan android.</p>
+<ol type="1" start="4">
+<li><strong>Folder lib</strong></li>
+</ol>
+<p>Folder lib berisi kode program dengan bahasa dart yang berupa widget yang dapat dibuat sesuai dengan kebutuhan aplikasi anda.</p>
+<ol type="1" start="5">
+<li><strong>Folder test</strong></li>
+</ol>
+<p>Berisi source code dart yang digunakan untuk melakukan test secara otomatis pada aplikasi flutter.</p>
+<ol type="1" start="6">
+<li><strong>Pubspec.yaml</strong></li>
+</ol>
+<p>Pada file ini berisi konfigurasi konfigurasi project flutter yang dibuat dimana anda dapat mendata asset berupa font, gambar dan lain lain. Pada file ini anda juga dapat mengkonfigurasi flutter sdk dan konfigurasi yang terkait flutter.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Flutter Hot Reload dan Restart" duration="10">
+        <h2 is-upgraded><strong>Flutter Hot Reload</strong></h2>
+<p>Pada flutter terdapat fungsi hot reload dan hot restart yang digunakan untuk pengembangan aplikasi dengan flutter. Hote reload mencompile source code yang baru ditambahkan dan dikirimkan ke dart virtual machine diupdate. Setelah selesai update, dart virtual machine akan memperbarui UI sesuai dengan perubahan. Keunggulan hot reload adalah waktu prosenya cepat disbanding hot restart. Akan tetapi hot reload mempertahan state yang ada sehingga jika menggunakan state maka nilai dari widget tidak akan berubah.</p>
+<h2 is-upgraded><strong>Flutter Hot Restart</strong></h2>
+<p>Hot restart akan mencompile ulang aplikasi dan mereset (<em>destroy</em>) state yang ada. Jadi hot restart akan membuild ulang widget tree sesuai dengan code yang telah diperbarui. </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bedah Hello World Project" duration="20">
+        <p>Berikut ini penjelasan terkait project flutter yang nanti akan Anda praktikkan pada Praktikum 1.</p>
+<h2 is-upgraded><strong>Import Statement</strong></h2>
+<p>Seperti halnya kode program pada umumnya dart dapat menggunakan statement import untuk mengimport package, library, atau file lain yang digunakan pada file yang dieksekusi.</p>
+<p><code>import 'package:flutter/material.dart';</code></p>
+<h2 is-upgraded><strong>Main function</strong></h2>
+<p>Main function pada flutter dibuat dengan menggunakan kode program berikut ini dimana semua proses aplikasi dimulai dari mengeksekusi fungsi main.</p>
+<p><code>void main() {</code></p>
+<p><code>  runApp(MyApp());</code></p>
+<p><code>}</code></p>
+<p>Perhatikan pada fungsi main ini yang di eksekusi adalah class MyApp dimana class MyApp harus mengextend salah satu StatlessWidget atau StatefullWidget, ingat bahwa flutter membangun UI menggunakan widget.</p>
+<h2 is-upgraded><strong>Stateless Widget</strong></h2>
+<p>Flutter menggunakan Widget sebagai elemen-elemen pembangun UI, widget ini adalah kode program yang diterjemahkan menjadi tampilan yang dapat dilihat dan diinteraksikan oleh pengguna. Stateless widget bersifat statis / final dimana nilai atau konfigurasi telah diinisiasi sejak awal, nilai variabel pada widget ini tidak dapat diubah oleh widget ini sendiri tetapi dapat diubah oleh parent widget nya jika parent nya adalah StatefullWidget. Struktur dasar stateless widget adalah sebagai berikut:</p>
+<p><code>class exampleStateless extends StatelessWidget{</code></p>
+<p><code>  @override</code></p>
+<p><code>  Widget build(BuildContext context) {</code></p>
+<p><code>  }</code></p>
+<p><code>}</code></p>
+<h2 is-upgraded><strong>Stateful Widget</strong></h2>
+<p>Stateful widget bersifat dinamis, widget ini dapat diperbarui ketika dibutuhkan sesuai dengan action pengguna atau jika ada ada perubahan data. Perubahan data pada stateful widget di <em>trigger </em>oleh perubahan state oleh karena itu sebuah StatefulWidget selalu memiliki State. Struktur dasar stateful widget adalah sebagai berikut:</p>
+<p><code>class exampleStateless extends StatefulWidget{</code></p>
+<p><code>  @override</code></p>
+<p><code>  State<StatefulWidget> createState() {</code></p>
+<p><code>  }</code></p>
+<p><code>}</code></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Stateful dan Stateless Widget" duration="10">
+        <p>Widget memiliki peranan sangat penting dalam Pengembangan aplikasi Flutter. Widget adalah bagian yang membentuk UI; kodenya merupakan representasi dari apa yang terlihat oleh pengguna.</p>
+<p>UI hampir tidak pernah bersifat statis; mereka sering berubah, seperti yang akan Anda alami ketika Anda menggunakan halaman web atau aplikasi. Meskipun tidak dapat diubah menurut definisi, widget tidak dimaksudkan untuk menjadi final – lagi pula, kita berurusan dengan UI, dan UI pasti akan berubah selama siklus hidup aplikasi apa pun. Itu sebabnya Flutter menyediakan dua jenis widget: stateless dan stateful.</p>
+<p><strong>Immutability</strong></p>
+<p>Sebagian besar bahasa pemrograman merujuk pada istilah &#34;immutable&#34;. Object Immutable adalah objek yang tidak pernah berubah. Artinya, itu tidak dapat mengubah dirinya sendiri, dan itu tidak dapat diubah secara eksternal. Sebaliknya, jika perubahan diperlukan, maka objeknya adalah diganti begitu saja. Stateless Widget immutable karena tidak dapat mengubah properties atau state, sesuatu yang eksternal juga tidak dapat mengubah properties atau statenya. Jika widget perlu diubah, maka secara efektif diganti dengan widget baru yang memiliki properties atau state yang berbeda.</p>
+<p>Seperti yang Anda duga, widget stateless tidak memiliki state, sedangkan widget stateful memiliki state dan beradaptasi berdasarkan state itu. Perbedaan ini berdampak pada life cycle widget, bagaimana kode dibangun, dan disusun. Kewajiban developer untuk memilih jenis widget apa yang digunakan dalam setiap situasi. Secara umum, seorang developer harus menggunakan stateless sebagai opsi default kecuali widget yang perlu menggunakan state. Stateful widget yang dapat digunakan untuk setiap skenario, tetapi ini akan memengaruhi kinerja dan pemeliharaan kode.</p>
+<p>Selain itu, Flutter menggunakan konsep widget yang diwarisi (tipe <strong>InheritedWidget</strong>), yang juga merupakan sejenis widget, tetapi sedikit berbeda dari dua jenis lainnya yang telah dijelaskan.</p>
+<p><strong>Stateless widgets</strong></p>
+<p>Sebuah typical UI akan terdiri dari banyak widget, dan beberapa di antaranya tidak akan pernah mengubah propertinya setelah dipakai. Mereka tidak memiliki state; yaitu, mereka tidak berubah dengan sendirinya melalui tindakan atau perilaku internal. Sebaliknya, mereka diubah oleh eksternal event pada parent widget di widget tree. Jadi, aman untuk mengatakan bahwa widget stateless memberikan kontrol tentang bagaimana mereka dibangun menuju parent widget di tree. Diagram berikut menunjukkan representasi dari widget stateless:</p>
+<p class="image-container"><img style="width: 180.00px" src="img\\492a9477d5a8ea84.png"></p>
+<p>Dalam diagram diatas, parent widget membuat instance child stateless widget dan meneruskan sekumpulan properti selama pembuatan instance. Child widget hanya dapat menerima properti ini dari parent widget dan tidak akan mengubah dengan sendirinya. Dalam hal kode, ini berarti bahwa widget stateless hanya memiliki properti akhir yang ditentukan selama construction, dan properti ini hanya dapat diubah melalui pembaruan parent widget dengan perubahan kemudian meneruskan menuju child widget. </p>
+<p>Mari kita lihat contoh stateless widget dari Hello World! aplikasi yang kita jelajahi di bab-bab sebelumnya.</p>
+<p><strong>Contoh Kode Program</strong></p>
+<p>Stateless widget pertama di dalam aplikasi adalah kelas aplikasi itu sendiri:</p>
+<pre><code>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Flutter Demo&#39;,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(title: &#39;Flutter Demo Home Page&#39;),
+    );
+  }
+}</code></pre>
+<p>Seperti yang Anda lihat, class MyApp extends <code>StatelessWidget</code> dan overrides metode  build(<code>BuildContext</code>). Metode build sangat penting untuk semua widget dan menjelaskan bagaimana widget akan muncul di layar. Ini dilakukan dengan membangun subtree widget di bawahnya. <code>MyApp</code> merupakan root dari widget tree; itu adalah widget top-level yang dipakai dalam metode <code>runApp</code> dalam metode <code>main</code> Dart. Oleh karena itu, ia membangun semua widget di bawah tree. Dalam contoh ini, turunan langsungnya adalah <code>MaterialApp</code>. Menurut dokumentasi, <code>MaterialApp</code> dapat didefinisikan sebagai berikut:</p>
+<p><em>&#34;A convenience widget that wraps a number of widgets that are commonly required for material design applications.&#34;</em></p>
+<p><strong>Material Design</strong></p>
+<p>Material Design adalah kumpulan desain dan pengalaman digital standar yang dibuat oleh Google untuk membantu tim membangun UI berkualitas tinggi. Apple memiliki padanan bernama Cupertino, dan kita akan melihat contoh keduanya pada materi ini.</p>
+<p>Dalam contoh ini, stateless widget tidak menerima properti apa pun dari parent karena tidak memiliki parent. Kami akan melihat contoh properti yang diteruskan nanti.</p>
+<p><code>BuildContext</code> adalah argumen yang disediakan untuk metode <code>build</code> sebagai cara yang berguna untuk berinteraksi dengan widget tree. Ini memungkinkan Anda untuk mengakses informasi ancestral penting yang membantu menggambarkan widget yang sedang dibangun. Misalnya, data tema yang ditentukan dalam widget ini dapat diakses oleh semua child widget untuk memastikan ada tampilan dan nuansa yang konsisten pada aplikasi Anda.</p>
+<p>Selain properti lainnya, <code>MaterialApp</code> berisi properti home. Ini adalah widget pertama yang ditampilkan dalam aplikasi Anda. Di sini, <code>home</code> mengacu pada widget <code>MyHomePage</code>, yang bukan merupakan widget bawaan, melainkan widget stateful yang didefinisikan dalam Aplikasi Hello World!.</p>
+<p>Anda sekarang seharusnya dapat memahami bagaimana Flutter menyusun widget untuk membuat tampilan. Mari kita lihat partner widget stateless, yaitu widget stateful.</p>
+<h2 is-upgraded><strong>Stateful widgets</strong></h2>
+<p>Tidak seperti widget stateless, yang menerima properti dari induknya (parent) yang konstan sepanjang masa pakai widget, widget stateful dimaksudkan untuk mengubah propertinya secara dinamis selama masa pakainya. Menurut definisi, widget stateful juga tidak dapat diubah, tetapi mereka memiliki kelas <strong>State </strong>pendamping yang mewakili state widget saat ini. Ini ditunjukkan dalam diagram berikut:</p>
+<p class="image-container"><img style="width: 367.00px" src="img\\55d40f654f2e7b93.png"></p>
+<p>Dalam diagram diatas, widget membuat instance child widget dan, mirip dengan contoh widget stateless, meneruskan properti ke child. Properti ini, sekali lagi, final dan tidak dapat diubah di dalam widget. Namun, tidak seperti contoh widget stateless, objek <strong>State </strong>pendamping juga memiliki akses ke properti widget dan, selain itu, mampu menampung properti lain yang tidak final.</p>
+<p>Dengan menahan state widget di objek separate <strong>State</strong>, framework dapat merebuild widget kapan pun diperlukan tanpa kehilangan state terkait saat ini. Elemen pada tree elemen menyimpan referensi ke widget yang sesuai dan juga objek <strong>State </strong>yang terkait dengannya. Objek <strong>State </strong>akan memberi tahu Anda ketika widget perlu dibangun kembali dan kemudian melakukan pembaruan di elemen tree juga.</p>
+<p><strong>Contoh Kode Program</strong></p>
+<p><code>MyHomePage</code> adalah widget stateful, dan karenanya, itu didefinisikan dengan objek <strong>State </strong>bernama <code>_MyHomePageState</code>, yang berisi properti yang memengaruhi tampilan widget. Pertama, mari kita lihat widgetnya:</p>
+<pre><code>class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() =&gt; _MyHomePageState();
+}</code></pre>
+<p>Hal pertama yang harus Anda perhatikan adalah bahwa ini extends <code>StatefulWidget</code>, mengidentifikasi, oleh karena itu, bahwa ini akan memiliki objek pendamping <code>State</code>. Widget stateful harus mengganti metode createState() dan mengembalikan instance objek pendamping. Dalam contoh ini, ia mengembalikan sebuah instance dari <code>_MyHomePageState</code>. State widget yang valid adalah kelas yang memperluas kelas <strong>State </strong>framework, yang didefinisikan dalam dokumentasi sebagai berikut:</p>
+<p><em>&#34;The logic and internal state for a StatefulWidget.&#34;</em></p>
+<p>Selain itu, dalam contoh ini, properti telah diteruskan dari parent widget dan ini muncul di konstruktor widget. Perhatikan bahwa properti <code>title</code> telah diteruskan dan disimpan di widget di bidang terakhir, yang diberi nama <code>title</code>. Seperti yang dibahas dalam Bab 4, Kelas dan Konstruksi Dart, Dart memiliki beberapa pintasan cerdas dalam cara menyusun konstruktor, dan dengan menggunakan <code>this</code>.<code>title</code> di badan konstruktor ini, kita dapat secara otomatis menetapkan nilai properti <code>title</code> ke bidang <code>title</code>.</p>
+<p>Biasanya, widget stateful mendefinisikan kelas <code>State</code> yang sesuai dalam file yang sama. Selain itu, status biasanya bersifat pribadi untuk pustaka widget, karena klien eksternal tidak perlu berinteraksi dengannya secara langsung.</p>
+<p>Kelas <code>_MyHomePageState</code> berikut mewakili objek <strong>State </strong>dari widget <code>MyHomePage</code>:</p>
+<pre><code>class _MyHomePageState extends State&lt;MyHomePage&gt; {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: &lt;Widget&gt;[
+            Text(
+              &#39;You have pushed the button this many times:&#39;,
+            ),
+            Text(
+              &#39;$_counter&#39;,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ],
+        ),
+       ),
+       floatingActionButton: FloatingActionButton(
+         onPressed: _incrementCounter,
+         tooltip: &#39;Increment&#39;,
+         child: Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for
+      build methods.
+    );
+  }
+}</code></pre>
+<p>Mari kita lihat kode diatas bagian demi bagian.</p>
+<p>Pertama, hanya ada satu kelas field, yang bernama <code>_counter</code>, sehingga Anda dapat menyimpulkan bahwa status widget <code>MyHomePage</code> ditentukan oleh properti tunggal tersebut. Properti <code>_counter</code> mencatat jumlah penekanan tombol di sudut kanan bawah layar. Bagaimana perubahan properti <code>_counter</code> ini akan ditentukan dalam business logic Anda.</p>
+<h2 is-upgraded><strong>Apa itu business logic?</strong></h2>
+<p>Business logic adalah bagian dari kode tempat Anda menentukan aturan bisnis untuk aplikasi Anda. Tidak seperti kebanyakan kode aplikasi Anda, yang berkaitan dengan detail tingkat yang lebih rendah, seperti cara menampilkan widget atau menghubungkan ke database, business logic menentukan bagaimana pengguna berinteraksi dengan aplikasi Anda, dan bagaimana interaksi tersebut memengaruhi data status.</p>
+<p>Misalnya, di mana widget ditempatkan di layar, apa warnanya, dan bagaimana reaksinya saat ditekan bukanlah business logic. Namun, jika dengan menekannya, pengguna dapat mengubah informasi tentang diri mereka sendiri, seperti jenis kelamin, alamat rumah, atau berapa banyak kue yang ingin mereka beli, maka itulah logika bisnis (business logic).</p>
+<p>Metode pertama yang kita temui adalah metode <code>_incrementCounter</code>. Ini tidak membutuhkan argumen dan memiliki kode <strong>void </strong>return yang menentukan bahwa ia tidak mengembalikan nilai. Namun, itu memang melakukan sesuatu yang penting yang harus kita jelajahi lebih detail:</p>
+<pre><code>setState(() {
+  _counter++;
+});</code></pre>
+<p>Widget stateful dimaksudkan untuk mengubah penampilannya selama masa pakainya – yaitu, mendefinisikan apa yang akan berubah – dan karenanya perlu dibangun kembali untuk mencerminkan perubahan tersebut. Dalam diagram <strong>StatefulWidget </strong>(Figure 5.2), kita melihat bahwa kerangka kerja membangun kembali <code>StatefulWidget</code> untuk mencerminkan keadaan baru. Namun, bagaimana kerangka kerja mengetahui kapan sesuatu di widget berubah dan bahwa pembangunan kembali diperlukan?</p>
+<p>Jawabannya adalah metode <code>setState</code>. Metode ini menerima fungsi sebagai parameter yang memperbarui <strong>State </strong>terkait widget. Dalam hal ini, kami telah membuat fungsi anonim, dan di badan fungsi, kami telah menetapkan bahwa variabel <code>_counter</code> harus bertambah. Dengan memanggil <code>setState</code>, kerangka kerja diberi tahu bahwa ia perlu membangun kembali widget. Setelah dipanggil, widget akan digambar ulang dengan nilai <code>_counter</code> baru yang sudah ditetapkan.</p>
+<p>Akhirnya, kita mencapai metode pembuatan widget. Tanda tangan metode dan fungsi yang dimaksud identik dengan metode pembuatan <code>StatelessWidget</code> yang telah kita bahas sebelumnya. Namun, tidak seperti <code>StatelessWidget</code>, kami sekarang memiliki status yang akan memengaruhi cara kami menggambar widget, yang dapat mengarah ke kode yang jauh lebih kompleks yang melibatkan lebih banyak pernyataan bersyarat.</p>
+<p>Metode build dapat terlihat menakutkan, dan kita akan melihat masing-masing widget secara lebih rinci nanti di bab ini. Namun, pada titik ini, cobalah untuk merasakan struktur komposisi yang ditampilkan. Metode ini mengembalikan widget <code>Scaffold</code> di tingkat atas dan terdiri dari tiga widget anak melalui tiga argumen konstruktor:</p>
+<ul>
+<li><code>appBar</code>: Ini menyimpan widget tipe <code>AppBar</code>, yang memiliki satu argumen konstruktor bernama <code>title</code>. Seperti yang dapat Anda tebak, ini menjelaskan widget yang akan muncul di bagian atas layar sebagai bilah aplikasi.</li>
+<li><code>body</code>: Ini dapat menampung widget apa pun dan muncul di badan utama aplikasi (yaitu, di antara bilah aplikasi atas dan bilah menu bawah). Dalam hal ini, ia memegang widget <code>Center</code> (yang memusatkan anak konten). Ini, pada gilirannya, memegang widget <code>Column</code>(yang membuat kolom widget vertikal). Terakhir, ini menampung dua widget <code>Text</code>(yang menampilkan string teks).</li>
+<li><code>floatingActionButton</code>: Ini menampung widget jenis <code>FloatingActionButton</code>, yang merupakan tombol yang mengapung di atas badan aplikasi di sudut kanan bawah (sebagai konfigurasi default) dan berfungsi sebagai tombol</li>
+</ul>
+<p>Perhatikan bahwa salah satu argumen untuk konstruktor <code>FloatingActionButton</code> adalah <code>onPressed</code>, dan nilainya adalah metode <code>_incrementCounter</code>. Ini mengikat seluruh flow bersama-sama:</p>
+<ol type="1" start="1">
+<li>Widget <code>MyHomePage</code> memanggil metode <code>build</code> dari status pendamping untuk menampilkan bilah aplikasi, isi, dan tombol tindakan.</li>
+<li>Pengguna menekan tombol action.</li>
+<li>Nilai argumen <strong>onPressed </strong>dipicu, yang memanggil metode <code>_incrementCounter</code>.</li>
+<li>Metode <code>_incrementCounter</code> memanggil metode <code>setState</code> dengan fungsi anonim, menetapkan bahwa variabel <code>_counter</code> harus bertambah.</li>
+<li>Framework memanggil fungsi anonim, sehingga menambah variabel <code>_counter</code>.</li>
+<li>Framework menggambar ulang widget dengan memanggil metode <code>build</code> dari state pendamping lagi untuk menampilkan update app bar, body, dan action button yang diperbarui:</li>
+</ol>
+<p class="image-container"><img style="width: 318.00px" src="img\\244e42a27ee7893c.png"></p>
+<p>Seperti yang ditunjukkan diagram sebelumnya, metode <code>setState</code> sangat penting untuk keseluruhan flow ini, dan memahami aliran yang digambar ulang ini adalah inti dari cara kerja framework Flutter.</p>
+<p>Mari selesaikan bagian ini dengan melihat jenis widget yang kurang terkenal, yaitu jenis <code>InheritedWidget</code>.</p>
+<h2 is-upgraded><strong>Inherited widgets</strong></h2>
+<p>Selain StatelessWidget dan StatefulWidget, ada satu lagi jenis widget di framework Flutter, InheritedWidget. Terkadang, satu widget mungkin memerlukan akses ke data lebih jauh di atas widget tree. Dalam skenario seperti itu, salah satu solusinya adalah mereplikasi informasi ke widget yang tertarik dengan meneruskannya melalui semua widget perantara. Mari kita lihat contoh struktur komposisi widget sehingga kita dapat memeriksanya lebih detail:</p>
+<p class="image-container"><img style="width: 298.00px" src="img\\69abebbf8b122caf.png"></p>
+<p>Dalam skenario ini, anggaplah salah satu widget di bawah pohon memerlukan akses ke title properti dari widget root. Agar hal ini terjadi di dunia di mana hanya ada widget stateful dan stateless, kita perlu meneruskan properti <code>title</code> ke setiap child widget melalui konstruktor sehingga pada gilirannya widget turunan dapat meneruskan properti <code>title</code> ke widget turunannya. Ini dapat menyebabkan banyak kode boilerplate, bisa rawan kesalahan jika salah satu widget tidak dikodekan dengan benar, dan bisa sangat menyakitkan jika diputuskan bahwa child widget memerlukan properti lain, yang berarti bahwa semua perantara widget perlu diperbarui.</p>
+<p>Untuk mengatasi masalah ini, Flutter menyediakan kelas <code>InheritedWidget</code>. Ini adalah jenis widget tambahan yang membantu menyebarkan informasi ke bawah pohon, seperti yang ditunjukkan pada diagram berikut:</p>
+<p class="image-container"><img style="width: 339.00px" src="img\\dfd6b149c6dd2941.png"></p>
+<p>Dengan menambahkan <code>InheritedWidget</code> ke pohon, widget apa pun di bawahnya dapat mengakses data yang dieksposnya dengan menggunakan metode of(<code>InheritedWidget</code>) dari kelas <code>BuildContext</code> yang menerima tipe <code>InheritedWidget</code> sebagai parameter dan menggunakan pohon untuk menemukan widget ancestral pertama dari jenis yang diminta.</p>
+<p>Ada beberapa penggunaan <code>InheritedWidget</code> yang sangat umum di Flutter. Salah satu kegunaan paling umum adalah dari class Theme, yang membantu mendeskripsikan warna untuk keseluruhan aplikasi. Kita akan membahas ini di Bab 6, Menangani Masukan dan Gestur Pengguna.</p>
+<p>Sekarang, mari kita selidiki sesuatu yang mungkin telah Anda lihat di beberapa contoh kode sebelumnya, yaitu, properti konstruktor dengan nama <strong>key</strong>.</p>
+<h2 is-upgraded><strong>The widget key property</strong></h2>
+<p>Jika Anda melihat konstruktor kelas <code>StatelessWidget</code> dan <code>StatefulWidget</code>, Anda akan melihat parameter bernama <strong>key</strong>. Ini adalah properti penting untuk widget di Flutter.</p>
+<p>Properti <strong>key </strong>memungkinkan Anda untuk mempertahankan status widget di antara pembuatan ulang. Anda mungkin ingat bahwa framework mengambil widget tree dan merendernya ke tree elemen. Tree elemen adalah representasi yang sangat sederhana dari widget tree yang hanya menyimpan jenis widget dan referensi ke widget turunannya. Saat terjadi perubahan atau pembangunan kembali, framework menggunakan tipe widget dan referensi turunan untuk menentukan apakah gambar ulang diperlukan. Dalam situasi di mana ada banyak widget dengan tipe yang sama dengan anak-anak dari widget yang sama (misalnya, baris atau kolom), mungkin ada situasi di mana pengurutan berubah tetapi tidak membatalkan pohon elemen. Dalam situasi ini, perilaku Flutter bisa jadi tidak terduga.</p>
+<p>Tanpa key, tree elemen tidak akan tahu state mana yang sesuai dengan widget mana, karena semuanya memiliki tipe yang sama. Ketika sebuah widget memiliki state, ia membutuhkan state yang sesuai untuk dipindahkan dengannya. Sederhananya, itulah yang dilakukan oleh <strong>key </strong>untuk membantu kerangka kerja. Dengan menahan nilai key, elemen yang bersangkutan akan mengetahui state widget terkait yang harus ada dengannya.</p>
+<p>Dalam kebanyakan situasi, key tidak diperlukan (dan tidak boleh digunakan); namun, jika Anda melihat beberapa perilaku aneh di mana Anda yakin widget Anda berubah state tetapi ini tidak tercermin dengan benar di UI, maka ada baiknya memeriksa apakah kerangka kerja salah memahami tree elemen dan apakah key mungkin merupakan obat yang cocok untuk situasi. Jika Anda memerlukan informasi lebih lanjut tentang bagaimana key memengaruhi widget dan jenis key yang tersedia, silakan lihat pengantar dokumentasi resmi untuk key:</p>
+<p><a href="https://flutter.dev/docs/development/ui/widgets-intro#keys" target="_blank"><code>https://flutter.dev/docs/development/ui/widgets-intro#keys</code></a><code>.</code></p>
+<p>Kami sekarang telah menjelajahi blok bangunan dasar Flutter: widget. Secara khusus, kami telah melihat tiga jenis widget, stateless, stateful, dan inheritance, bersama dengan situasi di mana Anda akan menggunakannya. Sekarang Anda memiliki pengetahuan dasar tentang dasar-dasar widget, mari kita lihat beberapa widget yang Anda dapatkan gratis saat Anda memulai UI.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Membuat Project Flutter Baru" duration="10">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Buka VS Code, lalu tekan tombol <strong>Ctrl + Shift + P</strong> maka akan tampil <em>Command Palette</em>, lalu ketik <strong>Flutter</strong>. Pilih <strong>New Application Project</strong>.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\ade0820c241422ee.png"></p>
+<aside class="special"><p><strong>Catatan:</strong> Anda dapat mengakses <strong>Command Palette</strong> dengan cara lain, yaitu pilih menu <strong>View &gt; Command Palette</strong>. Tombol shortcut <strong>Ctrl + Shift + P</strong> mungkin hanya berlaku di Windows.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Kemudian buat folder <strong>TSA</strong> di mana pun yang Anda suka. Disarankan pada folder dokumen atau desktop atau alamat folder lain yang tidak terlalu dalam atau panjang. Lalu pilih <strong>Select a folder to create the project in</strong>.</p>
+<p class="image-container"><img style="width: 436.50px" src="img\\8e8aac1d39b265fd.png"></p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Buat nama project flutter <strong>hello_world</strong> seperti berikut, lalu tekan <strong>Enter</strong>. Tunggu hingga proses pembuatan project baru selesai.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\14c916401bd408d1.png"></p>
+<aside class="warning"><p><strong>Perhatian:</strong> Nama project ini harus <em>lowercase </em>(huruf kecil semua) tanpa menggunakan spasi. Untuk memisahkan kata, bisa menggunakan <em>underline </em>(garis bawah). Nama project tidak dapat diawali dengan angka atau karakter khusus lain. Nama project ini bukan nama aplikasi yang akan tampil di Play Store atau App Store. Untuk nama aplikasi, nanti dapat diatur ketika melakukan <em>deployment</em>.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Jika sudah selesai proses pembuatan project baru, pastikan tampilan seperti berikut. Pesan akan tampil berupa &#34;<strong>Your Flutter Project is ready!</strong>&#34; artinya Anda telah berhasil membuat project Flutter baru.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\7c89a658ec51faad.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Membuat Repository GitHub dan Laporan Praktikum" duration="30">
+        <p>Melanjutkan dari praktikum 1, silakan selesaikan langkah-langkah berikut ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah mempunyai akun GitHub dan Anda telah memahami konsep dasar dalam bekerja menggunakan Git pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Login ke akun <a href="https://github.com/new" target="_blank">GitHub</a> Anda, lalu buat repository baru dengan nama &#34;<strong>flutter-fundamental-part1</strong>&#34;</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\6a89c9b7526826c7.png"></p>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Lalu klik tombol &#34;<strong>Create repository</strong>&#34; lalu akan tampil seperti gambar berikut.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\bc796ded171562c9.png"></p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Kembali ke VS code, project flutter hello_world, buka terminal pada menu <strong>Terminal &gt; New Terminal</strong>. Lalu ketik perintah berikut untuk inisialisasi git pada project Anda.</p>
+<pre><code>git init</code></pre>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Pilih menu <strong>Source Control</strong> di bagian kiri, lalu lakukan <strong>stages</strong> (+) pada file <strong>.gitignore</strong> untuk mengunggah file pertama ke repository GitHub.</p>
+<p class="image-container"><img style="width: 350.00px" src="img\\b36e874b4c5f3b4f.png"></p>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<p>Beri pesan commit &#34;<strong>tambah gitignore</strong>&#34; lalu klik <strong>Commit</strong> (✔)</p>
+<p class="image-container"><img style="width: 350.00px" src="img\\289075d350a66209.png"></p>
+<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<p>Lakukan push dengan klik bagian menu titik tiga &gt; <strong>Push</strong></p>
+<p class="image-container"><img style="width: 460.00px" src="img\\a780a6f0d0bb76db.png"></p>
+<h2 is-upgraded><strong>Langkah 7:</strong></h2>
+<p>Di pojok kanan bawah akan tampil seperti gambar berikut. Klik &#34;<strong>Add Remote</strong>&#34;</p>
+<p class="image-container"><img style="width: 470.00px" src="img\\af38367adccd71ea.png"></p>
+<h2 is-upgraded><strong>Langkah 8:</strong></h2>
+<p>Salin tautan repository Anda dari browser ke bagian ini, lalu klik <strong>Add remote</strong></p>
+<p class="image-container"><img style="width: 624.00px" src="img\\a9ccbf46f02f44c0.png"></p>
+<p>Setelah berhasil, tulis remote name dengan &#34;<strong>origin</strong>&#34;</p>
+<p class="image-container"><img style="width: 612.00px" src="img\\4ea8b75ee3e96239.png"></p>
+<h2 is-upgraded><strong>Langkah 9:</strong></h2>
+<p>Lakukan hal yang sama pada file <strong>README.md</strong> mulai dari Langkah 4. Setelah berhasil melakukan push, masukkan username GitHub Anda dan password berupa token yang telah dibuat (pengganti password konvensional ketika Anda login di browser GitHub). Reload halaman repository GitHub Anda, maka akan tampil hasil push kedua file tersebut seperti gambar berikut.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\6a6deb7ad495e900.png"></p>
+<aside class="warning"><p><strong>Perhatian:</strong> Personal access token GitHub dapat Anda buat melalui <a href="https://github.com/settings/tokens/new" target="_blank">https://github.com/settings/tokens/new</a> atau dapat membaca dokumentasi <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token" target="_blank">GitHub Token</a>.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 10:</strong></h2>
+<p>Lakukan push juga untuk semua file lainnya dengan pilih <strong>Stage All Changes</strong>. Beri pesan commit &#34;<strong>project hello_world</strong>&#34;. Maka akan tampil di repository GitHub Anda seperti berikut.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\5808f595bea638fd.png"></p>
+<h2 is-upgraded><strong>Langkah 11:</strong></h2>
+<p>Kembali ke VS Code, ubah platform di pojok kanan bawah ke emulator atau device atau bisa juga menggunakan browser Chrome. Lalu coba running project <strong>hello_world</strong> dengan tekan <strong>F5</strong> atau <strong>Run &gt; Start Debugging</strong>. Tunggu proses kompilasi hingga selesai, maka aplikasi flutter pertama Anda akan tampil seperti berikut.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\9345a12821c689dc.png"></p>
+<aside class="warning"><p><strong>Perhatian:</strong> Proses Run atau kompilasi untuk pertama kali akan memakan waktu cukup lama (3-5 menit). Namun, proses kompilasi berikutnya menjadi lebih cepat. Berbeda ketika melakukan kompilasi ke device, hal ini akan memakan waktu lebih lama lagi.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 12:</strong></h2>
+<p>Silakan screenshot seperti pada Langkah 11, namun teks yang ditampilkan dalam aplikasi berupa nama lengkap Anda. Simpan file screenshot dengan nama <strong>01.png</strong> pada folder <strong>images </strong>(buat folder baru jika belum ada) di project hello_world Anda. Lalu ubah isi README.md seperti berikut, sehingga tampil hasil screenshot pada file README.md. Kemudian push ke repository Anda.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\f9de4d04c2945383.png"></p>
+<aside class="warning"><p><strong>Perhatian:</strong> Lakukan proses screenshot seperti pada Langkah 12 untuk setiap Laporan Praktikum yang Anda akan buat pada praktikum selanjutnya hingga pertemuan project final.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Menerapkan Widget Dasar" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Text Widget</strong></h2>
+<p>Buat folder baru <strong>basic_widgets</strong> di dalam folder <strong>lib</strong>. Kemudian buat file baru di dalam basic_widgets dengan nama <code>text_widget.dart</code>. Ketik atau salin kode program berikut ke project hello_world Anda pada file <code>text_widget.dart</code>.</p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+class MyTextWidget extends StatelessWidget {
+  const MyTextWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      &#34;Nama saya Fulan, sedang ikut TSA Mobile Flutter&#34;,
+      style: TextStyle(color: Colors.red, fontSize: 14),
+      textAlign: TextAlign.center);
+  }
+}</code></pre>
+<aside class="warning"><p><strong>Perhatian:</strong> Gantilah teks <strong>Fulan</strong> dengan nama lengkap Anda.</p>
+</aside>
+<p>Lakukan import file <code>text_widget.dart</code> ke main.dart, lalu ganti bagian text widget dengan kode di atas. Maka hasilnya seperti gambar berikut. Screenshot hasil milik Anda, lalu dibuat laporan pada file README.md.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\9d75505cb0ceea72.png"></p>
+<h2 is-upgraded><strong>Langkah 2: Image Widget</strong></h2>
+<p>Buat sebuah file <code>image_widget.dart</code> di dalam folder basic_widgets dengan isi kode berikut.</p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+class MyImageWidget extends StatelessWidget {
+  const MyImageWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Image(
+      image: AssetImage(&#34;logo_polinema.jpg&#34;)
+    );
+  }
+}</code></pre>
+<p>Lakukan penyesuaian asset pada file <code>pubspec.yaml</code> dan tambahkan file logo Anda di folder <code>assets</code> project hello_world.</p>
+<pre><code>flutter:
+  assets:
+     - logo_polinema.jpg</code></pre>
+<p>Jangan lupa sesuaikan kode dan import di file <code>main.dart</code> kemudian akan tampil gambar seperti berikut.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\acd71a6fe513d2a5.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 4: Menerapkan Widget Material Design dan iOS Cupertino" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan project hello_world Anda. Lakukan langkah yang sama seperti pada Praktikum 3, yaitu setiap widget dibuat file sendiri lalu import ke <code>main.dart</code> dan screenshot hasilnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Cupertino Button dan Loading Bar</strong></h2>
+<p>Buat file di basic_widgets &gt; <code>loading_cupertino.dart</code>. Import stateless widget dari material dan cupertino. Lalu isi kode di dalam method Widget build adalah sebagai berikut.</p>
+<pre><code>return MaterialApp(
+      home: Container(
+        margin: const EdgeInsets.only(top: 30),
+        color: Colors.white,
+        child: Column(
+          children: &lt;Widget&gt;[
+            CupertinoButton(
+              child: const Text(&#34;Contoh button&#34;),
+              onPressed: () {},
+            ),
+            const CupertinoActivityIndicator(),
+          ],
+        ),
+      ),
+    );</code></pre>
+<h2 is-upgraded><strong>Langkah 2: Floating Action Button (FAB)</strong></h2>
+<p>Button widget terdapat beberapa macam pada flutter yaitu ButtonBar, DropdownButton, TextButton, FloatingActionButton, IconButton, OutlineButton, PopupMenuButton, dan ElevatedButton.</p>
+<p>Buat file di basic_widgets &gt; <code>fab_widget.dart</code>. Import stateless widget dari material. Lalu isi kode di dalam method Widget build adalah sebagai berikut.</p>
+<pre><code>return MaterialApp(
+      home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Add your onPressed code here!
+          },
+          child: const Icon(Icons.thumb_up),
+          backgroundColor: Colors.pink,
+        ),
+      ),
+    );</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Scaffold Widget</strong></h2>
+<p>Scaffold widget digunakan untuk mengatur tata letak sesuai dengan material design.</p>
+<p>Ubah isi kode <code>main.dart</code> seperti berikut.</p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Flutter Demo&#39;,
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: const MyHomePage(title: &#39;My Increment App&#39;),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State&lt;MyHomePage&gt; createState() =&gt; _MyHomePageState();
+}
+
+class _MyHomePageState extends State&lt;MyHomePage&gt; {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: &lt;Widget&gt;[
+            const Text(
+              &#39;You have pushed the button this many times:&#39;,
+            ),
+            Text(
+              &#39;$_counter&#39;,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: 50.0,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: &#39;Increment Counter&#39;,
+        child: const Icon(Icons.add),
+      ), 
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 4: Dialog Widget</strong></h2>
+<p>Dialog widget pada flutter memiliki dua jenis dialog yaitu <code>AlertDialog</code> dan <code>SimpleDialog</code>.</p>
+<p>Ubah isi kode <code>main.dart</code> seperti berikut.</p>
+<pre><code>class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: MyLayout(),
+      ),
+    );
+  }
+}
+
+class MyLayout extends StatelessWidget {
+  const MyLayout({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        child: const Text(&#39;Show alert&#39;),
+        onPressed: () {
+          showAlertDialog(context);
+        },
+      ),
+    );
+  }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the button
+  Widget okButton = TextButton(
+    child: const Text(&#34;OK&#34;),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: const Text(&#34;My title&#34;),
+    content: const Text(&#34;This is my message.&#34;),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 5: Input dan Selection Widget</strong></h2>
+<p>Flutter menyediakan widget yang dapat menerima input dari pengguna aplikasi yaitu antara lain Checkbox, Date and Time Pickers, Radio Button, Slider, Switch, TextField.</p>
+<p>Contoh penggunaan TextField widget adalah sebagai berikut:</p>
+<pre><code>class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text(&#34;Contoh TextField&#34;)),
+        body: const TextField(
+          obscureText: false,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: &#39;Nama&#39;,
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 6: Date and Time Pickers</strong></h2>
+<p>Date and Time Pickers termasuk pada kategori input dan selection widget, berikut adalah contoh penggunaan Date and Time Pickers.</p>
+<pre><code>import &#39;dart:async&#39;;
+import &#39;package:flutter/material.dart&#39;;
+
+void main() =&gt; runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: &#39;Contoh Date Picker&#39;,
+      home: MyHomePage(title: &#39;Contoh Date Picker&#39;),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() =&gt; _MyHomePageState();
+}
+
+class _MyHomePageState extends State&lt;MyHomePage&gt; {
+  // Variable/State untuk mengambil tanggal
+  DateTime selectedDate = DateTime.now();
+
+  //  Initial SelectDate FLutter
+  Future&lt;void&gt; _selectDate(BuildContext context) async {
+    // Initial DateTime FIinal Picked
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null &amp;&amp; picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: &lt;Widget&gt;[
+            Text(&#34;${selectedDate.toLocal()}&#34;.split(&#39; &#39;)[0]),
+            const SizedBox(
+              height: 20.0,
+            ),
+            ElevatedButton(
+              onPressed: () =&gt; {
+                _selectDate(context),
+                // ignore: avoid_print
+                print(selectedDate.day + selectedDate.month + selectedDate.year)
+              },
+              child: const Text(&#39;Pilih Tanggal&#39;),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan Praktikum 1 sampai 4, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Pada praktikum 4 mulai dari Langkah 3 sampai 6, buatlah file widget tersendiri di folder <code>basic_widgets</code>, kemudian pada file <code>main.dart</code> cukup melakukan import widget sesuai masing-masing langkah tersebut!</li>
+<li>Kumpulkan berupa link repository GitHub Anda ke LMS yang telah dibuat berdasarkan pada Praktikum 2!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait Flutter Fundamental untuk dasar-dasar widget.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Flutter Fundamental Bagian 2 terkait layout, position, navigasi dan route.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

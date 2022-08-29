@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-08-29T00:38:52Z",
+  "id": "16-flutter-fundamental-bagian-1",
+  "duration": 245,
+  "title": "#16 | Flutter Fundamental - Bagian 1",
+  "authors": "Tim Pengajar Mobile TSA 2022",
+  "summary": "- Mahasiswa mampu menjelaskan bagian-bagian dari project file flutter\n- Mahasiswa mampu menggunakan fitur hot reload dan restart\n- Mahasiswa mampu menjelaskan perbedaan stateful dan stateless widget\n- Mahasiswa mampu menerapkan widget-widget dasar flutter dan tema",
+  "source": "1OiFTlbQ_zwYrNDNDuDgmSNhOteZ_N7fN6nZbMabg1MI",
+  "theme": "mobile-flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile Flutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "16-flutter-fundamental-bagian-1"
+}
