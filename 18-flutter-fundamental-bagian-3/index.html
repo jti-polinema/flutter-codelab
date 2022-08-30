@@ -1,0 +1,583 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#18 | Flutter Fundamental - Bagian 3</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="18-flutter-fundamental-bagian-3"
+                  title="#18 | Flutter Fundamental - Bagian 3"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Flutter Fundamental - Bagian 3" duration="0">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/WhVXkCFPmK4?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p><strong>Terakhir diperbarui:</strong> 30 Agustus 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
+<p>Pada codelab ini, Anda akan mempelajari konsep dan praktik untuk dasar-dasar framework Flutter dengan menerapkan jenis-jenis gesture, input widget dan controller-nya serta melakukan custom input dan FormField widget.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>menerapkan jenis-jenis gesture</li>
+<li>menerapkan input widget dan controllernya</li>
+<li>menerapkan custom input dan FormField widget</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
+<h3 is-upgraded><strong>Praktikum 1</strong></h3>
+<p class="image-container"><img style="width: 229.35px" src="img\\b0f5d3977b6429a2.png"></p>
+<h3 is-upgraded><strong>Praktikum 2</strong></h3>
+<p class="image-container"><img style="width: 230.80px" src="img\\2a45d7b88b0153f1.png"></p>
+<h3 is-upgraded><strong>Praktikum 3</strong></h3>
+<p class="image-container"><img style="width: 209.25px" src="img\\5a31c420123268ef.png"></p>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Daftar Perintah</strong></h2>
+<p>Tidak ada.</p>
+<h2 is-upgraded><strong>Bantuan</strong></h2>
+<p>Tidak ada.</p>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Menangani User Gestures" duration="10">
+        <p>Mobile Application akan sangat terbatas tanpa interaktivitas. Flutter framework memungkinkan untuk menangani user gestures dengan segala cara, dari simple taps hingga drag dan pan gestures. Event pada layar dalam sistem gesture Flutter dipisahkan menjadi dua layer, sebagai berikut:</p>
+<p><strong>Pointers layer:</strong> Layer ini menyimpan informasi mentah tentang bagaimana penunjuk (misalnya, sentuhan, mouse, atau stylus) berinteraksi dengan layar. Data mentah ini akan mencakup lokasi dan pergerakan pointer.</p>
+<p><strong>Gestures layer:</strong> Layer ini mengambil beberapa tindakan penunjuk dan mencoba memberi beberapa arti sebagai tindakan pengguna. Tindakan semantik ini (misalnya, tap, drag, atau scale) seringkali lebih berguna untuk aplikasi, dan ini adalah cara paling umum untuk menerapkan penanganan input pengguna.</p>
+<h2 is-upgraded><strong>Pointers</strong></h2>
+<p>Flutter memulai penanganan input layar di lapisan penunjuk level rendah. Secara umum, tidak perlu menggunakan event dari lapisan ini dalam aplikasi Anda, tetapi jika Anda perlu melakukan penanganan masukan yang dipesan lebih dahulu, maka Anda dapat menggunakan lapisan ini untuk menerima peristiwa pada setiap pembaruan penunjuk dan memutuskan bagaimana mengontrolnya. Misalnya, jika Anda membuat kode game, maka Anda mungkin memerlukan detail yang tepat pada setiap pembaruan penunjuk daripada mengandalkan peristiwa gerakan tingkat yang lebih tinggi. Kerangka kerja Flutter mengimplementasikan pengiriman peristiwa penunjuk pada pohon widget dengan mengikuti urutan peristiwa:</p>
+<p><strong>PointerDownEvent</strong> adalah tempat interaksi dimulai, dengan penunjuk bersentuhan dengan lokasi tertentu pada layar perangkat. Di sini, kerangka kerja mencari pohon widget untuk widget yang ada di lokasi penunjuk di layar. Tindakan ini disebut tes hit.</p>
+<p>Setiap event berikut dikirim ke widget terdalam yang cocok dengan lokasi dan kemudian memunculkan pohon widget dari widget induk ke root. Penyebaran tindakan peristiwa ini tidak dapat diinterupsi. Peristiwa tersebut dapat berupa PointerMoveEvent, di mana lokasi penunjuk diubah, PointerUpEvent, yang menunjukkan bahwa penunjuk tidak lagi bersentuhan dengan layar, atau PointerCancelEvent, di mana penunjuk masih aktif di perangkat tetapi tidak lagi berinteraksi dengan aplikasi Anda.</p>
+<p>Interaksi akan selesai dengan salah satu event PointerUpEvent atau PointerCancelEvent. Flutter menyediakan kelas Listener, yang dapat digunakan untuk mendeteksi peristiwa interaksi pointer yang terdaftar sebelumnya. Anda dapat membungkus pohon widget dengan widget ini untuk menangani peristiwa penunjuk pada subpohon widgetnya.</p>
+<h2 is-upgraded><strong>Gestures</strong></h2>
+<p>Meskipun memungkinkan, tidak selalu praktis untuk menangani sendiri event pointer menggunakan widget Pendengar. Sebaliknya, acara dapat ditangani pada lapisan kedua</p>
+<p>sistem isyarat. Gerakan dikenali dari beberapa peristiwa penunjuk, dan bahkan beberapa pointer individu (<em>multitouch</em>). Ada beberapa jenis gerakan yang bisa ditangani:</p>
+<p><strong>Tap</strong>: Satu ketukan/sentuhan pada layar perangkat.</p>
+<p><strong>Double-tap</strong>: Ketuk dua kali dengan cepat pada lokasi yang sama di layar perangkat.</p>
+<p><strong>Press and long-press</strong>: Tekan pada layar perangkat, mirip dengan ketuk, tetapi memiliki kontak dengan layar untuk jangka waktu yang lebih lama sebelum dilepaskan.</p>
+<p><strong>Drag</strong>: Tekan yang dimulai dengan penunjuk yang bersentuhan dengan layar di beberapa lokasi, yang kemudian dipindahkan, dan berhenti berhubungan di lokasi lain di layar perangkat.</p>
+<p><strong>Pan</strong>: Mirip dengan peristiwa tarik. Di Flutter, arahnya berbeda; gerakan pan mencakup drag horizontal dan vertikal.</p>
+<p><strong>Scale</strong>: Dua penunjuk digunakan untuk gerakan seret untuk menggunakan isyarat skala. Ini juga mirip dengan gerakan zoom.</p>
+<p>Seperti widget Listener untuk event pointer, Flutter menyediakan widget GestureDetector, yang berisi callback untuk semua event sebelumnya. Anda akan menggunakannya sesuai dengan interaksi yang ingin Anda izinkan. Mari kita lihat beberapa contoh GestureDetector.</p>
+<h2 is-upgraded><strong>Gestures di material widgets</strong></h2>
+<p>Meskipun GestureDetector adalah widget yang sangat berguna, sebagian besar waktu Anda tidak perlu menggunakannya karena widget bawaan sudah memiliki manajemen gerakan yang terpasang di dalamnya. Desain Material dan widget Cupertino iOS memiliki banyak gerakan yang diabstraksikan ke parameter konstruktor dengan menggunakan widget GestureDetector secara internal dalam kodenya. Misalnya, widget material seperti ElevatedButton menyematkan widget khusus bernama InkWell yang selain memberikan akses ke acara gerakan tap, juga akan membuat efek percikan pada widget target. Properti onPressed dari ElevatedButton memaparkan fungsionalitas tap yang dapat digunakan untuk mengimplementasikan aksi tombol.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Memahami stateful widget life cycle" duration="15">
+        <p>Di pertemuan sebelumnya, kita melihat bagaimana widget stateful berbeda dari widget stateless dan bagaimana metode build() dapat dipanggil beberapa kali, dipicu oleh metode setState().</p>
+<p>Namun, ada beberapa bagian tambahan dari siklus hidup widget stateful yang akan kita jelajahi saat ini karena hal itu penting untuk cara kita mengelola data input dan juga menjadi semakin penting di sepanjang sisa buku ini saat kita melihat widget yang lebih canggih interaksi.</p>
+<h2 is-upgraded>Key life cycle states</h2>
+<p>Ada beberapa status siklus hidup yang dapat dilalui oleh widget stateful. Di bagian ini, kita akan melihat status yang akan Anda perlukan di sebagian besar situasi. Nanti di buku ini, kami akan memperkenalkan status siklus hidup tambahan untuk skenario dan kasus sudut tertentu.</p>
+<h3 is-upgraded><strong>Creation of the state</strong></h3>
+<p>Pembuatan status terjadi di awal siklus hidup widget stateful, tepat setelah konstruktor dipanggil. Widget stateful membuat objek State pendamping untuk menahan state yang bisa berubah dengan memanggil metode createState() dan meneruskan sebuah instance dari objek State pendamping. Ini adalah langkah yang diperlukan dalam siklus hidup; jika tidak, widget stateful tidak akan memiliki status.</p>
+<p>Kita melihat contoh metode createState() di pertemuan sebelumnya:</p>
+<pre><code>class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+  
+  final String title;
+  
+  @override
+  _MyHomePageState createState() =&gt; _MyHomePageState();
+}
+</code></pre>
+<h3 is-upgraded><strong>Initializing the state</strong></h3>
+<p>Instance Status dapat menginisialisasi variabel statusnya atau persyaratan infrastruktur lainnya (seperti koneksi database) dalam metode initState(). Metode ini hanya dipanggil sekali saat widget ditambahkan ke pohon widget untuk pertama kalinya (yaitu, terlihat oleh pengguna) dan bersifat opsional.</p>
+<p>Kita akan melihat beberapa contohnya nanti di bab ini, tetapi contoh dasar dari metode initState() terlihat sebagai berikut:</p>
+<pre><code>@override
+void initState() {
+  super.initState();
+  // Custom initialization logic here
+}
+</code></pre>
+<p>Dalam contoh ini, kita melihat bahwa baris pertama metode harus berupa panggilan untuk menginisialisasi status kelas super. Ini diikuti oleh logika kustom apa pun yang diperlukan untuk menginisialisasi widget.</p>
+<h3 is-upgraded><strong>Build</strong></h3>
+<p>Seperti yang Anda lihat di bab sebelumnya, metode build dipanggil saat widget akan digambar ke layar. Ini dipanggil setelah initState() dan kemudian dipanggil setiap kali setState() dipicu.</p>
+<h3 is-upgraded><strong>Disposing of the state</strong></h3>
+<p>Saat widget dihapus dari pohon widget, metode buang() dipanggil. Pembersihan infrastruktur apa pun yang diperlukan, umumnya untuk aktivitas yang terjadi selama initState(), seperti menyiapkan pendengar basis data atau koneksi internet, akan dilakukan dalam metode buang().</p>
+<p>Sekali lagi, kita akan melihat contohnya nanti di bagian ini, tetapi di sini adalah struktur kerangka dari metode ini:</p>
+<pre><code>@override
+void dispose() {
+  // Custom clean-up code here
+  super.dispose();
+}</code></pre>
+<p>Dalam contoh ini, kita melihat bahwa baris terakhir dari metode harus berupa panggilan untuk membuang status kelas super. Namun, sebelum ini, logika khusus apa pun yang diperlukan untuk membuang widget dapat ditempatkan.</p>
+<h2 is-upgraded><strong>Mounted</strong></h2>
+<p>Selain status siklus hidup, ada bidang penting yang tersedia untuk Anda, dari kelas induk Stateful widget Anda, yang disebut mount. Ini akan memberi tahu Anda apakah widget masih terpasang ke pohon widget. Secara khusus, ketika initState dipanggil, maka mount ditandai sebagai benar, dan ketika buang dipanggil, mount ditandai sebagai palsu. Anda akan menggunakan ini untuk situasi seperti mendengarkan di database atau koneksi internet. Jika perubahan dalam database atau status koneksi internet dikodekan untuk memicu pembaruan widget (mungkin melalui setState()), maka sebaiknya tambahkan pemeriksaan terpasang sebelum memanggil setState() karena widget mungkin telah dihapus dari widget pohon antara waktu Anda menyiapkan pendengar dan waktu menerima pembaruan.</p>
+<p>Mari kita lihat contoh sederhana:</p>
+<pre><code>if (mounted) {
+   setState(() {
+   // Change state here
+ });
+}</code></pre>
+<p>Dalam contoh ini, kami telah membungkus panggilan setState() dalam pemeriksaan terpasang untuk memastikan widget masih berada di pohon widget dan dapat digambar ulang.</p>
+<p>Jadi, sekarang Anda tahu lebih banyak tentang siklus hidup widget stateful, dan memiliki pengetahuan tentang input pengguna melalui gerakan, mari kita lihat cara umum lainnya untuk menerima input pengguna, melalui widget dan formulir input.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Input widgets and forms" duration="20">
+        <p>Kemampuan aplikasi Anda untuk mengelola gerakan adalah titik awal yang baik untuk interaksi dengan pengguna, tetapi untuk banyak aplikasi, Anda juga memerlukan cara untuk mendapatkan jenis masukan lain dari pengguna.</p>
+<p>Mendapatkan data pengguna adalah hal yang menambahkan konten khusus dan penyesuaian ke banyak aplikasi.</p>
+<p>Flutter menyediakan banyak widget data input untuk membantu developer mendapatkan berbagai jenis informasi dari pengguna. Kita telah melihat beberapa di antaranya, Widget – Membangun Tata Letak di Flutter, termasuk TextField, dan berbagai jenis widget Selector dan Picker.</p>
+<p>Widget TextField memungkinkan pengguna memasukkan teks dengan keyboard. Widget TextField memperlihatkan metode onChanged, yang dapat digunakan untuk mendengarkan perubahan pada nilainya saat ini, seperti yang telah kita lihat sebelumnya dengan widget TextField. Namun, cara lain untuk mendengarkan perubahan adalah dengan menggunakan pengontrol.</p>
+<h2 is-upgraded><strong>Getting input through a controller</strong></h2>
+<p>Saat menggunakan widget TextField standar, kita perlu menggunakan properti pengontrolnya untuk mengakses nilainya. Ini dilakukan dengan kelas TextEditingController:</p>
+<p><code>final _controller = TextEditingController.fromValue(</code></p>
+<p><code>  TextEditingValue(text: "Initial value"),</code></p>
+<p><code>);</code></p>
+<p>Seperti yang Anda lihat, dengan menyetel properti teks dari pengontrol, kita dapat menentukan nilai awal dari widget yang dikontrolnya. Setelah membuat instance TextEditingController, kami mengatur properti controller dari widget TextField sehingga &#34;mengontrol&#34; widget:</p>
+<pre><code>TextField(
+  controller: _controller,
+);</code></pre>
+<p>TextEditingController diberi tahu setiap kali widget TextField memiliki nilai baru. Untuk mendengarkan perubahan, kita perlu menambahkan pendengar ke _controller kita:</p>
+<pre><code>_controller.addListener(() {
+   this.setState(() {
+     _textValue = _controller.text;
+   });
+});</code></pre>
+<p>Kita harus menentukan fungsi panggilan balik yang akan dipanggil setiap kali widget TextField berubah. Dalam hal ini, kami telah membuat fungsi sebaris sederhana yang menetapkan variabel status _textValue ke nilai teks di TextField seperti yang diambil melalui properti teks pada pengontrol.</p>
+<p>Pendekatan serupa digunakan untuk widget input lainnya. Namun, seringkali, Anda ingin membuat formulir yang menampung sekelompok widget data input dan memiliki validasi serta umpan balik untuk pengguna yang bekerja di seluruh formulir.</p>
+<h2 is-upgraded><strong>FormField and TextField</strong></h2>
+<p>Flutter menyediakan dua widget untuk membantu mengatur penyimpanan data input, validasinya, dan memberikan umpan balik segera kepada pengguna. Ini adalah widget Form dan FormField.</p>
+<p>Widget FormField berfungsi sebagai kelas dasar untuk membuat bidang input kita sendiri di dalam formulir.</p>
+<p>Fungsinya adalah sebagai berikut:</p>
+<p>• Untuk membantu proses pengaturan dan pengambilan nilai input saat ini</p>
+<p>• Untuk memvalidasi nilai input saat ini</p>
+<p>• Untuk memberikan validasi formulir umpan balik</p>
+<p>Widget FormField sering kali memiliki widget Form sebagai ancestor, tetapi dalam beberapa kasus, ini tidak diperlukan. Misalnya, ketika kita memiliki satu FormField untuk menerima input, mungkin tidak perlu widget Formulir untuk mengelola pembaruan formulir.</p>
+<p>Banyak widget input bawaan dari Flutter hadir dengan implementasi widget FormField yang sesuai. Salah satu contohnya adalah widget TextField, yang memiliki widget TextFormField khusus bentuk. Widget TextFormField membantu dengan akses ke nilai TextField dan juga menambahkan perilaku terkait formulir ke dalamnya, seperti validasi.</p>
+<h2 is-upgraded><strong>Accessing the FormField widget&#39;s state</strong></h2>
+<p>Jika kita menggunakan widget TextFormField, maka ada pendekatan alternatif untuk mengakses data input menggunakan status widget FormField:</p>
+<p><code>final _key = GlobalKey<FormFieldState<String>>();</code></p>
+<p><code>...</code></p>
+<p><code>TextFormField(</code></p>
+<p><code>  key: _key,</code></p>
+<p><code>);</code></p>
+<p>Kita dapat menambahkan kunci ke TextFormField yang nantinya dapat digunakan untuk mengakses status widget saat ini melalui nilai key.currentState, yang akan berisi nilai bidang yang diperbarui.</p>
+<p>Jenis kunci khusus mengacu pada jenis data yang digunakan bidang input. Pada contoh sebelumnya, ini adalah String, karena merupakan widget TextField, jadi jenis kuncinya tergantung pada widget tertentu yang digunakan.</p>
+<p>Kelas FormFieldState&lt;String&gt; juga menyediakan metode dan properti lain yang berguna untuk menangani FormField:</p>
+<p>• <code>validate()</code> akan memanggil callback validator widget, yang akan memeriksa nilainya saat ini dan mengembalikan pesan kesalahan, atau null jika valid.</p>
+<p>• <code>hasError</code> dan <code>errorText</code> hasil dari validasi sebelumnya menggunakan fungsi sebelumnya. Dalam widget material, misalnya, ini menambahkan beberapa teks kecil di dekat bidang, memberikan umpan balik yang tepat kepada pengguna tentang kesalahan tersebut.</p>
+<p>• <code>save()</code> akan memanggil callback onSaved widget.</p>
+<p>• <code>reset()</code> akan menempatkan bidang dalam keadaan awalnya, dengan nilai awal (jika ada) dan kesalahan validasi yang jelas.</p>
+<h2 is-upgraded><strong>Form</strong></h2>
+<p>Memiliki <code>FormFieldWidget</code> membantu kami mengakses dan memvalidasi informasinya satu per satu. Tetapi ketika kita memiliki satu set widget input dalam struktur formulir, maka kita dapat menggunakan widget Formulir. Widget Formulir mengelompokkan instance FormFieldWidget secara logis, memungkinkan kita untuk melakukan operasi termasuk mengakses informasi bidang dan memvalidasi seluruh rangkaian bidang dengan cara yang lebih terstruktur.</p>
+<p>Widget Form memungkinkan kita untuk menjalankan metode berikut di semua bidang turunan dengan mudah:</p>
+<p>• <code>save()</code>: Ini akan memanggil metode simpan semua instance FormField, menyimpan semua data formulir di bidang sekaligus.</p>
+<p>• <code>validate()</code>: Ini akan memanggil metode validasi semua instance FormField, menyebabkan semua kesalahan muncul sekaligus.</p>
+<p>• <code>reset()</code>: Ini akan memanggil metode reset semua instance FormField, menyetel ulang seluruh formulir ke keadaan awalnya.</p>
+<h3 is-upgraded><strong>Accessing the Form widget&#39;s state</strong></h3>
+<p>Aplikasi Anda harus dapat mengakses status widget Formulir, sama seperti kami mengakses status widget FormField, sehingga Anda dapat menjalankan validasi, penyimpanan data, dan penyetelan ulang dari bagian lain antarmuka pengguna, tidak hanya di dalam pohon widget formulir . Sebagai contoh, Anda mungkin memiliki tombol tindakan mengambang yang memungkinkan Anda menyimpan formulir, atau tombol bilah aplikasi untuk mengatur ulang formulir.</p>
+<p>Mari kita lihat dua cara untuk mengakses status formulir.</p>
+<h4 is-upgraded>Using a key</h4>
+<p>Widget Formulir harus digunakan dengan kunci tipe FormState. FormState berisi pembantu untuk mengelola semua anak FormField:</p>
+<p><code>final _key = GlobalKey<FormFieldState<String>>();</code></p>
+<p><code>...</code></p>
+<p><code>Form(</code></p>
+<p><code>   key: _key,</code></p>
+<p><code>   child: Column(</code></p>
+<p><code>      children: <Widget>[</code></p>
+<p><code>         TextFormField(),</code></p>
+<p><code>         TextFormField(),</code></p>
+<p><code>       ],</code></p>
+<p><code>    ),</code></p>
+<p><code>);</code></p>
+<p>Dalam contoh ini, kami memiliki Formulir dengan kunci global dan, secara tidak langsung, dua widget TextFormField sebagai turunan.</p>
+<p>Kami kemudian dapat menggunakan kunci untuk mengambil status terkait widget Formulir dan memanggil validasinya dengan _key.currentState.validate().</p>
+<p>Sebagian besar waktu ini adalah cara terbaik untuk mengakses widget Formulir, tetapi jika Anda memiliki pohon widget yang kompleks, maka ada opsi lain. Mari kita lihat opsi alternatif ini.</p>
+<h4 is-upgraded>Using InheritedWidget</h4>
+<p>Widget Formulir hadir dengan kelas yang berguna untuk menghilangkan kebutuhan untuk menambahkan kunci ke dalamnya dan tetap mendapatkan manfaatnya.</p>
+<p>Setiap widget Formulir di pohon memiliki InheritedWidget terkait dengannya. Formulir dan banyak widget lain mengekspos ini dalam metode statis yang disebut of(), di mana kita melewati BuildContext, dan itu mencari pohon untuk menemukan status yang sesuai yang kita cari. Mengetahui hal ini, jika kita perlu mengakses widget Formulir di suatu tempat di bawahnya di pohon, kita bisa menggunakan Form.of(), dan kita mendapatkan akses ke fungsi yang sama seperti yang kita miliki jika kita menggunakan properti key:Setiap widget Form di pohon memiliki InheritedWidget yang terkait dengannya. Formulir dan banyak widget lain mengekspos ini dalam metode statis yang disebut of(), di mana kita melewati BuildContext, dan itu mencari pohon untuk menemukan status yang sesuai yang kita cari. Mengetahui hal ini, jika kita perlu mengakses widget Form di suatu tempat di bawahnya di pohon, kita dapat menggunakan Form.of(), dan kita mendapatkan akses ke fungsi yang sama seperti yang kita miliki jika kita menggunakan properti key:</p>
+<pre><code>Widget build(BuildContext topContext) {
+return Form(
+  child: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: &lt;Widget&gt;[
+      TextFormField(
+        validator: (String value) {
+          return value.isEmpty ? &#34;Not empty&#34; : null;
+        },
+       ),
+      TextFormField(),
+      Builder(
+         builder: (BuildContext subContext) =&gt; TextButton(
+         onPressed: () {
+            final valid = Form.of(subContext).validate();
+            print(&#34;valid: $valid&#34;);
+          },
+         child: Text(&#34;validate&#34;),
+      ),
+    )
+   ],
+  ),
+ );
+}</code></pre>
+<p>Berikan perhatian khusus pada widget Builder yang digunakan untuk merender TextButton. Seperti yang telah kita lihat sebelumnya, widget yang diwarisi dapat digunakan untuk mencari pohon widget. Saat kita menggunakan Form.of(subContext), ia menggunakan BuildContext dari Builder, yang lebih rendah di bawah pohon widget daripada widget Form. Oleh karena itu, Form.of(subContext) akan mencari pohon widget dan menemukan Form.</p>
+<p>Jika builder tidak ada dan kita menggunakan konteks dari metode build, maka Form.of(topContext) akan memulai pencarian pada pohon widget di atas widget Form dan tidak akan menemukan widget Form selama pencarian tersebut.</p>
+<h3 is-upgraded><strong>Validating user input</strong></h3>
+<p>Memvalidasi input pengguna adalah salah satu fungsi utama widget Formulir. Untuk memastikan data yang dimasukkan oleh pengguna valid, sangat penting untuk menjalankan pemeriksaan validasi karena pengguna mungkin tidak mengetahui semua nilai yang diizinkan atau mungkin telah melakukan kesalahan. Widget Formulir, dikombinasikan dengan instans FormField, membantu Anda menampilkan pesan kesalahan yang sesuai jika nilai input perlu diperbaiki, sebelum menyimpan data formulir melalui fungsi <code>save()</code>-nya.</p>
+<p>Kita telah melihat, dalam contoh Form sebelumnya, bagaimana memvalidasi nilai bidang form. Mari kita lihat aliran sebenarnya:</p>
+<ol type="1" start="1">
+<li>Buat widget Form dengan FormField di atasnya.</li>
+<li>Tentukan logika validasi pada setiap properti konstruktor validator FormField dengan melewatkan fungsi validasi sebagai argumen. Berikut adalah contoh fungsi inline:</li>
+</ol>
+<pre><code>TextFormField(
+  validator: (String value) {
+   return value.isEmpty ? &#34;Cannot be empty&#34; : null;
+  },
+)</code></pre>
+<ol type="1" start="3">
+<li>Saat pengguna memilih untuk mengirimkan formulir, panggil validasi() pada FormState dengan menggunakan kuncinya, atau metode Form.of yang telah dibahas sebelumnya.</li>
+<li>Setiap FormField yang merupakan anak dari formulir akan memiliki validasi() metode yang disebut:</li>
+</ol>
+<ol type="1" start="1">
+<li>Jika validasi tidak berhasil, beberapa teks kesalahan dikembalikan sebagai string. Teks kesalahan ini kemudian ditampilkan di FormField kepada pengguna sehingga mereka dapat memperbaiki masalah dan mengirimkan formulir lagi.</li>
+<li>Jika validasi berhasil, nilai null dikembalikan.</li>
+</ol>
+<ol type="1" start="5">
+<li>Jika validasi berhasil, metode save() dapat dipanggil pada FormState untuk menyimpan semua data dari kolom input.</li>
+</ol>
+<p>Sekarang setelah Anda memahami formulir, mari kita lihat bagaimana kita bisa masuk lebih dalam tentang kustomisasi input formulir kita.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Custom input and FormField widgets" duration="10">
+        <p>Kita telah melihat bagaimana widget Form dan FormField membantu manipulasi dan validasi input. Selain itu, kita tahu bahwa Flutter hadir dengan serangkaian widget input yang merupakan varian FormField yang berisi fungsi pembantu seperti simpan dan validasi.</p>
+<p>Ekstensibilitas dan fleksibilitas Flutter ada di mana-mana dalam kerangka kerja, jadi membuat bidang masukan khusus Anda sendiri sangat mungkin.</p>
+<h2 is-upgraded><strong>Creating custom inputs</strong></h2>
+<p>Membuat input kustom di Flutter semudah membuat widget normal dan menyertakan metode yang dijelaskan sebelumnya. Kami biasanya melakukan ini dengan memperluas widget FormField&lt;inputType&gt;, di mana inputType adalah tipe nilai dari widget input.</p>
+<p>Jadi, prosesnya adalah sebagai berikut:</p>
+<ol type="1" start="1">
+<li>Buat widget khusus yang extends dengan StatefulWidget (untuk melacak value) dan menerima input dari pengguna dengan mengenkapsulasi widget input lain, atau dengan menyesuaikan seluruh proses, seperti dengan menggunakan gesture.</li>
+<li>Buat widget yang extends dengan FormField yang pada dasarnya menampilkan widget input yang dibuat pada langkah sebelumnya dan juga menampilkan bidangnya.</li>
+</ol>
+<h2 is-upgraded>Custom input widget example</h2>
+<p>Nanti, di pertemuan berikutnya, Plugin Pihak Ketiga, kita akan melihat cara menggunakan plugin untuk menambahkan autentikasi ke aplikasi kita. Untuk saat ini, kita akan membuat widget khusus yang akan mirip dengan yang digunakan pada langkah itu.</p>
+<p>Dalam contoh ini, kami akan meminta nomor telepon pengguna dan kemudian berpura-pura bahwa mereka telah dikirimi kode verifikasi enam digit. Kami kemudian akan meminta mereka untuk memasukkan kode verifikasi, yang harus sesuai dengan nilai server agar berhasil masuk.</p>
+<p>Untuk saat ini, itu saja informasi yang perlu kita ketahui untuk pembuatan widget input kustom. Anda akan melihat seperti berikut:</p>
+<p class="image-container"><img style="width: 309.00px" src="img\\1d492d6b2a4a6e0d.png"></p>
+<p>Widget akan memulai widget input enam digit sederhana, yang nantinya akan menjadi widget FormField dan menampilkan metode save(), reset(), dan validation().</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Menerapkan Gesture Detector" duration="10">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>flutter_fundamental_3</strong>. Lalu jadikan repository di GitHub Anda dengan nama <strong>flutter-fundamental-part3.</strong></p>
+<h2 is-upgraded><strong>Langkah 2: Menambahkan GestureDetector</strong></h2>
+<p>Buka file <code>main.dart</code> lalu ganti bagian <code>body</code> dengan kode berikut. Untuk <code>MyImageWidget()</code> dapat Anda ganti dengan widget milik Anda sendiri.</p>
+<pre><code>body: Center(
+        child: GestureDetector(
+            onTap: _incrementCounter,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: &lt;Widget&gt;[
+                const MyImageWidget(),
+                Text(
+                  &#39;$_counter&#39;,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
+            )),
+      ),</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Buat Dokumentasi atau Laporan Praktikum</strong></h2>
+<p>Simpan lalu coba untuk <strong>Run </strong>project Anda. Untuk kode <code>MyImageWidget()</code> di sini menampilkan logo Polinema seperti gambar berikut. Jika Anda coba klik/tap pada gambar, maka angka di bawah akan terus bertambah. Mengapa demikian? Jelaskan dalam laporan <code>README.md</code>! Jangan lupa kode dan hasil tampilannya di screenshot.</p>
+<p class="image-container"><img style="width: 284.40px" src="img\\b0f5d3977b6429a2.png"></p>
+<h2 is-upgraded><strong>Langkah 4: Eksperimen Jenis Gesture Lain</strong></h2>
+<p>Sekarang Anda ganti kode bagian <code>onTap</code> dari Langkah 2 dengan <code>onDoubleTap</code> dan <code>onLongPress</code>. Lalu screenshot masing-masing hasil tampilannya dan jelaskan fungsinya!</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Menerapkan Input Widget dan Forms" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Buat class FormContoh</strong></h2>
+<p>Buatlah file baru dengan nama <code>forms.dart</code> lalu buat <code>class FormContoh</code> seperti kode berikut</p>
+<pre><code>class FormContoh extends StatefulWidget {
+  const FormContoh({Key? key}) : super(key: key);
+
+  @override
+  _FormContohState createState() =&gt; _FormContohState();
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 2: Buat class _FormContohState</strong></h2>
+<p>Kemudian buat class state-nya</p>
+<pre><code>class _FormContohState extends State&lt;FormContoh&gt; {
+  final _controller = TextEditingController.fromValue(
+    const TextEditingValue(text: &#34;Initial value&#34;),
+  );
+
+  final _key = GlobalKey&lt;FormFieldState&lt;String&gt;&gt;();
+  String _textValue = &#34;&#34;;
+
+  @override
+  void initState() {
+    _controller.addListener(() {
+      setState(() {
+        _textValue = _controller.text;
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext topContext) {
+    return Form(
+      key: _key,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: &lt;Widget&gt;[
+          const Text(
+            &#39;Teks :&#39;,
+          ),
+          Text(
+            _textValue,
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          TextFormField(
+            controller: _controller,
+            validator: (String? value) {
+              return value == null || value.isEmpty
+                  ? &#34;Tidak Boleh Kosong&#34;
+                  : null;
+            },
+          ),
+          TextFormField(),
+          Builder(
+            builder: (BuildContext subContext) =&gt; TextButton(
+              onPressed: () {
+                final valid = Form.of(subContext)!.validate();
+                if (kDebugMode) {
+                  print(&#34;valid: $valid&#34;);
+                }
+                if (valid) {
+                  setState(() {
+                    _textValue = _controller.text;
+                  });
+                }
+              },
+              child: const Text(&#34;validate&#34;),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Tambah Widget FormContoh di main.dart</strong></h2>
+<p>Lalu pindah ke file <code>main.dart</code> dan panggil widget <code>FormContoh</code> tersebut yang telah dibuat.</p>
+<pre><code> children: &lt;Widget&gt;[
+            const Text(
+              &#39;You have pushed the button this many times:&#39;,
+            ),
+            Text(
+              &#39;$_counter&#39;,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const FormContoh(),
+. . .</code></pre>
+<p>Jangan lupa sesuaikan kode dan import di file <code>main.dart</code> kemudian akan tampil gambar seperti berikut. Jika terdapat error atau warning, silakan diperbaiki.</p>
+<p class="image-container"><img style="width: 346.25px" src="img\\2a45d7b88b0153f1.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Menerapkan Custom Input dan FormField Widget" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya. Anda dapat melakukan <em>comment </em>terhadap widget dari praktikum 2.</p>
+<h2 is-upgraded><strong>Langkah 1: Buat class VerificationCodeInput</strong></h2>
+<p>Buat file <code>input_fields.dart</code> lalu isi kode seperti berikut.</p>
+<pre><code>class VerificationCodeInput extends StatefulWidget {
+  final BorderSide borderSide;
+  final void Function(String)? onChanged;
+  final TextEditingController? controller;
+
+  const VerificationCodeInput({
+    Key? key,
+    this.controller,
+    this.borderSide = const BorderSide(),
+    this.onChanged,
+  }) : super(key: key);
+
+  @override
+  _VerificationCodeInputState createState() =&gt; _VerificationCodeInputState();
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 2: Buat class _VerificationCodeInputState</strong></h2>
+<p>Kemudian dibawahnya buat <code>class _VerificationCodeInputState</code> yang di-extends dengan State.</p>
+<pre><code>class _VerificationCodeInputState extends State&lt;VerificationCodeInput&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: widget.controller,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(&#34;[0-9]&#34;)),
+        LengthLimitingTextInputFormatter(6),
+      ],
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderSide: widget.borderSide,
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      onChanged: widget.onChanged,
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Buat class VerificationCodeFormField</strong></h2>
+<p>Masih di file <code>input_fields.dart</code>, buatlah <code>class VerificationCodeFormField</code> seperti berikut yang diletakkan dibawahnya.</p>
+<pre><code>/// FormField version of the VerificationCodeInput widget
+class VerificationCodeFormField extends FormField&lt;String&gt; {
+  final TextEditingController controller;
+
+  VerificationCodeFormField({
+    Key? key,
+    FormFieldSetter&lt;String&gt;? onSaved,
+    required this.controller,
+    FormFieldValidator&lt;String&gt;? validator,
+  }) : super(
+          key: key,
+          validator: validator,
+          builder: (FormFieldState&lt;String&gt; field) {
+            _VerificationCodeFormFieldState state = field as _VerificationCodeFormFieldState;
+            return VerificationCodeInput(
+              controller: state._controller,
+            );
+          },
+        );
+
+  @override
+  FormFieldState&lt;String&gt; createState() =&gt; _VerificationCodeFormFieldState();
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 4: Buat class _VerificationCodeFormFieldState</strong></h2>
+<p>Selanjutnya buat class state-nya seperti berikut.</p>
+<pre><code>class _VerificationCodeFormFieldState extends FormFieldState&lt;String&gt; {
+  final TextEditingController _controller = TextEditingController(text: &#34;&#34;);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller.addListener(_controllerChanged);
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    _controller.text = &#34;&#34;;
+  }
+
+  void _controllerChanged() {
+    didChange(_controller.text);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_controllerChanged);
+    super.dispose();
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 5: Tambah variabel _controller</strong></h2>
+<p>Buka file <code>main.dart</code> lalu tambahkan variabel <code>_controller</code> di dalam class extends State</p>
+<pre><code>final TextEditingController _controller = TextEditingController.fromValue(const TextEditingValue(text: &#34;isi angka saja&#34;));</code></pre>
+<h2 is-upgraded><strong>Langkah 6: Tambah Widget VerificationCodeFormField</strong></h2>
+<p>Lalu masuk ke method Widget build pada bagian <code>children: <Widget></code> tambahkan <code>Form</code> seperti kode berikut. Lakukan import dari file <code>input_fields.dart</code> untuk <code>VerificationCodeFormField</code>.</p>
+<pre><code>Form(
+     child: Column(
+     mainAxisSize: MainAxisSize.min,
+     children: &lt;Widget&gt;[
+              VerificationCodeFormField(controller: _controller),
+               Builder(
+                builder: (BuildContext subContext) =&gt; ElevatedButton(
+                  onPressed: () {
+                     final valid = Form.of(subContext)?.validate();
+                        if (kDebugMode) {
+                          print(&#34;valid: $valid&#34;);
+                        }
+                      },
+                  child: const Text(&#34;validate&#34;),
+                ),
+              )
+           ],
+        ),
+),</code></pre>
+<p>Maka hasilnya akan seperti berikut. Silakan coba isi form field dengan mengetikkan huruf dan angka. Apa yang terjadi ? Jelaskan dalam laporan praktikum Anda!</p>
+<p class="image-container"><img style="width: 269.87px" src="img\\5a31c420123268ef.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan Praktikum 1 sampai 3, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Kumpulkan berupa link repository GitHub Anda ke LMS!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait Flutter Fundamental untuk penanganan User Input, Gesture, dan FormField.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Flutter Fundamental Bagian 4 terkait ListMap dan aplikasi konversi suhu dengan stateful widget.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

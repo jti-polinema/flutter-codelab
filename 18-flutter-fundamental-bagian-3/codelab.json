@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-08-30T23:28:47Z",
+  "id": "18-flutter-fundamental-bagian-3",
+  "duration": 215,
+  "title": "#18 | Flutter Fundamental - Bagian 3",
+  "authors": "Tim Pengajar Mobile TSA 2022",
+  "summary": "- Mahasiswa mampu menerapkan jenis-jenis gesture\n- Mahasiswa mampu menerapkan input widget dan controllernya\n- Mahasiswa mampu menerapkan custom input dan FormField widget",
+  "source": "1AVJuj_t_1D3QnncXzJScmMVzy5vfdqAugkUEuEQkj1E",
+  "theme": "mobile-flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile Flutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "18-flutter-fundamental-bagian-3"
+}
