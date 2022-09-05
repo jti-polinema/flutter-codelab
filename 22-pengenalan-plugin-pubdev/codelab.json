@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-09-05T00:03:40Z",
+  "id": "22-pengenalan-plugin-pubdev",
+  "duration": 180,
+  "title": "#22 | Pengenalan Plugin di Pub.Dev",
+  "authors": "Tim Pengajar Mobile TSA 2022",
+  "summary": "- Mahasiswa mampu menjelaskan manfaat plugin\n- Mahasiswa mampu memasang plugin ke dalam project flutter\n- Mahasiswa mampu memanfaatkan plugin dalam aplikasi",
+  "source": "1LZCARxvXpkQB9OVMLa_wlK_F3aitjsM6HADFDPLSKAI",
+  "theme": "mobile-flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile Flutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "22-pengenalan-plugin-pubdev"
+}
