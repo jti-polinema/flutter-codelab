@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2022-09-19T00:29:25Z",
+  "id": "33-manipulasi-widget",
+  "duration": 165,
+  "title": "#33 | Manipulasi Widget",
+  "authors": "Tim Pengajar Mobile TSA 2022",
+  "summary": "Mahasiswa mampu menggunakan fungsi transform widget, Matrix4, dan jenis-jenis transformasi",
+  "source": "1GlbbLEcK2lR_3VS4EeztgzomY023BbySobmotyUKBgQ",
+  "theme": "mobile-flutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Mobile Flutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "33-manipulasi-widget"
+}

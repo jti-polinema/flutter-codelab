@@ -1,0 +1,359 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#33 | Manipulasi Widget</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="33-manipulasi-widget"
+                  title="#33 | Manipulasi Widget"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Manipulasi Widget" duration="0">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/9z_YNlRlWfA?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p><strong>Terakhir diperbarui:</strong> 18 September 2022</p>
+<p><strong>Penulis:</strong> Tim Pengajar Mobile Flutter</p>
+<p>Pada codelab ini, Anda akan mempelajari tentang fungsi transform widget, Matrix4, dan jenis-jenis transformasi.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>menggunakan fungsi transform widget, Matrix4, dan jenis-jenis transformasi</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
+<p class="image-container"><img style="width: 267.21px" src="img\\2fc19ac50871e911.png">  <img style="width: 234.85px" src="img\\ab743d163992010.png"> </p>
+<p class="image-container"><img style="width: 173.89px" src="img\\8ea0580abf8ead93.png"></p>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Daftar Perintah</strong></h2>
+<p>Tida ada.</p>
+<h2 is-upgraded><strong>Bantuan</strong></h2>
+<p>Tidak ada.</p>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Transformasi widget dengan Transform class" duration="45">
+        <p>Kita telah melihat banyak widget di pertemuan sebelumnya, tetapi terkadang kita mungkin perlu mengubah tampilan widget untuk meningkatkan UX. Melakukan respon terhadap input user atau untuk membuat efek keren dalam tata letak, kita mungkin perlu memindahkan widget di sekitar layar, mengubah ukurannya, atau bahkan sedikit mengubahnya.</p>
+<p>Jika Anda pernah mencoba dalam bahasa pemrograman native, Anda mungkin merasa kesulitan. Flutter, seperti yang disebutkan sebelumnya, sangat fokus pada desain UI dan bertujuan untuk membuat hidup developer lebih mudah dengan menyederhanakan apa yang bisa dengan mudah pada area yang rumit.</p>
+<p>Di bagian ini, pertama-tama kita akan melihat widget Transform karena ini adalah widget yang sangat berguna saat Anda melakukan manipulasi widget. Kemudian akan mempelajari lebih dalam widget untuk melihat jenis-jenis manipulasi yang mungkin bisa dilakukan.</p>
+<h2 is-upgraded><strong>Transform widget</strong></h2>
+<p>Widget Transform adalah salah satu contoh terbaik dari kekuatan dan konsistensi framework Flutter. Ini adalah widget tujuan tunggal yang hanya menerapkan transformasi grafis ke anaknya, dan tidak lebih. Memfokuskan widget pada satu tujuan adalah dasar untuk struktur tata letak yang lebih baik, dan Flutter melakukannya dengan sangat baik.</p>
+<p>Widget Transform, seperti namanya, melakukan satu tugas—itu mengubah turunan dasarnya. Meskipun tugasnya sangat kompleks, ia menyembunyikan sebagian besar kerumitan ini dari pengembang. Mari kita lihat kodenya sebagai berikut:</p>
+<pre><code>const Transform({
+  Key,
+  required Matrix4 transform,
+  Offset origin, AlignmentGeometry alignment,
+  bool transformHitTests: true,
+  Widget child
+})</code></pre>
+<p>Seperti yang Anda lihat, selain properti Key, widget ini tidak memerlukan banyak argumen untuk melakukan tugasnya. Mari kita lihat penjelasan parameter masing-masing sebagai berikut:</p>
+<ul>
+<li><code>transform</code>: Ini adalah satu-satunya properti yang diperlukan dan digunakan untuk menjelaskan transformasi yang akan diterapkan ke widget anak. Jenisnya adalah instance Matrix4, matriks <strong>empat dimensi (4D)</strong> yang menggambarkan transformasi secara matematis. Kita akan melihat lebih detail di bagian berikutnya, yaitu pada bagian memahami kelas Matrix4.</li>
+<li><code>origin</code>: Ini adalah asal dari sistem koordinat yang menerapkan matriks transformasi. Properti asal ditentukan oleh jenis Offset, yang mewakili, dalam hal ini, titik (x,y) dalam sistem Cartesian yang relatif terhadap sudut kiri atas widget render.</li>
+<li><code>alignment</code>: Seperti halnya origin, dapat digunakan untuk memanipulasi posisi matriks transformasi yang diterapkan. Kita dapat menggunakan ini untuk menentukan asal dengan cara yang lebih fleksibel, karena asal mengharuskan kita untuk menggunakan nilai posisi nyata. Tidak ada yang mencegah Anda menggunakan Origin dan alignment secara bersamaan.</li>
+<li><code>transformHitTests</code>: Ini menentukan apakah tes klik (yaitu, ketukan) dievaluasi dalam versi widget yang diubah.</li>
+<li><code>child</code>: Ini adalah widget anak tempat transformasi akan diterapkan.</li>
+</ul>
+<p>Transformasi Matrix4 sangat penting untuk kelas Transform, jadi mari kita lihat lebih detail.</p>
+<h2 is-upgraded><strong>Memahami Matrix4 class</strong></h2>
+<p>Di Flutter, transformasi direpresentasikan sebagai matriks 4D. Meskipun terdengar sangat menakutkan, matriks 4D hanyalah matriks yang memiliki empat baris dan empat kolom, seperti yang ditunjukkan di sini:</p>
+<p class="image-container"><img style="width: 198.00px" src="img\\67fdba6a77349155.png"></p>
+<p>Nilai matriks yang ditampilkan adalah <strong>matriks identitas</strong>. Ini adalah nilai khusus karena secara efektif mengatakan untuk tidak melakukan perubahan dalam transformasi. Saat nilai dalam matriks diubah, maka widget ditransformasikan dengan cara yang berbeda.</p>
+<p>Seringkali, kita tidak perlu mengetahui nilai spesifik dari matriks untuk melakukan transformasi.</p>
+<p>Selain metode seperti penambahan atau perkalian matriks, kelas <code>Matrix4</code> berisi metode yang membantu konstruksi dan manipulasi transformasi geometris. Beberapa di antaranya tercantum di sini:</p>
+<ul>
+<li>Rotasi: <code>rotateX()</code>, <code>rotateY()</code>, dan <code>rotateZ()</code> adalah beberapa contoh metode yang memutar matriks melalui sumbu tertentu.</li>
+<li>Skala: <code>scale()</code>, dengan beberapa varian, digunakan untuk menerapkan skala pada matriks menggunakan nilai ganda dari sumbu yang sesuai (x, y, dan z) atau melalui representasi vektor dengan kelas <code>Vector3</code> dan <code>Vector4</code>.</li>
+<li>Translasi: Sama seperti sebelumnya, kita dapat melakukan translasi matriks menggunakan metode <code>translate()</code> dengan nilai <code>x, y</code>, atau <code>z</code> tertentu dan instance <code>Vector3</code> dan <code>Vector4</code>.</li>
+<li>Skew: Ini digunakan untuk memiringkan matriks di sekitar sumbu x dengan <code>skewX()</code> atau sumbu y dengan <code>skewY()</code>.</li>
+</ul>
+<p>Mari kita lihat bagaimana kita dapat menggunakan kelas <code>Matrix4</code> untuk memberlakukan berbagai jenis transformasi.</p>
+<h2 is-upgraded><strong>Explorasi jenis-jenis transformasi</strong></h2>
+<p>Kelas Transform menyediakan fasilitas kepada pengembang melalui konstruktor pabriknya.</p>
+<p>Ada banyak dari mereka untuk setiap kemungkinan transformasi, sehingga sangat mudah untuk menerapkan transformasi ke widget tanpa pengetahuan yang lebih dalam tentang perhitungan geometris. Terdiri dari:</p>
+<ul>
+<li><code>Transform.rotate()</code>: Membuat widget Transform yang memutar anaknya di sekitar pusatnya.</li>
+<li><code>Transform.scale()</code>: Membuat widget Transform yang menskalakan anaknya secara seragam.</li>
+<li><code>Transform.translate()</code>: Membuat widget Transform yang menerjemahkan anaknya dengan offset x,y.</li>
+</ul>
+<p>Mari kita lihat masing-masing jenis transformasi secara lebih rinci.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/mL6cQLzXm0s?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h3 is-upgraded><strong>Rotate transformation</strong></h3>
+<p>Transformasi putar muncul dalam situasi di mana kita hanya ingin membuat widget kita berputar. Dengan menggunakan konstruktor Transform.rotate(), kita bisa mendapatkan widget yang diputar.</p>
+<p>Itu tidak terlalu berbeda dari konstruktor Transform default. Perbedaannya tercantum di sini:</p>
+<ul>
+<li>Tidak ada properti <code>transform</code>: Kita gunakan varian <code>rotate()</code> karena ingin menerapkan rotasi, jadi tidak perlu menentukan seluruh matriks untuk ini. Kita hanya gunakan properti <code>angle</code> sebagai gantinya.</li>
+<li>Angle: Ini menentukan rotasi yang diinginkan dalam radian searah jarum jam.</li>
+<li>Origin: Secara default, rotasi diterapkan relatif terhadap bagian tengah anak. Namun, kita dapat menggunakan properti <code>origin</code> untuk memanipulasi rotasi, seolah-olah kita menerjemahkan pusat widget dengan offset <code>origin</code>, menyebabkan rotasi menjadi relatif ke titik lain jika kita mau.</li>
+</ul>
+<p>Kita dapat menggunakannya seperti ini:</p>
+<pre><code>Transform.rotate(
+  angle: -45 * (math.pi / 180.0),
+  child: ElevatedButton(
+    child: Text(&#34;Rotated button&#34;),
+    onPressed: () {},
+  ),
+);</code></pre>
+<p>Pada contoh ini, kita spesifikkan sudut radian yang digunakan (misalnya sudut 315° searah jarum jam sama dengan sudut -45° berlawanan), dan widget child akan berotasi, dalam contoh ini yaitu widget <code>ELevatedButton</code>.</p>
+<p>Hasil yang sama persis akan diperoleh ketika menggunakan widget <code>Transform</code> dan <code>Matrix4</code>, seperti yang diilustrasikan pada kode berikut:</p>
+<pre><code>Transform(
+  transform: Matrix4.rotationZ(-45 * (pi / 180.0)),
+  alignment: Alignment.center,
+  child: ElevatedButton (
+    child: Text(&#34;Rotated button&#34;),
+    onPressed: () {},
+  ),
+);</code></pre>
+<p>Argumen yang perlu kita berikan untuk mendapatkan hasil yang sama adalah properti <code>transform</code> dengan rotasi melalui sumbu <code>z</code>, dan properti <code>alignment</code> dari transformasi yang menentukan pusat <code>child</code> widget.</p>
+<h3 is-upgraded><strong>Scale transformation</strong></h3>
+<p>Transformasi skala muncul dalam situasi di mana kita hanya ingin membuat widget kita mengubah ukurannya, baik dengan menambah atau mengurangi skalanya. Sama seperti konstruktor pabrik <code>rotate()</code> , varian ini tidak terlalu berbeda dari yang default. Berikut adalah beberapa rincian lebih lanjut mengenai hal ini:</p>
+<ul>
+<li>Tidak ada properti <code>transform</code>: Di sini, sekali lagi, kami menggunakan properti skala alih-alih seluruh matriks transformasi.</li>
+<li>Skala: Inilah yang kami gunakan untuk menentukan skala yang diinginkan dalam format ganda, 1.0 sebagai ukuran asli widget. Ini mewakili skalar yang akan diterapkan pada setiap sumbu x dan y.</li>
+<li>Alignment: Secara default, skala diterapkan relatif terhadap pusat anak. Di sini, kita dapat menggunakan properti keselarasan untuk mengubah asal skala. Sekali lagi, kita dapat menggabungkan properti alignment dan origin untuk mendapatkan hasil yang diinginkan.</li>
+</ul>
+<p>Misalnya, untuk memperbesar widget, kita dapat menjalankan kode berikut:</p>
+<pre><code>Transform.scale(
+    scale: 2.0,
+    child: ElevatedButton(
+    child: Text(&#34;scaled up&#34;),
+    onPressed: () {},
+    ),
+);</code></pre>
+<p>Di sini, kami telah menetapkan properti skala 2.0, yang menggandakan ukuran widget anak, dan sekali lagi menetapkan bahwa widget anak adalah ElevatedButton. Jelas, Anda bisa mengatur ukuran ElevatedButton untuk menghindari transformasi.</p>
+<p>Dan untuk mendapatkan hasil yang sama dengan menggunakan konstruktor Transform default, kami menggunakan kode berikut:</p>
+<pre><code>Transform(
+  transform: Matrix4.identity()..scale(2.0, 2.0),
+  alignment: Alignment.center,
+  child: ElevatedButton(
+    child: Text(&#34;scaled up&#34;),
+    onPressed: () {},
+  ),
+);</code></pre>
+<p>Dengan cara yang sangat mirip dengan rotasi, kita harus menentukan asal transformasi dengan properti keselarasan dan instance Matrix4 yang menjelaskan transformasi skala.</p>
+<h3 is-upgraded><strong>Translate transformation</strong></h3>
+<p>Transformasi terjemahan kemungkinan akan muncul dalam animasi, seperti yang dijelaskan nanti dalam bab di bagian Menggunakan animasi.</p>
+<p>Di sini, kami memiliki lebih sedikit properti dibandingkan dengan transformasi sebelumnya.</p>
+<p>Perbedaannya tercantum sebagai berikut:</p>
+<ul>
+<li>Tidak adanya properti transformasi dan penyelarasan: Transformasi akan diterapkan oleh nilai offset, jadi kita tidak memerlukan matriks transformasi.</li>
+<li>Offset: Kali ini, offset hanya menentukan terjemahan yang akan diterapkan pada widget anak; ini berbeda dengan transformasi sebelumnya, di mana hal itu mempengaruhi titik asal dari transformasi yang diterapkan.</li>
+</ul>
+<p>Dengan menggunakan konstruktor Transform.translate(), kita memindahkan widget di sekitar layar, dengan menambahkan widget Transform sebagai induk dari widget yang ingin kita pindahkan, seperti yang diilustrasikan dalam cuplikan kode berikut:</p>
+<pre><code>Transform.translate(
+  offset: Offset(100, 300),
+  child: ElevatedButton(
+    child: Text(&#34;translated to bottom&#34;),
+    onPressed: () {},
+  ),
+);</code></pre>
+<p>Konstruktor default juga dapat digunakan dengan Matrix4 yang menentukan terjemahan, sebagai berikut:</p>
+<pre><code>Transform(
+  transform: Matrix4.translationValues(100, 300, 0),
+  child: ElevatedButton(
+    child: Text(&#34;translated to bottom&#34;),
+    onPressed: () {},
+  ),
+);</code></pre>
+<p>Kita hanya perlu menentukan properti transform dengan instance Matrix4 yang menjelaskan terjemahannya.</p>
+<h3 is-upgraded><strong>Composed transformations</strong></h3>
+<p>Kita dapat—dan kemungkinan besar akan—menggabungkan sejumlah transformasi yang terlihat sebelumnya untuk mencapai efek unik, seperti memutar pada saat yang sama saat kita memindahkan dan menskalakan widget.</p>
+<p>Menyusun transformasi dapat dilakukan dengan dua cara, sebagai berikut:</p>
+<ul>
+<li>Menggunakan konstruktor widget <code>Transform</code> default dan menghasilkan transformasi yang kita inginkan menggunakan metode yang disediakan <code>Matrix4</code> untuk menyusunnya.</li>
+<li>Menggunakan beberapa widget <code>Transform</code> secara bersarang dengan konstruktor pabrik <code>rotate()</code>, <code>scale()</code>, dan <code>translate()</code>, untuk mencapai efek yang sama.</li>
+</ul>
+<p>Untuk lebih jelasnya, mari kita lihat bagaimana kita akan menyarangkan beberapa widget Transform, sebagai berikut:</p>
+<pre><code>Transform.translate(
+  offset: Offset(70, 200),
+  child: Transform.rotate(
+    angle: -45 * (math.pi / 180.0),
+    child: Transform.scale(
+      scale: 2.0,
+      child: ElevatedButton(
+        child: Text(&#34;multiple transformations&#34;),
+        onPressed: () {},
+        ),
+     ),
+   ),
+);</code></pre>
+<p>Seperti yang Anda lihat, kami menambahkan widget Transform sebagai turunan ke widget Transform lainnya, yang menyusun transformasi. Meskipun lebih sederhana untuk dibaca, metode ini memiliki kelemahan:</p>
+<p>kami menambahkan lebih banyak widget daripada yang dibutuhkan ke pohon widget.</p>
+<p>Saat kita menambahkan beberapa transformasi ke widget secara bersamaan, kita harus memperhatikan urutan transformasi. Bereksperimen sendiri: menukar posisi widget Transform akan menghasilkan hasil yang berbeda.</p>
+<p>Sebagai alternatif, kita dapat menggunakan konstruktor Transform default dengan transformasi tersusun dengan objek Matrix4, sebagai berikut:</p>
+<pre><code>Transform(
+  alignment: Alignment.center,
+  transform: Matrix4.translationValues(70, 200, 0)
+    ..rotateZ(-45 * (math.pi / 180.0))
+    ..scale(2.0, 2.0),
+  child: ElevatedButton(
+    child: Text(&#34;multiple transformations&#34;),
+    onPressed: () {},
+  ),
+);</code></pre>
+<p>Sama seperti sebelumnya, kami menentukan perataan transformasi sebagai pusat widget anak dan kemudian instance Matrix4 untuk menggambarkannya. Seperti yang Anda lihat, ini sangat mirip dengan beberapa versi widget Transform tetapi tanpa widget bersarang, menyebabkan pohon widget yang lebih dalam.</p>
+<p>Sekarang kita telah menjelajahi cara memanipulasi widget dengan cara statis, mari kita lihat membuat animasi pada pertemuan berikutnya untuk memungkinkan widget berpindah dari satu keadaan ke keadaan lain dengan cara yang lebih halus.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum Manipulasi Widget" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>flutter_transform</strong>. Lalu jadikan repository di GitHub Anda dengan nama <strong>flutter_transform.</strong></p>
+<h2 is-upgraded><strong>Langkah 2: Impor dart:math</strong></h2>
+<p>Tambahkan library dart:math pada file <code>main.dart</code></p>
+<pre><code>import &#39;dart:math&#39;;</code></pre>
+<h2 is-upgraded>Langkah 3: Tambahkan kode Transform</h2>
+<p>Tetap di file <code>main.dart</code> di <code>class _MyHomePageState</code> pada bagian widget <code>build</code>, letakkan kode berikut di dalam <code>children: <Widget></code> setelah teks <code>$_counter</code>.</p>
+<pre><code>Transform.rotate(
+    angle: -45 * (pi / 180.0),
+    child: ElevatedButton(
+      child: const Text(&#34;Rotated button&#34;),
+      onPressed: () {},
+    ),
+),
+            Transform(
+              transform: Matrix4.rotationZ(-45 * (pi / 180.0)),
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                child: const Text(&#34;Rotated button&#34;),
+                onPressed: () {},
+              ),
+            ),
+            Transform.scale(
+              scale: 2.0,
+              child: ElevatedButton(
+                child: const Text(&#34;scaled up&#34;),
+                onPressed: () {},
+              ),
+            ),
+            Transform(
+              transform: Matrix4.identity()..scale(2.0, 2.0),
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                child: const Text(&#34;scaled up (matrix)&#34;),
+                onPressed: () {},
+              ),
+            ),
+            Transform.translate(
+              offset: const Offset(100, 300),
+              child: ElevatedButton(
+                child: const Text(&#34;translated to bottom&#34;),
+                onPressed: () {},
+              ),
+            ),
+            Transform(
+              transform: Matrix4.translationValues(100, 300, 0),
+              child: ElevatedButton(
+                child: const Text(&#34;translated to bottom (matrix)&#34;),
+                onPressed: () {},
+              ),
+            ),
+            Transform.translate(
+              offset: const Offset(70, 200),
+              child: Transform.rotate(
+                angle: -45 * (pi / 180.0),
+                child: Transform.scale(
+                  scale: 2.0,
+                  child: ElevatedButton(
+                    child: const Text(&#34;multiple transformations&#34;),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+            ),
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.translationValues(70, 200, 0)
+                ..rotateZ(-45 * (pi / 180.0))
+                ..scale(2.0, 2.0),
+              child: ElevatedButton(
+                child: const Text(&#34;multiple transformations (matrix)&#34;),
+                onPressed: () {},
+              ),
+            )</code></pre>
+<p><strong>Run</strong> aplikasi tersebut dengan tekan <strong>F5</strong>, maka hasilnya akan seperti berikut.</p>
+<p class="image-container"><img style="width: 285.50px" src="img\\2fc19ac50871e911.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan Praktikum tersebut, lalu dokumentasikan dan push ke repository Anda berupa screenshot hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Tetap di project yang sama, buatlah folder dan file dart baru lalu praktikkan kode yang ada di <a href="https://medium.com/flutter/perspective-on-flutter-6f832f4d912e" target="_blank">tautan ini</a> terkait perspektif di flutter!</li>
+<li>Tetap di project yang sama, buatlah folder dan file dart baru lalu praktikkan kode yang ada di <a href="https://medium.com/flutter-community/make-3d-flip-animation-in-flutter-16c006bb3798" target="_blank">tautan ini</a> untuk membuat flip animasi 3D!</li>
+<li>Kumpulkan laporan praktikum Anda berupa link repository GitHub ke LMS!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait manipulasi widget dengan class <code>Transform</code>.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Animasi.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+<li><a href="https://medium.com/flutter/perspective-on-flutter-6f832f4d912e" target="_blank">Perspective on Flutter</a></li>
+<li><a href="https://medium.com/flutter-community/make-3d-flip-animation-in-flutter-16c006bb3798" target="_blank">Make 3D flip animation in Flutter</a></li>
+<li><a href="https://pub.dev/packages/flip_panel" target="_blank">https://pub.dev/packages/flip_panel</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
