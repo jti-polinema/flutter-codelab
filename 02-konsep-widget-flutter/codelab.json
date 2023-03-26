@@ -10,12 +10,12 @@
   "authors": "Tim Pengajar Mobile TSA 2022",
   "summary": "Modul kedua ini berisi konsep widget pada flutter, rendering, composability, immutability, widget tree.",
   "source": "16s8izeL3oL3IVwpgisrLU41_bWM9Sbi5ygLTG8uCxpM",
-  "theme": "mobile-flutter",
+  "theme": "mobileflutter",
   "status": [
     "published"
   ],
   "category": [
-    "Mobile Flutter"
+    "mobileflutter"
   ],
   "tags": [
     "android",

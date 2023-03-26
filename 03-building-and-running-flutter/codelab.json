@@ -10,12 +10,12 @@
   "authors": "Tim Pengajar Mobile TSA 2022",
   "summary": "- Mahasiswa mampu melakukan mode debug, release, profile, dan running sesuai target platform\n- Mahasiswa mampu menggunakan dan menjelaskan konsep dari file pubspec.yaml termasuk mengelola aset, library dependencies",
   "source": "1gEj7wjFrw6cIZog6GiMD05_TMw_erKGKeKhfRoXMp2c",
-  "theme": "mobile-flutter",
+  "theme": "mobileflutter",
   "status": [
     "published"
   ],
   "category": [
-    "Mobile Flutter"
+    "mobileflutter"
   ],
   "tags": [
     "android",
