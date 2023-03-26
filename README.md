@@ -4,6 +4,12 @@ Codelab Flutter 2022 - Talent Scouting Academy (TSA) Mobile 2022. Created on 08 
 
 Penulis: Tim Kurikulum TSA Mobile 2022
 
+
+## RAW Materi (Google Docs)
+
+[Materi Google Docs](https://drive.google.com/drive/folders/1u69xRZv5ven6hs36EQ_MovktsbY6nZiX)
+
+
 ## Codelab
 
 Akses codelab di github pages: [https://jti-polinema.github.io/flutter-codelab/](https://jti-polinema.github.io/flutter-codelab/)
