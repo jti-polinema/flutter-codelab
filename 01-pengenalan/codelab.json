@@ -10,12 +10,12 @@
   "authors": "Tim Pengajar Mobile TSA 2022",
   "summary": "Modul pertama ini berisi pengantar tentang Flutter Framework dan persiapan perangkat lunak yang perlu dipasang pada komputer Anda.",
   "source": "1RVJ9ljT-n1LJx6xM74eMXM4onLUpxwrKNm7i525CLEk",
-  "theme": "mobile-flutter",
+  "theme": "mobileflutter",
   "status": [
     "published"
   ],
   "category": [
-    "Mobile Flutter"
+    "mobileflutter"
   ],
   "tags": [
     "android",
