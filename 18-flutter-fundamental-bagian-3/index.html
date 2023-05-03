@@ -9,7 +9,7 @@
   <title>#18 | Flutter Fundamental - Bagian 3</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -154,9 +154,9 @@ void dispose() {
 <p>Widget TextField memungkinkan pengguna memasukkan teks dengan keyboard. Widget TextField memperlihatkan metode onChanged, yang dapat digunakan untuk mendengarkan perubahan pada nilainya saat ini, seperti yang telah kita lihat sebelumnya dengan widget TextField. Namun, cara lain untuk mendengarkan perubahan adalah dengan menggunakan pengontrol.</p>
 <h2 is-upgraded><strong>Getting input through a controller</strong></h2>
 <p>Saat menggunakan widget TextField standar, kita perlu menggunakan properti pengontrolnya untuk mengakses nilainya. Ini dilakukan dengan kelas TextEditingController:</p>
-<p><code>final _controller = TextEditingController.fromValue(</code></p>
-<p><code>  TextEditingValue(text: "Initial value"),</code></p>
-<p><code>);</code></p>
+<pre><code>final _controller = TextEditingController.fromValue(
+  TextEditingValue(text: &#34;Initial value&#34;),
+);</code></pre>
 <p>Seperti yang Anda lihat, dengan menyetel properti teks dari pengontrol, kita dapat menentukan nilai awal dari widget yang dikontrolnya. Setelah membuat instance TextEditingController, kami mengatur properti controller dari widget TextField sehingga &#34;mengontrol&#34; widget:</p>
 <pre><code>TextField(
   controller: _controller,
@@ -573,10 +573,10 @@ class VerificationCodeFormField extends FormField&lt;String&gt; {
     
   </google-codelab>
 
-  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
-  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
   <script src="//support.google.com/inapp/api.js"></script>
 
 </body>
