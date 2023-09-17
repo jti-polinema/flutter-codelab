@@ -1,8 +1,12 @@
-# Codelab: Flutter - TSA Mobile 2022
+# Codelab: Flutter - Mata Kuliah Pemrograman Mobile
 
-Codelab Flutter 2022 - Talent Scouting Academy (TSA) Mobile 2022. Created on 08 Agustus 2022.
+Codelab Flutter - Mata Kuliah Pemrograman Mobile. Created on 08 Agustus 2022.
 
-Penulis: Tim Kurikulum TSA Mobile 2022
+Untuk mata kuliah D4 Teknik Informatika, Semester 5 (Lima)
+
+Penulis: Habibie Ed Dien
+
+Copyright 2022-2023
 
 
 ## RAW Materi (Google Docs)
