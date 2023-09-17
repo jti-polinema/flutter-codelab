@@ -1,0 +1,31 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-09-17T22:49:45Z",
+  "id": "09-pengantar-bahasa-pemrograman-dart-bag-4",
+  "duration": 240,
+  "title": "#09 | Pengantar Bahasa Pemrograman Dart - Bagian 4",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mahasiswa mampu menerapkan collections, records, dan functions di Dart",
+  "source": "10uxedqCHQEl4e_DHYd525SyCjYW2y5YcCQjGIAQujbE",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "android",
+    "desktop",
+    "flutter",
+    "ios",
+    "mobile",
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "09-pengantar-bahasa-pemrograman-dart-bag-4"
+}

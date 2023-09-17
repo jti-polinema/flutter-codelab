@@ -1,0 +1,187 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#09 | Pengantar Bahasa Pemrograman Dart - Bagian 4</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="09-pengantar-bahasa-pemrograman-dart-bag-4"
+                  title="#09 | Pengantar Bahasa Pemrograman Dart - Bagian 4"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Pengantar Bahasa Pemrograman Dart - Bagian 4" duration="0">
+        <p class="image-container"><img style="width: 487.50px" src="img\\9f7bf4c9093a56cb.png"></p>
+<p><strong>Terakhir diperbarui:</strong> 17 September 2023</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada pengantar bahasa pemrograman Dart bagian 4 ini, Anda akan melakukan praktik untuk bereksperimen dengan colletctions, records, dan functions. Hal ini cukup penting diketahui terutama bagi Anda yang belum memiliki dasar pemrograman sebelumnya.</p>
+<p>Dengan mempelajari materi ini, Anda diharapkan mampu untuk menerapkannya pada Framework Flutter untuk menangani data dalam bentuk collections dan record serta memanfaatkan functions.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>Menerapkan collections pada bahasa pemrograman Dart</li>
+<li>Menerapkan records pada bahasa pemrograman Dart</li>
+<li>Menerapkan functions pada bahasa pemrograman Dart</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Dokumentasi API Dart serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
+<p>Tidak ada, hanya menggunakan Visual Studio Code dan Console.</p>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Minimal Dart versi 3.0</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus dimiliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Struktur Data</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Eksperimen Tipe Data List" duration="90">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan VS Code atau Code Editor favorit Anda.</p>
+<h2 is-upgraded><strong>Langkah 1: </strong></h2>
+<p>Ketik atau salin kode program berikut ke dalam  <code>void</code> <code>main()</code>.</p>
+<pre><code>var list = [1, 2, 3];
+assert(list.length == 3);
+assert(list[1] == 2);
+print(list.length);
+print(list[1]);
+
+list[1] = 1;
+assert(list[1] == 1);
+print(list[1]);
+</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan!</p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Ubah kode pada langkah 1 menjadi variabel final yang mempunyai index = 5 dengan default value = <code>null</code>. Isilah nama dan NIM Anda pada elemen index ke-1 dan ke-2. Lalu print dan capture hasilnya. </p>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki.</p>
+<aside class="special"><p><strong>Catatan:</strong></p>
+<p>Dart akan melakukan infers pada variabel <code>list</code> dengan tipe data <code>List<int></code>. Jika Anda mencoba menambahkan elemen berupa objek non-integer pada list, maka analyzer atau runtime akan error. Informasi lebih lanjut dapat membaca di tautan ini <a href="https://dart.dev/language/type-system#type-inference" target="_blank">type inference</a>.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Eksperimen Tipe Data Set" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan VS Code atau Code Editor favorit Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Ketik atau salin kode program berikut ke dalam fungsi <code>main()</code>.</p>
+<pre><code>var halogens = {&#39;fluorine&#39;, &#39;chlorine&#39;, &#39;bromine&#39;, &#39;iodine&#39;, &#39;astatine&#39;};
+print(halogens);</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan! Lalu perbaiki jika terjadi error.</p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>var names1 = &lt;String&gt;{};
+Set&lt;String&gt; names2 = {}; // This works, too.
+var names3 = {}; // Creates a map, not a set.
+
+print(names1);
+print(names2);
+print(names3);</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki namun tetap menggunakan ketiga variabel tersebut. Tambahkan elemen nama dan NIM Anda pada kedua variabel Set tersebut dengan dua fungsi berbeda yaitu <code>.add()</code> dan <code>.addAll()</code>. Untuk variabel Map dihapus, nanti kita coba di praktikum selanjutnya.</p>
+<p>Dokumentasikan code dan hasil di console, lalu buat laporannya.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Eksperimen Tipe Data Maps" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan DartPad di browser Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Ketik atau salin kode program berikut ke dalam fungsi <code>main()</code>.</p>
+<pre><code>for (Index = 10; index &lt; 27; index) {
+  print(Index);
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan! Lalu perbaiki jika terjadi error.</p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Tambahkan kode program berikut di dalam <em>for-loop</em>, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>If (Index == 21) break;
+Else If (index &gt; 1 || index &lt; 7) continue;
+print(index);</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki namun tetap menggunakan <em>for </em>dan <em>break-continue</em>.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/BCiyJOb7X-w?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Silakan selesaikan Praktikum 1 sampai 3, lalu dokumentasikan berupa screenshot hasil pekerjaan beserta penjelasannya!</li>
+<li>Jelaskan yang dimaksud Functions dalam bahasa Dart!</li>
+<li>Jelaskan jenis-jenis parameter di Functions beserta contoh sintaksnya!</li>
+<li>Jelaskan maksud Functions sebagai first-class objects beserta contoh sintaknya!</li>
+<li>Apa itu Anonymous Functions? Jelaskan dan berikan contohnya!</li>
+<li>Jelaskan perbedaan Lexical scope dan Lexical closures! Berikan contohnya!</li>
+<li>Jelaskan dengan contoh cara membuat return multiple value di Functions!</li>
+<li>Kumpulkan berupa link commit repo GitHub pada tautan yang telah disediakan di grup Telegram!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini sebagai langkah awal untuk memahami bahasa pemrograman Dart yang digunakan dalam framework Flutter.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang konfigurasi Flutter SDK dan emulatornya.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+<li><a href="https://dart.dev/guides/language/type-system" target="_blank">The Dart type system</a></li>
+<li><a href="https://dart.dev/resources/dartpad-best-practices" target="_blank">DartPad in tutorials: Best practices</a></li>
+<li><a href="https://developers.google.com/codelabs/from-java-to-dart" target="_blank">Pengantar Dart untuk Developer Java (Codelab)</a></li>
+<li><a href="https://dart.dev/codelabs" target="_blank">https://dart.dev/codelabs</a> </li>
+<li><a href="https://dart.dev/resources/videos" target="_blank">https://dart.dev/resources/videos</a> </li>
+<li><a href="https://dart.dev/language/collections" target="_blank">https://dart.dev/language/collections</a> </li>
+<li><a href="https://dart.dev/language/records" target="_blank">https://dart.dev/language/records</a> </li>
+<li><a href="https://dart.dev/language/functions" target="_blank">https://dart.dev/language/functions</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">https://dart.dev/guides/language/language-tour</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+</ul>
+<p><em>&lt;iframe src=&#34;https://docs.google.com/presentation/d/e/2PACX-1vQpHS_kGWEIeiwfiV6EDb01VM-oOKiCexlRodQzTDqtTihlb2Q1yy-aFtq7NlUIjtQajhOmW3TsDIEN/embed?start=false&amp;loop=false&amp;delayms=3000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</em></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
