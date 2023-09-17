@@ -62,7 +62,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 1: Eksperimen Tipe Data List" duration="90">
+      <google-codelab-step label="Praktikum 1: Eksperimen Tipe Data List" duration="30">
         <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan VS Code atau Code Editor favorit Anda.</p>
 <h2 is-upgraded><strong>Langkah 1: </strong></h2>
 <p>Ketik atau salin kode program berikut ke dalam  <code>void</code> <code>main()</code>.</p>
@@ -112,28 +112,122 @@ print(names3);</code></pre>
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 3: Eksperimen Tipe Data Maps" duration="30">
-        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan DartPad di browser Anda.</p>
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan VS Code atau Code Editor favorit Anda.</p>
 <h2 is-upgraded><strong>Langkah 1:</strong></h2>
 <p>Ketik atau salin kode program berikut ke dalam fungsi <code>main()</code>.</p>
-<pre><code>for (Index = 10; index &lt; 27; index) {
-  print(Index);
-}</code></pre>
+<pre><code>var gifts = {
+  // Key:    Value
+  &#39;first&#39;: &#39;partridge&#39;,
+  &#39;second&#39;: &#39;turtledoves&#39;,
+  &#39;fifth&#39;: 1
+};
+
+var nobleGases = {
+  2: &#39;helium&#39;,
+  10: &#39;neon&#39;,
+  18: 2,
+};
+
+print(gifts);
+print(nobleGases);</code></pre>
 <h2 is-upgraded><strong>Langkah 2:</strong></h2>
 <p>Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan! Lalu perbaiki jika terjadi error.</p>
 <h2 is-upgraded><strong>Langkah 3:</strong></h2>
-<p>Tambahkan kode program berikut di dalam <em>for-loop</em>, lalu coba eksekusi (Run) kode Anda.</p>
-<pre><code>If (Index == 21) break;
-Else If (index &gt; 1 || index &lt; 7) continue;
-print(index);</code></pre>
-<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki namun tetap menggunakan <em>for </em>dan <em>break-continue</em>.</p>
-<iframe class="youtube-video" src="https://www.youtube.com/embed/BCiyJOb7X-w?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p>Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>var mhs1 = Map&lt;String, String&gt;();
+gifts[&#39;first&#39;] = &#39;partridge&#39;;
+gifts[&#39;second&#39;] = &#39;turtledoves&#39;;
+gifts[&#39;fifth&#39;] = &#39;golden rings&#39;;
+
+var mhs2 = Map&lt;int, String&gt;();
+nobleGases[2] = &#39;helium&#39;;
+nobleGases[10] = &#39;neon&#39;;
+nobleGases[18] = &#39;argon&#39;;
+</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki.</p>
+<p>Tambahkan elemen nama dan NIM Anda pada tiap variabel di atas (<code>gifts</code>, <code>nobleGases</code>, <code>mhs1</code>, dan <code>mhs2</code>). Dokumentasikan hasilnya dan buat laporannya!</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 4: Eksperimen Tipe Data List: Spread dan Control-flow Operators" duration="50">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan VS Code atau Code Editor favorit Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Ketik atau salin kode program berikut ke dalam fungsi <code>main()</code>.</p>
+<pre><code>var list = [1, 2, 3];
+var list2 = [0, ...list];
+print(list1);
+print(list2);
+print(list2.length);</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan! Lalu perbaiki jika terjadi error.</p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>list1 = [1, 2, null];
+print(list1);
+var list3 = [0, ...?list1];
+print(list3.length);</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki.</p>
+<p>Tambahkan variabel list berisi NIM Anda menggunakan Spread Operators. Dokumentasikan hasilnya dan buat laporannya!</p>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>var nav = [&#39;Home&#39;, &#39;Furniture&#39;, &#39;Plants&#39;, if (promoActive) &#39;Outlet&#39;];
+print(nav);</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Tunjukkan hasilnya jika variabel <code>promoActive</code> ketika <code>true</code> dan <code>false</code>.</p>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<p>Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>var nav2 = [&#39;Home&#39;, &#39;Furniture&#39;, &#39;Plants&#39;, if (login case &#39;Manager&#39;) &#39;Inventory&#39;];
+print(nav2);</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Tunjukkan hasilnya jika variabel <code>login</code> mempunyai kondisi lain.</p>
+<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<p>Tambahkan kode program berikut, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>var listOfInts = [1, 2, 3];
+var listOfStrings = [&#39;#0&#39;, for (var i in listOfInts) &#39;#$i&#39;];
+assert(listOfStrings[1] == &#39;#1&#39;);
+print(listOfStrings);</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Jelaskan manfaat <strong>Collection For</strong> dan dokumentasikan hasilnya.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 5: Eksperimen Tipe Data Records" duration="50">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan VS Code atau Code Editor favorit Anda.</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p>Ketik atau salin kode program berikut ke dalam fungsi <code>main()</code>.</p>
+<pre><code>var record = (&#39;first&#39;, a: 2, b: true, &#39;last&#39;);
+print(record)</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p>Silakan coba eksekusi (Run) kode pada langkah 1 tersebut. Apa yang terjadi? Jelaskan! Lalu perbaiki jika terjadi error.</p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p>Tambahkan kode program berikut di luar scope <code>void main()</code>, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>(int, int) tukar((int, int) record) {
+  var (a, b) = record;
+  return (b, a);
+}</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Gunakan fungsi <code>tukar()</code> di dalam <code>main()</code> sehingga tampak jelas proses pertukaran value field di dalam Records.</p>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Tambahkan kode program berikut di dalam scope <code>void main()</code>, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>// Record type annotation in a variable declaration:
+(String, int) mahasiswa;
+print(mahasiswa);
+</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Inisialisasi field nama dan NIM Anda pada variabel record <code>mahasiswa</code> di atas. Dokumentasikan hasilnya dan buat laporannya!</p>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<p>Tambahkan kode program berikut di dalam scope <code>void main()</code>, lalu coba eksekusi (Run) kode Anda.</p>
+<pre><code>var mahasiswa2 = (&#39;first&#39;, a: 2, b: true, &#39;last&#39;);
+
+print(mahasiswa2.$1); // Prints &#39;first&#39;
+print(mahasiswa2.a); // Prints 2
+print(mahasiswa2.b); // Prints true
+print(mahasiswa2.$2); // Prints &#39;last&#39;</code></pre>
+<p>Apa yang terjadi ? Jika terjadi error, silakan perbaiki. Gantilah salah satu isi record dengan nama dan NIM Anda, lalu dokumentasikan hasilnya dan buat laporannya!</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Tugas Praktikum" duration="90">
         <ol type="1" start="1">
-<li>Silakan selesaikan Praktikum 1 sampai 3, lalu dokumentasikan berupa screenshot hasil pekerjaan beserta penjelasannya!</li>
+<li>Silakan selesaikan Praktikum 1 sampai 5, lalu dokumentasikan berupa screenshot hasil pekerjaan Anda beserta penjelasannya!</li>
 <li>Jelaskan yang dimaksud Functions dalam bahasa Dart!</li>
 <li>Jelaskan jenis-jenis parameter di Functions beserta contoh sintaksnya!</li>
 <li>Jelaskan maksud Functions sebagai first-class objects beserta contoh sintaknya!</li>
@@ -170,7 +264,7 @@ print(index);</code></pre>
 <li><a href="https://dart.dev/guides/language/language-tour" target="_blank">https://dart.dev/guides/language/language-tour</a> </li>
 <li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
 </ul>
-<p><em>&lt;iframe src=&#34;https://docs.google.com/presentation/d/e/2PACX-1vQpHS_kGWEIeiwfiV6EDb01VM-oOKiCexlRodQzTDqtTihlb2Q1yy-aFtq7NlUIjtQajhOmW3TsDIEN/embed?start=false&amp;loop=false&amp;delayms=3000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;</em></p>
+<iframe class="embedded-iframe" src="https://docs.google.com/presentation/d/e/2PACX-1vQpHS_kGWEIeiwfiV6EDb01VM-oOKiCexlRodQzTDqtTihlb2Q1yy-aFtq7NlUIjtQajhOmW3TsDIEN/embed?start=false&loop=false&delayms=5000"></iframe>
 
 
       </google-codelab-step>
