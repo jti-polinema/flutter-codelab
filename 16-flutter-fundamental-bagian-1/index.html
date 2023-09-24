@@ -42,7 +42,6 @@
 </ul>
 <aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
 </aside>
-<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
 <h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
 <p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
 <ul>
@@ -68,16 +67,13 @@
 <ol type="1" start="1">
 <li><strong>.dart_tools</strong>         : Konfigurasi untuk dart language</li>
 <li><strong>.idea</strong>                 : Konfigurasi untuk android studio</li>
-<li><strong>.gitignore</strong>        :        File git yang digunakan untuk mengelola source code. Hal ini akan </li>
-</ol>
-<p>                berguna jika developer sudah bekerja dengan git.</p>
-<ol type="1" start="4">
+<li><strong>.gitignore</strong>        :        File git yang digunakan untuk mengelola source code. Hal ini akan berguna jika developer sudah bekerja dengan git.</li>
 <li><strong>metadata</strong>        : File yang berisi metadata dari project</li>
 <li><strong>packages</strong>        : File yang berisi alamat path</li>
 <li><strong>flutter_basic.iml</strong>: File yang berisi detail dari project.</li>
 <li><strong>pubspec.lock</strong>        :        File yang berisi versi library atau package yang digunakan pada </li>
 </ol>
-<p>                project yang degenerate sesuai dengan file pubspec.yaml.</p>
+<p>                project yang degenerate sesuai dengan file <code>pubspec.yaml</code>.</p>
 <ol type="1" start="8">
 <li><strong>pubspec.yaml</strong>        :        File yang berisi library atau package yang dibutuhkan untuk </li>
 </ol>
@@ -116,9 +112,9 @@
     
       <google-codelab-step label="Flutter Hot Reload dan Restart" duration="10">
         <h2 is-upgraded><strong>Flutter Hot Reload</strong></h2>
-<p>Pada flutter terdapat fungsi hot reload dan hot restart yang digunakan untuk pengembangan aplikasi dengan flutter. Hote reload mencompile source code yang baru ditambahkan dan dikirimkan ke dart virtual machine diupdate. Setelah selesai update, dart virtual machine akan memperbarui UI sesuai dengan perubahan. Keunggulan hot reload adalah waktu prosenya cepat disbanding hot restart. Akan tetapi hot reload mempertahan state yang ada sehingga jika menggunakan state maka nilai dari widget tidak akan berubah.</p>
+<p>Pada flutter terdapat fungsi hot reload dan hot restart yang digunakan untuk pengembangan aplikasi dengan flutter. Hot reload mencompile source code yang baru ditambahkan dan dikirimkan ke dart virtual machine lalu diupdate. Setelah selesai update, dart virtual machine akan memperbarui UI sesuai dengan perubahan. Keunggulan hot reload adalah waktu prosenya yang cepat dibanding hot restart. Akan tetapi hot reload mempertahankan state yang ada sehingga jika menggunakan state maka nilai dari widget tidak akan berubah.</p>
 <h2 is-upgraded><strong>Flutter Hot Restart</strong></h2>
-<p>Hot restart akan mencompile ulang aplikasi dan mereset (<em>destroy</em>) state yang ada. Jadi hot restart akan membuild ulang widget tree sesuai dengan code yang telah diperbarui. </p>
+<p>Hot restart akan meng-<em>compile</em> ulang aplikasi dan mereset (<em>destroy</em>) state yang ada. Jadi hot restart akan mem-<em>build</em> ulang <em>widget tree</em> sesuai dengan code yang telah diperbarui. </p>
 
 
       </google-codelab-step>
@@ -127,27 +123,28 @@
         <p>Berikut ini penjelasan terkait project flutter yang nanti akan Anda praktikkan pada Praktikum 1.</p>
 <h2 is-upgraded><strong>Import Statement</strong></h2>
 <p>Seperti halnya kode program pada umumnya dart dapat menggunakan statement import untuk mengimport package, library, atau file lain yang digunakan pada file yang dieksekusi.</p>
-<p><code>import 'package:flutter/material.dart';</code></p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;</code></pre>
 <h2 is-upgraded><strong>Main function</strong></h2>
 <p>Main function pada flutter dibuat dengan menggunakan kode program berikut ini dimana semua proses aplikasi dimulai dari mengeksekusi fungsi main.</p>
-<p><code>void main() {</code></p>
-<p><code>  runApp(MyApp());</code></p>
-<p><code>}</code></p>
+<pre><code>void main() {
+  runApp(MyApp());
+}</code></pre>
 <p>Perhatikan pada fungsi main ini yang di eksekusi adalah class MyApp dimana class MyApp harus mengextend salah satu StatlessWidget atau StatefullWidget, ingat bahwa flutter membangun UI menggunakan widget.</p>
 <h2 is-upgraded><strong>Stateless Widget</strong></h2>
 <p>Flutter menggunakan Widget sebagai elemen-elemen pembangun UI, widget ini adalah kode program yang diterjemahkan menjadi tampilan yang dapat dilihat dan diinteraksikan oleh pengguna. Stateless widget bersifat statis / final dimana nilai atau konfigurasi telah diinisiasi sejak awal, nilai variabel pada widget ini tidak dapat diubah oleh widget ini sendiri tetapi dapat diubah oleh parent widget nya jika parent nya adalah StatefullWidget. Struktur dasar stateless widget adalah sebagai berikut:</p>
-<p><code>class exampleStateless extends StatelessWidget{</code></p>
-<p><code>  @override</code></p>
-<p><code>  Widget build(BuildContext context) {</code></p>
-<p><code>  }</code></p>
-<p><code>}</code></p>
+<pre><code>class exampleStateless extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    
+  }
+}</code></pre>
 <h2 is-upgraded><strong>Stateful Widget</strong></h2>
-<p>Stateful widget bersifat dinamis, widget ini dapat diperbarui ketika dibutuhkan sesuai dengan action pengguna atau jika ada ada perubahan data. Perubahan data pada stateful widget di <em>trigger </em>oleh perubahan state oleh karena itu sebuah StatefulWidget selalu memiliki State. Struktur dasar stateful widget adalah sebagai berikut:</p>
-<p><code>class exampleStateless extends StatefulWidget{</code></p>
-<p><code>  @override</code></p>
-<p><code>  State<StatefulWidget> createState() {</code></p>
-<p><code>  }</code></p>
-<p><code>}</code></p>
+<p>Stateful widget bersifat dinamis, widget ini dapat diperbarui ketika dibutuhkan sesuai dengan action pengguna atau jika ada ada perubahan data. Perubahan data pada stateful widget di <em>trigger </em>oleh perubahan state, oleh karena itu sebuah StatefulWidget selalu memiliki State. Struktur dasar stateful widget adalah sebagai berikut:</p>
+<pre><code>class exampleStateless extends StatefulWidget{
+  @override
+  State&lt;StatefulWidget&gt; createState() {
+  }
+}</code></pre>
 
 
       </google-codelab-step>
@@ -710,6 +707,8 @@ class _MyHomePageState extends State&lt;MyHomePage&gt; {
 </ul>
 <h2 is-upgraded><strong>Referensi</strong></h2>
 <ul>
+<li><a href="https://drive.google.com/file/d/1W9uSLC9wlf9fFudmCWFHTx9dan5SXII0/view" target="_blank">Simone Alessandria - Flutter Cookbook_ 100+ step-by-step recipes for building cross-platform, professional-grade apps with Flutter 3.10.x and Dart 3.x,-Packt Publishing (2023)</a></li>
+<li><a href="https://drive.google.com/file/d/1W8l7EHa7ssyA6xqXCvYnBbUfYEJTXAcY/view" target="_blank">(Mastering Computer Science) Sufyan bin Uzayr - Mastering Flutter_ A Beginner&#39;s Guide-CRC Press (2022)</a></li>
 <li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
 <li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
 <li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
