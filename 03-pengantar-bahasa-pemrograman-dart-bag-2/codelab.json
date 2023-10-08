@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2023-10-08T14:09:36Z",
-  "id": "01-pengenalan",
-  "duration": 163,
-  "title": "#01 | Pengantar Pemrograman Mobile",
+  "updated": "2023-10-08T14:15:33Z",
+  "id": "03-pengantar-bahasa-pemrograman-dart-bag-2",
+  "duration": 240,
+  "title": "#03 | Pengantar Bahasa Pemrograman Dart - Bagian 2",
   "authors": "Habibie Ed Dien",
-  "summary": "Modul pertama ini berisi pengantar tentang Flutter Framework dan persiapan perangkat lunak yang perlu dipasang pada komputer Anda.",
-  "source": "1RVJ9ljT-n1LJx6xM74eMXM4onLUpxwrKNm7i525CLEk",
+  "summary": "Mahasiswa mampu menerapkan percabangan dan perulangan",
+  "source": "1nRgd0tzhO99mwrLuWFDnDgv1TzVKfI3oa5A7dsPBrCo",
   "theme": "mobileflutter",
   "status": [
     "published"
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "01-pengenalan"
+  "url": "03-pengantar-bahasa-pemrograman-dart-bag-2"
 }

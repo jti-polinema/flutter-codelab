@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-10-08T14:13:11Z",
+  "id": "02-pengantar-bahasa-pemrograman-dart-bag-1",
+  "duration": 235,
+  "title": "#02 | Pengantar Bahasa Pemrograman Dart - Bagian 1",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mahasiswa mampu menjelaskan evolusi dart, cara kerjanya, struktur bahasanya, operator dart, dan main function",
+  "source": "1h87vBIBKrU_Nei0RsHOcw6Amf0bk8TEi_GCVVUGDfMc",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "02-pengantar-bahasa-pemrograman-dart-bag-1"
+}
