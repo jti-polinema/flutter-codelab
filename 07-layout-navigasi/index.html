@@ -29,7 +29,7 @@
     
       <google-codelab-step label="Layout dan Navigasi" duration="0">
         <iframe class="embedded-iframe" src="https://docs.google.com/presentation/d/e/2PACX-1vSOXPO3ydimatPG1LNlxjOw8J-GIN-1fraSFentrguOyEgueh30gXyOjpWbxelyGW9bKnVsuN_tRPmg/pub?start=false&loop=false&delayms=5000"></iframe>
-<p><strong>Terakhir diperbarui:</strong> 08 Oktober 2023</p>
+<p><strong>Terakhir diperbarui:</strong> 09 Oktober 2023</p>
 <p><strong>Penulis:</strong> Habibie Ed Dien</p>
 <p>Pada codelab ini, Anda akan mempelajari konsep dan praktik untuk dasar-dasar framework Flutter dengan menerapkan layout dan navigasi.</p>
 <h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
@@ -229,9 +229,9 @@ Widget buttonSection = Row(
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 3: Implementasi text section" duration="30">
+      <google-codelab-step label="Praktikum 3: Implementasi text section" duration="10">
         <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
-<h2 is-upgraded><strong>Langkah 1: Buat class VerificationCodeInput</strong></h2>
+<h2 is-upgraded><strong>Langkah 1: Buat widget textSection</strong></h2>
 <p>Tentukan bagian teks sebagai variabel. Masukkan teks ke dalam <code>Container</code> dan tambahkan padding di sepanjang setiap tepinya. Tambahkan kode berikut tepat di bawah deklarasi <code>buttonSection</code>:</p>
 <pre><code>Widget textSection = Container(
   padding: const EdgeInsets.all(32),
@@ -253,9 +253,34 @@ Widget buttonSection = Row(
 
       </google-codelab-step>
     
-      <google-codelab-step label="Tugas Praktikum" duration="90">
+      <google-codelab-step label="Praktikum 4: Implementasi image section" duration="10">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Siapkan aset gambar</strong></h2>
+<p>Anda dapat mencari gambar di internet yang ingin ditampilkan. Buatlah folder <code>images</code> di root project <strong>layout_flutter</strong>. Masukkan file gambar tersebut ke folder <code>images</code>, lalu set nama file tersebut ke file <code>pubspec.yaml</code> seperti berikut:</p>
+<p class="image-container"><img style="width: 356.00px" src="img\\6b5a4bc2e1591c80.png"></p>
+<p>Contoh nama file gambar di atas adalah <code>lake.jpg</code></p>
+<aside class="special"><p><strong>Tips</strong></p>
+<ul>
+<li>Perhatikan bahwa <code>pubspec.yaml</code> sensitif terhadap huruf besar-kecil, jadi tulis <code>assets</code>: dan URL gambar seperti yang ditunjukkan di atas.</li>
+<li>File pubspec juga sensitif terhadap spasi, jadi gunakan indentasi yang tepat.</li>
+<li>Anda mungkin perlu memulai ulang program yang sedang berjalan (baik di simulator atau perangkat yang terhubung) agar perubahan pubspec dapat diterapkan.</li>
+</ul>
+</aside>
+<h2 is-upgraded><strong>Langkah 2: Tambahkan gambar ke body</strong></h2>
+<p>Tambahkan aset gambar ke dalam <code>body</code> seperti berikut:</p>
+<p class="image-container"><img style="width: 376.00px" src="img\\56a96f0d725017fd.png"></p>
+<p><code>BoxFit.cover</code> memberi tahu kerangka kerja bahwa gambar harus sekecil mungkin tetapi menutupi seluruh kotak rendernya.</p>
+<h2 is-upgraded><strong>Langkah 3: Terakhir, ubah menjadi ListView</strong></h2>
+<p>Pada langkah terakhir ini, atur semua elemen dalam <code>ListView</code>, bukan Column, karena <code>ListView</code> mendukung scroll yang dinamis saat aplikasi dijalankan pada perangkat yang resolusinya lebih kecil.</p>
+<p class="image-container"><img style="width: 497.00px" src="img\\d690c32e1656b4d0.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="120">
         <ol type="1" start="1">
-<li>Selesaikan Praktikum 1 sampai 3, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Selesaikan Praktikum 1 sampai 4, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Silakan implementasikan di project baru &#34;<strong>basic_layout_flutter</strong>&#34; dengan mengakses sumber ini: <a href="https://docs.flutter.dev/codelabs/layout-basics" target="_blank">https://docs.flutter.dev/codelabs/layout-basics</a> </li>
 <li>Kumpulkan link commit repository GitHub Anda ke spreadsheet yang telah disediakan!</li>
 </ol>
 
@@ -264,19 +289,22 @@ Widget buttonSection = Row(
     
       <google-codelab-step label="Selamat!" duration="0">
         <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari Layout di Flutter.</p>
-<p>Pada codelab berikutnya, Anda akan mempelajari tentang ....</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang navigasi dan routing.</p>
 <h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
 <p>Silakan cek beberapa sumber belajar lainnya...</p>
 <ul>
-<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
 <li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+<li><a href="https://docs.flutter.dev/codelabs/layout-basics" target="_blank">https://docs.flutter.dev/codelabs/layout-basics</a></li>
+<li><a href="https://docs.flutter.dev/ui/interactivity" target="_blank">https://docs.flutter.dev/ui/interactivity</a> </li>
 </ul>
 <h2 is-upgraded><strong>Referensi</strong></h2>
 <ul>
+<li><a href="https://docs.flutter.dev/ui/layout" target="_blank">https://docs.flutter.dev/ui/layout</a> </li>
+<li><a href="https://docs.flutter.dev/ui/layout/tutorial" target="_blank">https://docs.flutter.dev/ui/layout/tutorial</a> </li>
 <li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
 <li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">https://dart.dev/guides/language/language-tour</a> </li>
 <li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
-<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
 </ul>
 
 
