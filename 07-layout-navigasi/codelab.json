@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-10-09T01:13:17Z",
+  "id": "07-layout-navigasi",
+  "duration": 155,
+  "title": "#07 | Layout dan Navigasi",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mampu melakukan penyusunan layout dan navigasi serta routing",
+  "source": "1zCou4usd-DriL3tcXmLLP686aTiUulyyzygyfQmyio4",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "07-layout-navigasi"
+}

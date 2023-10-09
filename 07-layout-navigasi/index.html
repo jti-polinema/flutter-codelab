@@ -1,0 +1,294 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#07 | Layout dan Navigasi</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="07-layout-navigasi"
+                  title="#07 | Layout dan Navigasi"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Layout dan Navigasi" duration="0">
+        <iframe class="embedded-iframe" src="https://docs.google.com/presentation/d/e/2PACX-1vSOXPO3ydimatPG1LNlxjOw8J-GIN-1fraSFentrguOyEgueh30gXyOjpWbxelyGW9bKnVsuN_tRPmg/pub?start=false&loop=false&delayms=5000"></iframe>
+<p><strong>Terakhir diperbarui:</strong> 08 Oktober 2023</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada codelab ini, Anda akan mempelajari konsep dan praktik untuk dasar-dasar framework Flutter dengan menerapkan layout dan navigasi.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>menerapkan jenis-jenis layout</li>
+<li>menerapkan navigasi</li>
+<li>menerapkan routing</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Konsep Layout di Flutter" duration="10">
+        <p>Inti dari mekanisme tata letak Flutter adalah widget. Di Flutter, hampir semuanya adalah widget—bahkan model tata letak pun merupakan widget. Gambar, ikon, dan teks yang Anda lihat di aplikasi Flutter semuanya merupakan widget. Namun hal-hal yang tidak Anda lihat juga merupakan widget, seperti baris, kolom, dan kisi yang mengatur, membatasi, dan menyelaraskan widget yang terlihat.</p>
+<p>Anda membuat tata letak dengan menyusun widget untuk membuat widget yang lebih kompleks. Misalnya, tangkapan layar pertama di bawah ini menunjukkan 3 ikon dengan label di bawah masing-masing ikon:</p>
+<p class="image-container"><img style="width: 424.00px" src="img\\3bafeddffa06174b.png"></p>
+<p>Tangkapan layar kedua menampilkan tata letak visual, memperlihatkan deretan 3 kolom yang setiap kolomnya berisi ikon dan label.</p>
+<p>Berikut diagram pohon widget untuk UI ini:</p>
+<p class="image-container"><img style="width: 600.00px" src="img\\c2e2938d5fe911a9.png"></p>
+<p>Sebagian besar tampilannya akan terlihat seperti yang Anda harapkan, namun Anda mungkin bertanya-tanya tentang wadahnya (ditampilkan dalam warna merah muda). Kontainer adalah kelas widget yang memungkinkan Anda menyesuaikan widget turunannya. Gunakan Kontainer ketika Anda ingin menambahkan padding, margin, batas, atau warna latar belakang, untuk menyebutkan beberapa kemampuannya.</p>
+<p>Dalam contoh ini, setiap widget Teks ditempatkan dalam Wadah untuk menambahkan margin. Seluruh Baris juga ditempatkan dalam Wadah untuk menambahkan bantalan di sekitar baris.</p>
+<p>UI lainnya dalam contoh ini dikendalikan oleh properti. Atur warna Ikon menggunakan properti warnanya. Gunakan properti Text.style untuk mengatur font, warna, berat, dan sebagainya. Kolom dan baris memiliki properti yang memungkinkan Anda menentukan bagaimana turunannya disejajarkan secara vertikal atau horizontal, dan berapa banyak ruang yang harus ditempati oleh turunannya.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Membangun Layout di Flutter" duration="15">
+        <aside class="special"><p><strong>Apa yang akan Anda pelajari</strong></p>
+<ul>
+<li>Cara kerja mekanisme tata letak Flutter.</li>
+<li>Cara menata widget secara vertikal dan horizontal.</li>
+<li>Cara membuat tata letak Flutter.</li>
+</ul>
+</aside>
+<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<p><strong>Tampilan akhir yang akan Anda buat</strong></p>
+<p class="image-container"><img style="width: 256.56px" src="img\\52e2825a0742c242.png"></p>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>layout_flutter</strong>. Atau sesuaikan style laporan praktikum yang Anda buat.</p>
+<h2 is-upgraded>Langkah 2: Buka file <strong><code>lib/main.dart</code></strong></h2>
+<p>Buka file <code>main.dart</code> lalu ganti dengan kode berikut. Isi nama dan NIM Anda di <code>text title</code>.</p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+void main() =&gt; runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Flutter layout: Nama dan NIM Anda&#39;,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(&#39;Flutter layout demo&#39;),
+        ),
+        body: const Center(
+          child: Text(&#39;Hello World&#39;),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Identifikasi layout diagram</strong></h2>
+<p>Langkah pertama adalah memecah tata letak menjadi elemen dasarnya:</p>
+<ul>
+<li>Identifikasi baris dan kolom.</li>
+<li>Apakah tata letaknya menyertakan kisi-kisi (grid)?</li>
+<li>Apakah ada elemen yang tumpang tindih?</li>
+<li>Apakah UI memerlukan tab?</li>
+<li>Perhatikan area yang memerlukan alignment, padding, atau borders.</li>
+</ul>
+<p>Pertama, identifikasi elemen yang lebih besar. Dalam contoh ini, empat elemen disusun menjadi sebuah kolom: sebuah gambar, dua baris, dan satu blok teks.</p>
+<p class="image-container"><img style="width: 264.51px" src="img\\f38a1b954df85972.png"></p>
+<p>Selanjutnya, buat diagram setiap baris. Baris pertama, disebut bagian Judul, memiliki 3 anak: kolom teks, ikon bintang, dan angka. Anak pertamanya, kolom, berisi 2 baris teks. Kolom pertama itu memakan banyak ruang, sehingga harus dibungkus dengan widget yang Diperluas.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\c39ec49e9db9ebb8.png"></p>
+<p>Baris kedua, disebut bagian Tombol, juga memiliki 3 anak: setiap anak merupakan kolom yang berisi ikon dan teks.</p>
+<p class="image-container"><img style="width: 593.00px" src="img\\43883262364c63da.png"></p>
+<p>Setelah tata letak telah dibuat diagramnya, cara termudah adalah dengan menerapkan pendekatan bottom-up. Untuk meminimalkan kebingungan visual dari kode tata letak yang banyak bertumpuk, tempatkan beberapa implementasi dalam variabel dan fungsi.</p>
+<h2 is-upgraded><strong>Langkah 4: Implementasi title row</strong></h2>
+<p>Pertama, Anda akan membuat kolom bagian kiri pada judul. Tambahkan kode berikut di bagian atas metode <code>build()</code> di dalam kelas <code>MyApp</code>:</p>
+<pre><code>Widget titleSection = Container(
+  padding: const EdgeInsets.all(...),
+  child: Row(
+    children: [
+      Expanded(
+        /* soal 1*/
+        child: Column(
+          crossAxisAlignment: ...,
+          children: [
+            /* soal 2*/
+            Container(
+              padding: const EdgeInsets.only(bottom: ...),
+              child: const Text(
+                &#39;Wisata Gunung di Batu&#39;,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Text(
+              &#39;Batu, Malang, Indonesia&#39;,
+              style: TextStyle(...),
+            ),
+          ],
+        ),
+      ),
+      /* soal 3*/
+      Icon(
+       ...,
+        color: ...,
+      ),
+      const Text(...),
+    ],
+  ),
+);</code></pre>
+<p><strong>/* soal 1 */</strong> Letakkan widget <code>Column</code> di dalam widget <code>Expanded</code> agar menyesuaikan ruang yang tersisa di dalam widget <code>Row</code>. Tambahkan properti <code>crossAxisAlignment</code> ke <code>CrossAxisAlignment.start</code> sehingga posisi kolom berada di awal baris.</p>
+<p><strong>/* soal 2 */</strong> Letakkan baris pertama teks di dalam <code>Container</code> sehingga memungkinkan Anda untuk menambahkan padding = 8. Teks ‘<code>Batu, Malang, Indonesia</code>&#39; di dalam <code>Column</code>, set warna menjadi abu-abu.</p>
+<p><strong>/* soal 3 */</strong> Dua item terakhir di baris judul adalah ikon bintang, set dengan warna merah, dan teks &#34;41&#34;. Seluruh baris ada di dalam <code>Container</code> dan beri padding di sepanjang setiap tepinya sebesar 32 piksel. Kemudian ganti isi <code>body text ‘Hello World'</code> dengan variabel <code>titleSection</code> seperti berikut:</p>
+<p class="image-container"><img style="width: 471.50px" src="img\\ec4cd5a8c9e993f4.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Implementasi button row" duration="10">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Buat method Column _buildButtonColumn</strong></h2>
+<p>Bagian tombol berisi 3 kolom yang menggunakan tata letak yang sama—sebuah ikon di atas baris teks. Kolom pada baris ini diberi jarak yang sama, dan teks serta ikon diberi warna primer.</p>
+<p>Karena kode untuk membangun setiap kolom hampir sama, buatlah metode pembantu pribadi bernama <code>buildButtonColumn()</code>, yang mempunyai parameter warna, <code>Icon</code> dan <code>Text</code>, sehingga dapat mengembalikan kolom dengan widgetnya sesuai dengan warna tertentu.</p>
+<p><strong>lib/main.dart (_buildButtonColumn)</strong></p>
+<pre><code>class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // ···
+  }
+
+  Column _buildButtonColumn(Color color, IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color),
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: color,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 2: Buat widget buttonSection</strong></h2>
+<p>Buat Fungsi untuk menambahkan ikon langsung ke kolom. Teks berada di dalam <code>Container</code> dengan margin hanya di bagian atas, yang memisahkan teks dari ikon.</p>
+<p>Bangun baris yang berisi kolom-kolom ini dengan memanggil fungsi dan set warna, <code>Icon</code>, dan teks khusus melalui parameter ke kolom tersebut. Sejajarkan kolom di sepanjang sumbu utama menggunakan <code>MainAxisAlignment.spaceEvenly</code> untuk mengatur ruang kosong secara merata sebelum, di antara, dan setelah setiap kolom. Tambahkan kode berikut tepat di bawah deklarasi <code>titleSection</code> di dalam metode <code>build()</code>:</p>
+<p><strong>lib/main.dart (buttonSection)</strong></p>
+<pre><code>Color color = Theme.of(context).primaryColor;
+
+Widget buttonSection = Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    _buildButtonColumn(color, Icons.call, &#39;CALL&#39;),
+    _buildButtonColumn(color, Icons.near_me, &#39;ROUTE&#39;),
+    _buildButtonColumn(color, Icons.share, &#39;SHARE&#39;),
+  ],
+);</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Tambah button section ke body</strong></h2>
+<p>Tambahkan variabel <code>buttonSection</code> ke dalam <code>body</code> seperti berikut:</p>
+<p class="image-container"><img style="width: 579.00px" src="img\\d026c1bc3e8e1aa0.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Implementasi text section" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Buat class VerificationCodeInput</strong></h2>
+<p>Tentukan bagian teks sebagai variabel. Masukkan teks ke dalam <code>Container</code> dan tambahkan padding di sepanjang setiap tepinya. Tambahkan kode berikut tepat di bawah deklarasi <code>buttonSection</code>:</p>
+<pre><code>Widget textSection = Container(
+  padding: const EdgeInsets.all(32),
+  child: const Text(
+    &#39;Carilah teks di internet yang sesuai &#39;
+    &#39;dengan foto atau tempat wisata yang ingin &#39;
+    &#39;Anda tampilkan. &#39;
+    &#39;Tambahkan nama dan NIM Anda sebagai &#39;
+    &#39;identitas hasil pekerjaan Anda. &#39;
+    &#39;Selamat mengerjakan 🙂.&#39;,
+    softWrap: true,
+  ),
+);</code></pre>
+<p>Dengan memberi nilai <code>softWrap</code> = true, baris teks akan memenuhi lebar kolom sebelum membungkusnya pada batas kata.</p>
+<h2 is-upgraded><strong>Langkah 2: Tambahkan variabel text section ke body</strong></h2>
+<p>Tambahkan widget variabel <code>textSection</code> ke dalam <code>body</code> seperti berikut:</p>
+<p class="image-container"><img style="width: 581.00px" src="img\\aa2c329d766be950.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan Praktikum 1 sampai 3, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Kumpulkan link commit repository GitHub Anda ke spreadsheet yang telah disediakan!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari Layout di Flutter.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang ....</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://flutlab.io/" target="_blank">FlutLab is a modern Flutter online IDE</a></li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
