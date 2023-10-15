@@ -277,7 +277,7 @@ Widget buttonSection = Row(
 
       </google-codelab-step>
     
-      <google-codelab-step label="Tugas Praktikum" duration="120">
+      <google-codelab-step label="Tugas Praktikum 1" duration="120">
         <ol type="1" start="1">
 <li>Selesaikan Praktikum 1 sampai 4, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
 <li>Silakan implementasikan di project baru &#34;<strong>basic_layout_flutter</strong>&#34; dengan mengakses sumber ini: <a href="https://docs.flutter.dev/codelabs/layout-basics" target="_blank">https://docs.flutter.dev/codelabs/layout-basics</a> </li>
@@ -287,12 +287,85 @@ Widget buttonSection = Row(
 
       </google-codelab-step>
     
+      <google-codelab-step label="Konsep Navigasi dan Rute" duration="5">
+        <p>Perpindahan halaman di Flutter, ditangani oleh Navigator dengan melibatkan konsep sebagai berikut:</p>
+<ul>
+<li><strong>Navigator</strong>: sebuah widget yang mengatur tumpukan (struktur data <em>stack</em>) dari objek rute.</li>
+<li><strong>Route</strong>: sebuah objek yang merepresentasikan tampilan, umumnya diimplementasikan oleh class seperti <code>MaterialPageRoute</code>.</li>
+</ul>
+<p>Sebuah <code>Route</code> umumnya dimasukkan (<em>push</em>) atau diambil (<em>pop</em>) dari dan ke tumpukan <code>Navigator</code>. Ketika sebuah halaman dilakukan operasi push, maka halaman tersebut akan diletakkan di atas halaman yang memanggilnya. Ilustrasi tersebut dapat anda lihat pada gambar berikut. Dan jika pop dipanggil (tombol back ditekan) maka aplikasi akan menampilkan halaman sebelumnya. Selain itu Flutter juga mendukung adanya penamaan Route yang didefinisikan di awal.</p>
+<p class="image-container"><img style="width: 429.00px" src="img\\fda302d91eadd10d.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 5: Membangun Navigasi di Flutter" duration="90">
+        <aside class="special"><p><strong>Apa yang akan Anda pelajari</strong></p>
+<ul>
+<li>Cara kerja mekanisme navigation dan route di Flutter.</li>
+<li>Cara membuat navigation dan route di Flutter.</li>
+</ul>
+</aside>
+<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Materi ini dapat dimasukkan ke Laporan Praktikum folder <strong>Week </strong>atau <strong>Pertemuan 08</strong>.</p>
+<p><strong>Tampilan akhir yang akan Anda buat</strong></p>
+<p class="image-container"><img style="width: 195.22px" src="img\\2133d50ed0212bf5.png"><img style="width: 197.00px" src="img\\7f764a7b7bd56df9.png"></p>
+<p>Pada praktikum 5 ini anda akan belajar mengenai pembangunan aplikasi bergerak multi halaman. Aplikasi yang dikembangkan berupa kasus daftar barang belanja. Pada aplikasi ini anda akan belajar untuk berpindah halaman dan mengirimkan data ke halaman lainnya. Gambaran mockup hasil akhir aplikasi dapat anda lihat pada gambar di atas (mockup dibuat sederhana, sehingga Anda mempunyai banyak ruang untuk berkreasi). Desain aplikasi menampilkan sebuah <code>ListView</code> widget yang datanya bersumber dari <code>List</code>. Ketika item ditekan, data akan dikirimkan ke halaman berikutnya.</p>
+<h2 is-upgraded><strong>Langkah 1: Siapkan project baru</strong></h2>
+<p>Sebelum melanjutkan praktikum, buatlah sebuah project baru Flutter dengan nama <strong>belanja </strong>dan susunan folder seperti pada gambar berikut. Penyusunan ini dimaksudkan untuk mengorganisasi kode dan widget yang lebih mudah.</p>
+<p class="image-container"><img style="width: 355.18px" src="img\\af4334a707ff50a2.png"></p>
+<h2 is-upgraded><strong>Langkah 2: Mendefinisikan Route</strong></h2>
+<p>Buatlah dua buah file dart dengan nama <code>home_page.dart</code> dan <code>item_page.dart</code> pada folder <strong>pages</strong>. Untuk masing-masing file, deklarasikan <code>class HomePage</code> pada file <code>home_page.dart</code> dan <code>ItemPage</code> pada <code>item_page.dart</code>. Turunkan class dari <code>StatelessWidget</code>. Gambaran potongan kode dapat anda lihat sebagai berikut.</p>
+<p class="image-container"><img style="width: 473.50px" src="img\\f8478f3c28c004c7.png"></p>
+<h2 is-upgraded>Langkah 3: Lengkapi Kode di <strong><code>main.dart</code></strong></h2>
+<p>Setelah kedua halaman telah dibuat dan didefinisikan, bukalah file <code>main.dart</code>. Pada langkah ini anda akan mendefinisikan <strong>Route </strong>untuk kedua halaman tersebut. Definisi penamaan <strong>route </strong>harus bersifat <strong>unique</strong>. Halaman <strong>HomePage </strong>didefinisikan sebagai <strong>/</strong>. Dan halaman <strong>ItemPage </strong>didefinisikan sebagai <strong>/item</strong>. Untuk mendefinisikan halaman awal, anda dapat menggunakan <code>named argument initialRoute</code>. Gambaran tahapan ini, dapat anda lihat pada potongan kode berikut.</p>
+<p class="image-container"><img style="width: 478.30px" src="img\\be86069fdd534874.png"></p>
+<h2 is-upgraded>Langkah 4: Membuat data model</h2>
+<p>Sebelum melakukan perpindahan halaman dari <code>HomePage</code> ke <code>ItemPage</code>, dibutuhkan proses pemodelan data. Pada desain mockup, dibutuhkan dua informasi yaitu nama dan harga. Untuk menangani hal ini, buatlah sebuah file dengan nama <code>item.dart</code> dan letakkan pada folder <strong>models</strong>. Pada file ini didefinisikan pemodelan data yang dibutuhkan. Ilustrasi kode yang dibutuhkan, dapat anda lihat pada potongan kode berikut.</p>
+<p class="image-container"><img style="width: 485.71px" src="img\\5d82c78163140d0c.png"></p>
+<h2 is-upgraded>Langkah 5: Lengkapi kode di class <strong><code>HomePage</code></strong></h2>
+<p>Pada halaman <code>HomePage</code> terdapat <code>ListView</code> widget. Sumber data <code>ListView</code> diambil dari model List dari object Item. Gambaran kode yang dibutuhkan untuk melakukan definisi model dapat anda lihat sebagai berikut.</p>
+<p class="image-container"><img style="width: 507.00px" src="img\\e22394a6f361eb06.png"></p>
+<h2 is-upgraded>Langkah 6: Membuat ListView dan itemBuilder</h2>
+<p>Untuk menampilkan <code>ListView</code> pada praktikum ini digunakan <code>itemBuilder</code>. Data diambil dari definisi model yang telah dibuat sebelumnya. Untuk menunjukkan batas data satu dan berikutnya digunakan widget <code>Card</code>. Kode yang telah umum pada bagian ini tidak ditampilkan. Gambaran kode yang dibutuhkan dapat anda lihat sebagai berikut.</p>
+<p class="image-container"><img style="width: 504.50px" src="img\\413ff356354734fc.png"></p>
+<p>Jalankan aplikasi pada emulator atau pada device anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Pastikan pada halaman awal telah berhasil menampilkan <code>ListView</code>. Jika ada kesalahan, segera perbaiki sebelum melanjutkan ke langkah berikutnya.</p>
+</aside>
+<h2 is-upgraded>Langkah 7: Menambahkan aksi pada <strong><code>ListView</code></strong></h2>
+<p>Item pada ListView saat ini ketika ditekan masih belum memberikan aksi tertentu. Untuk menambahkan aksi pada ListView dapat digunakan widget <code>InkWell</code> atau <code>GestureDetector</code>. Perbedaan utamanya <code>InkWell</code> merupakan material widget yang memberikan efek ketika ditekan. Sedangkan <code>GestureDetector</code> bersifat umum dan bisa juga digunakan untuk gesture lain selain sentuhan. Pada praktikum ini akan digunakan widget <code>InkWell</code>.</p>
+<p>Untuk menambahkan sentuhan, letakkan cursor pada widget pembuka <code>Card</code>. Kemudian gunakan shortcut quick fix dari VSCode (<strong>Ctrl + .</strong> pada Windows atau <strong>Cmd + .</strong> pada MacOS). Sorot menu <code>wrap with widget...</code> Ubah nilai widget menjadi <code>InkWell</code> serta tambahkan named argument <code>onTap</code> yang berisi fungsi untuk berpindah ke halaman <code>ItemPage</code>. Ilustrasi potongan kode dapat anda lihat pada potongan berikut.</p>
+<p class="image-container"><img style="width: 466.00px" src="img\\712e37fd6082bae9.png"></p>
+<p>Jalankan aplikasi kembali dan pastikan ListView dapat disentuh dan berpindah ke halaman berikutnya. Periksa kembali jika terdapat kesalahan.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum 2" duration="120">
+        <ol type="1" start="1">
+<li>Untuk melakukan pengiriman data ke halaman berikutnya, cukup menambahkan informasi arguments pada penggunaan <code>Navigator</code>. Perbarui kode pada bagian <code>Navigator</code> menjadi seperti berikut.</li>
+</ol>
+<pre><code>Navigator.pushNamed(context, &#39;/item&#39;, arguments: item);</code></pre>
+<ol type="1" start="2">
+<li>Pembacaan nilai yang dikirimkan pada halaman sebelumnya dapat dilakukan menggunakan <code>ModalRoute</code>. Tambahkan kode berikut pada blok fungsi build dalam halaman <code>ItemPage</code>. Setelah nilai didapatkan, anda dapat menggunakannya seperti penggunaan variabel pada umumnya. (<a href="https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments" target="_blank">https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments</a>)</li>
+</ol>
+<pre><code>final itemArgs = ModalRoute.of(context)!.settings.arguments as Item;</code></pre>
+<ol type="1" start="3">
+<li>Pada hasil akhir dari aplikasi <strong>belanja</strong> yang telah anda selesaikan, tambahkan atribut foto produk, stok, dan rating. Ubahlah tampilan menjadi <code>GridView</code> seperti di aplikasi marketplace pada umumnya.</li>
+<li>Silakan implementasikan <code>Hero widget</code> pada aplikasi <strong>belanja</strong> Anda dengan mempelajari dari sumber ini: <a href="https://docs.flutter.dev/cookbook/navigation/hero-animations" target="_blank">https://docs.flutter.dev/cookbook/navigation/hero-animations</a> </li>
+<li>Sesuaikan dan modifikasi tampilan sehingga menjadi aplikasi yang menarik. Selain itu, pecah widget menjadi kode yang lebih kecil. Tambahkan <strong>Nama </strong>dan <strong>NIM </strong>di footer aplikasi <strong>belanja</strong> Anda.</li>
+<li>Selesaikan Praktikum Navigasi dan Rute tersebut, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md.</code> Kumpulkan link commit repository GitHub Anda ke spreadsheet yang telah disediakan!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
       <google-codelab-step label="Selamat!" duration="0">
-        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari Layout di Flutter.</p>
-<p>Pada codelab berikutnya, Anda akan mempelajari tentang navigasi dan routing.</p>
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari Layout, Navigasi, dan rute di Flutter.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang manajemen plugin di Flutter.</p>
 <h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
 <p>Silakan cek beberapa sumber belajar lainnya...</p>
 <ul>
+<li><a href="https://docs.flutter.dev/cookbook/navigation/passing-data" target="_blank">https://docs.flutter.dev/cookbook/navigation/passing-data</a> </li>
 <li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
 <li><a href="https://docs.flutter.dev/codelabs/layout-basics" target="_blank">https://docs.flutter.dev/codelabs/layout-basics</a></li>
 <li><a href="https://docs.flutter.dev/ui/interactivity" target="_blank">https://docs.flutter.dev/ui/interactivity</a> </li>
