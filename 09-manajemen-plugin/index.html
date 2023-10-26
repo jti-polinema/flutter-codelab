@@ -1,0 +1,417 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#09 | Manajemen Plugin</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="09-manajemen-plugin"
+                  title="#09 | Manajemen Plugin"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Manajemen Plugin di Flutter" duration="0">
+        <p><strong>Terakhir diperbarui:</strong> 24 Oktober 2023</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada codelab ini, Anda akan mempelajari tentang plugin Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara memasang plugin ke dalam project flutter.</p>
+<p>Video berikut menjelaskan tentang perbedaan dan persamaan <em>package </em>dan <em>plugin</em>. Silakan simak dan pahami!</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/Y9WifT8aN6o?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>menjelaskan manfaat plugin</li>
+<li>memasang plugin ke dalam project flutter</li>
+<li>memanfaatkan plugin dalam aplikasi</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Tujuan Visual</strong></h2>
+<p class="image-container"><img style="width: 336.14px" src="img\\6a414bef06d7db92.png"></p>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Daftar Perintah</strong></h2>
+<table>
+<tr><td colspan="1" rowspan="1"><p><code>flutter pub add <nama_plugin></code></p>
+</td><td colspan="1" rowspan="1"><p>Untuk menambahkan plugin tertentu ke dalam project</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>flutter pub get</code></p>
+</td><td colspan="1" rowspan="1"><p>Mengunduh semua dependensi ke dalam project (biasanya digunakan ketika pertama kali clone project dari repository)</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>flutter pub outdated</code></p>
+</td><td colspan="1" rowspan="1"><p>Untuk memeriksa pembaruan semua dependensi yang ada dalam project</p>
+</td></tr>
+<tr><td colspan="1" rowspan="1"><p><code>flutter pub update</code></p>
+</td><td colspan="1" rowspan="1"><p>Untuk memperbarui semua dependensi sampai batas versi yang ditentukan dalam pubspec.yaml</p>
+</td></tr>
+</table>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Apa itu plugin ?" duration="10">
+        <p>Banyak framework pemrograman dan software memiliki konsep plugin. Terkadang menggunakan nama lain, seperti library pihak ketiga, ekstensi, atau add-on, tetapi itu adalah hal yang sama – pengiriman kode modular mandiri yang dapat &#34;<em>plugged in</em>&#34; ke kode aplikasi yang ada untuk menyediakan fungsionalitas ekstra.</p>
+<p>Dalam codelab ini, Anda akan melihat referensi ke <em>package</em>, sepotong kode Dart, dan aset. Plugin adalah jenis paket khusus yang menyediakan fungsionalitas untuk aplikasi Anda dan inilah yang akan kita bahas dalam codelab ini.</p>
+<p>Ada banyak manfaat serta kelemahan pendekatan plugin. Jadi mari kita lihat dan pahami mengapa Flutter memilih untuk menggunakan plugin dalam kerangka kerja dan kemudian kita akan beralih pada kekurangannya.</p>
+<h2 is-upgraded>Keuntungan</h2>
+<p>Seperti yang Anda harapkan, Flutter menggunakan plugin karena membawa banyak manfaat. Hal ini terutama berlaku untuk <em>code reuse</em>; membuat aplikasi Flutter yang hebat akan jauh lebih sulit jika Anda harus membuat semuanya dari awal. Mari kita lihat manfaatnya.</p>
+<h3 is-upgraded><strong>Code reuse</strong></h3>
+<p>Sebagai developer, Anda akan memahami bahwa tidak ada yang ingin membuat ulang kode jika mereka dapat membantunya. Tidak hanya membuang waktu, tetapi juga dapat menimbulkan bug ketika kode yang dibuat ulang mengandung kesalahan atau tidak memperhitungkan semua aliran eksekusi berbeda yang dipertimbangkan oleh kode asli. Selain itu, kode yang dibuat ulang dapat menyebabkan sakit kepala, pemeliharaan saat perbaikan diperlukan karena Anda perlu memperbaiki kode Anda dua kali lipat.</p>
+<p>Plugin mengatasi masalah ini dengan memecahkan masalah tertentu (misalnya, menautkan ke kalender perangkat) dan semua kode aplikasi Anda dapat mereferensikan satu plugin itu. Jika masalah ditemukan, plugin dapat diperbarui, dan semua pengguna plugin akan mendapatkan manfaat dari perbaikan tersebut.</p>
+<h3 is-upgraded><strong>Many eyes</strong></h3>
+<p>Salah satu hal hebat tentang plugin adalah karena banyak orang menggunakannya dan menemukan masalah dengannya, plugin menjadi sangat stabil dan kaya fitur.</p>
+<p>Anda mungkin merasa bahwa dalam beberapa kasus lebih mudah hanya dengan menulis kode Anda sendiri, tetapi hampir tidak mungkin untuk menguji kode Anda pada semua perangkat yang berbeda, semua rasio layar yang berbeda, atau digunakan dengan banyak pengguna. Kode plugin diuji secara efektif dan gratis di seluruh perangkat, rasio layar, dan pola penggunaan, jadi mengapa tidak memanfaatkannya.</p>
+<h3 is-upgraded><strong>Low-level integration</strong></h3>
+<p>Untuk beberapa fungsi, Anda perlu melakukan integrasi dengan sistem operasi dasar (OS) perangkat. Ini mungkin memerlukan Java, Swift, JavaScript, atau bahasa lain yang dapat berinteraksi dengan OS, kecuali Anda mahir dalam bahasa tersebut dan juga memiliki pengetahuan tentang API yang tersedia di dalam OS, ini bisa menjadi tantangan yang cukup besar.</p>
+<p>Plugin menangani kebutuhan itu untuk memahami integrasi tingkat rendah, sehingga Anda dapat menghabiskan waktu Anda menjadi ahli dalam Dart dan Flutter saja. Seperti yang Anda harapkan, beberapa kerugian menggunakan plugin, jadi mari kita lihat sekilas, kemudian jelajahi cara meringankannya nanti di codelab ini.</p>
+<h2 is-upgraded><strong>Drawbacks</strong></h2>
+<p>Seperti halnya keputusan perangkat lunak lain, terutama dalam skala besar seperti plugin, akan ada kekurangan yang perlu Anda pertimbangkan saat menggunakannya. Manfaatnya jauh lebih besar daripada kerugiannya, tetapi Anda tetap harus menyadarinya sehingga Anda dapat memutuskan bagaimana mengurangi dampaknya.</p>
+<h3 is-upgraded><strong>Version management</strong></h3>
+<p>Seperti sistem plugin yang bagus, semua plugin di Flutter menggunakan skema versi semantik. Ini berarti mudah untuk mengelola versi plugin mana yang Anda gunakan, dan memastikan bahwa Anda memiliki versi plugin terbaru atau terbaik (tidak selalu sama) untuk aplikasi Anda.</p>
+<p>Namun, dengan sistem versi apa pun, ada potensi ketidakcocokan, terutama bila Anda memiliki banyak plugin yang saling bergantung. Ini dapat menyebabkan masalah, dan dalam kasus yang jarang terjadi, menghalangi Anda untuk merilis aplikasi.</p>
+<h3 is-upgraded><strong>Difficult to diagnose bugs</strong></h3>
+<p>Beberapa plugin bisa sangat rumit, dan ketika sesuatu tidak berjalan seperti yang Anda harapkan, akan sulit untuk menyelesaikan masalah. Umumnya, penulis plugin dengan senang hati membantu jika Anda menemukan masalah, tetapi terkadang masalah sulit untuk dibuat ulang, atau lebih buruk lagi, hanya terjadi pada versi rilis daripada versi debug, jadi Anda hanya memiliki informasi lama tentang masalah tersebut.</p>
+<p>Dalam banyak hal, masalahnya bukan pada plugin yang memiliki bug, tetapi sulit untuk mendiagnosis karena Anda tidak menulis kodenya. Di sisi lain, jika Anda menulis kode, kode tersebut mungkin juga berisi bug yang sama dan Anda akan memiliki lebih banyak kode untuk dipelihara, jadi Anda mungkin tidak punya waktu untuk menemukan resolusinya.</p>
+<h3 is-upgraded><strong>Breaking changes</strong></h3>
+<p>Terkadang, pengembang plugin akan membuat perubahan besar karena mereka ingin mengubah cara kerja plugin secara mendasar, atau mereka ingin menstandardisasi plugin mereka dengan pendekatan plugin lain, atau karena salah satu dari banyak alasan lainnya.</p>
+<p>Pengembang plugin akan membuat versi baru dari plugin dengan versi utama yang ditambahkan dan memperingatkan pengembang tentang perubahan tersebut. Anda tidak harus menggunakan versi baru plugin, tetapi pengembang kemungkinan tidak akan mempertahankan versi yang lebih lama, jadi lebih baik menggunakan versi terbaru sehingga Anda dapat menerima perbaikan bug apa pun. Ini terkadang dapat berdampak besar pada kode Anda, terutama jika Anda sangat bergantung pada plugin itu.</p>
+<p>Jadi sekarang Anda sudah mengetahui apa itu plugin dan pro dan kontra menggunakannya, mari kita lihat di mana Anda dapat menemukannya dan seperti apa tampilannya.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/GAnSNplNpCA?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Di mana mendapatkan plugin ?" duration="15">
+        <p>Flutter memiliki cara yang sangat mudah untuk menemukan plugin yang mungkin Anda perlukan melalui situs <a href="https://pub.dev" target="_blank">https://pub.dev</a> yang mereka kelola. Di sinilah semua plugin terdaftar dan cara utama pengembang menemukan plugin.</p>
+<p>Situs ini tidak hanya memungkinkan Anda untuk mencari plugin tetapi juga menyertakan bagian yang berguna seperti berikut ini:</p>
+<ul>
+<li><strong>Flutter favorites </strong>: Plugin yang menunjukkan tingkat kualitas tertinggi.</li>
+<li><strong>Most populer packages </strong>: Plugin yang paling banyak diunduh.</li>
+<li><strong>Package of the week</strong>: Ini adalah rangkaian video animasi yang memperkenalkan beberapa plugin yang tersedia. Flutter sangat sukses dalam menggunakan video pendek untuk memperkenalkan widget minggu ini dan telah meluncurkan konsep paket minggu ini.</li>
+</ul>
+<p>Sekarang mari kita lihat bagian-bagian yang ada di pub.dev.</p>
+<h2 is-upgraded><strong>Plugin entry</strong></h2>
+<p>Salah satu contoh plugin di sini adalah widget <code>AutoSizeText</code>. Seperti namanya, widget ini akan mengubah ukuran teks yang berada didalamnya sehingga sesuai dengan batasannya.</p>
+<p>Untuk menemukan plugin, cukup ketik &#34;<strong><em>auto size text</em></strong>&#34; di bilah pencarian dan hasil Anda akan terlihat seperti ini:</p>
+<p class="image-container"><img style="width: 579.00px" src="img\\a33ac3cbeca3abc5.png"></p>
+<p>Hal pertama yang akan Anda perhatikan adalah ada banyak plugin yang melakukan hal serupa, jadi akan sangat sulit untuk menentukan plugin mana yang paling baik dan paling sering digunakan.</p>
+<p>Seperti yang dapat Anda bayangkan, secara tidak sengaja menggunakan plugin yang tidak lagi dipelihara berarti perbaikan bug tidak ditindaklanjuti dan peningkatan dependensi sementara (plugin lain yang menjadi sandaran plugin ini) tidak terjadi. Selain itu, memilih plugin yang tidak digunakan orang lain berarti mungkin belum diuji secara menyeluruh seperti plugin lain yang tersedia.</p>
+<p>Namun, pub.dev sekarang menampilkan serangkaian metrik dan informasi lainnya sehingga Anda dapat membuat pilihan yang lebih tepat. Mungkin terasa seperti terlalu fokus pada pencarian plugin, tetapi membuat pilihan yang tepat dapat membuat perbedaan besar pada proyek Anda, dan berpotensi membuat atau menghancurkannya.</p>
+<p>Informasi utama yang dapat diambil dari halaman ini jelas adalah metrik di sebelah kanan seperti berikut:</p>
+<ul>
+<li><strong>The updated date:</strong> Apakah kode plugin masih terus diperbarui?</li>
+<li><strong>The list of supported platforms</strong>: Untuk <code>auto_size_text</code>, platform yang didukung adalah Android, iOS, Linux, macOS, Web, dan Windows.</li>
+<li><strong>Version: </strong>versi plugin yang telah dirilis, menunjukkan versi stabil dari plugin tersebut.</li>
+</ul>
+<p>Jika kita mengklik <strong>auto_size_text</strong>, kita dapat melihat detail lebih lanjut tentang plugin:</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\c4c8041be6425533.png"></p>
+<p>Rincian informasi bagian plugin lain seperti berikut:</p>
+<ul>
+<li><strong>Likes</strong>: Seperti yang Anda harapkan, jika orang menyukai plugin, mereka dapat &#34;menyukainya&#34;.</li>
+<li><strong>Pub points</strong>: Plugin dianalisis dan menetapkan poin (dari 140) pada pemeliharaan kode, dokumentasi, dukungan platform, dependensi terkini, dan sebagainya.</li>
+<li><strong>Popularity</strong>: Ukuran seberapa banyak aplikasi bergantung pada plugin.</li>
+</ul>
+<p>Digunakan bersama-sama, ini adalah cara yang sangat ampuh untuk menilai kematangan plugin dan seberapa besar kemungkinannya untuk dipertahankan di masa depan.</p>
+<p>Informasi berguna lainnya di halaman ini mencakup hal-hal berikut:</p>
+<ul>
+<li><strong>Readme</strong>: Di sinilah informasi tentang plugin disimpan, sering kali termasuk petunjuk instalasi dan konfigurasi proyek.</li>
+<li><strong>Changelog</strong>: Di sinilah Anda dapat melihat mengapa versi plugin telah ditingkatkan. Ini sangat berguna ketika Anda perlu memutakhirkan versi utama dan ingin tahu apa saja perubahan yang melanggar.</li>
+<li><strong>Example</strong>: Sebagian besar plugin dilengkapi dengan aplikasi contoh kecil sehingga Anda dapat melihat bagaimana plugin digunakan.</li>
+<li><strong>Installing</strong>: Panduan tingkat tinggi tentang cara memasang plugin ini. Umumnya, Anda tidak perlu melihat lebih dekat pada bagian ini karena semua plugin diinstal dengan cara yang sama.</li>
+<li><strong>Repository (GitHub)</strong>: Sebagian besar plugin dikembangkan melalui repositori GitHub dan menautkannya dari halaman ini. Jika Anda ingin melihat cara kerja plugin, maka inilah tempatnya.</li>
+<li><strong>View/report issues:</strong> Tautan yang sangat penting karena Anda dapat melihat masalah apa yang telah dilaporkan orang lain dan bagaimana kemajuan penyelesaiannya, dan juga mengangkat masalah Anda sendiri. Perhatikan bahwa sebagian besar pengelola plugin secara sukarela memelihara plugin mereka dan karena itu memiliki pekerjaan lain, jadi harap dipahami jika mereka tidak dapat segera menanggapi masalah apa pun.</li>
+</ul>
+<p>Karena ukuran komunitas Flutter yang sangat besar, ada juga banyak tutorial video dan teks yang tersedia untuk plugin di seluruh web, pada publikasi seperti Medium dan YouTube, yang dapat memberikan panduan tambahan.</p>
+<p>Jadi sekarang kita telah melihat cara mengakses informasi penting tentang sebuah plugin, mari kita coba menambahkan plugin <code>auto_size_text</code> ke proyek hello world kita pada bagian praktikum.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bagaimana cara menambahkan plugin ke project ?" duration="15">
+        <p>Menambahkan plugin ke proyek Anda umumnya sangat mudah. Namun, sangat penting bagi Anda untuk membaca readme sepenuhnya karena untuk beberapa plugin, mungkin ada konfigurasi khusus platform yang perlu Anda atur sebelum plugin dijalankan. Dalam beberapa kasus ekstrem (seperti <code>google_mobile_ads</code>), aplikasi Anda akan gagal dijalankan sepenuhnya kecuali penyiapan plugin telah diselesaikan dengan benar.</p>
+<p>Di sini menggunakan contoh <code>auto_size_text</code> sebagai plugin yang ingin ditambahkan. Klik pada bagian <strong>Installing</strong> sekarang. Tangkapan layar berikut menunjukkan instruksi untuk instalasi:</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\cf768065d67e00f9.png"></p>
+<p>Ada <strong>dua cara</strong> untuk menambahkan plugin ke proyek Anda, tetapi hasilnya sama.</p>
+<p>Opsi pertama adalah menjalankan perintah flutter pada terminal seperti berikut:</p>
+<pre><code>flutter pub add auto_size_text</code></pre>
+<p>Pilihan lainnya adalah mengetiknya di file <code>pubspec.yaml</code>. Lakukan langkah-langkah di bawah ini:</p>
+<h2 is-upgraded>File <strong><code>pubspec.yaml</code></strong></h2>
+<p>File <code>pubspec.yaml</code> adalah tempat dependensi dan aset dikonfigurasi. Ada bagian khusus yang disebut dependensi yang menyimpan informasi tentang plugin tempat proyek Anda bergantung.</p>
+<p>Ini akan terlihat seperti ini:</p>
+<pre><code>dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your
+  application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.1</code></pre>
+<p>Indentasi sangat penting di sini dan itulah yang diandalkan oleh file <strong>YAML</strong> untuk memahami isinya. Perhatikan bahwa cupertino_icons: ^1.0.1 diindentasi oleh dua spasi. Ini menunjukkan bahwa itu berada di bawah header dependensi dan karenanya merupakan dependensi proyek.</p>
+<p>Di bawah <code>cupertino_icons</code>, tambahkan baris lain, diindentasi oleh dua spasi seperti berikut:</p>
+<pre><code>auto_size_text: ^3.0.0</code></pre>
+<p>Anda sekarang telah menyatakan bahwa proyek Anda bergantung pada plugin <code>auto_size_text</code>. Jika Anda membagikan proyek Anda dengan pengembang lain, maka mereka akan langsung melihat dependensi dan dapat memperbarui proyek yang sesuai.</p>
+<p>Anda juga telah menentukan versi plugin menggunakan versi semantik plugin. Ini mengunci aplikasi Anda ke versi plugin tertentu, memungkinkan Anda untuk menguji dan melepaskan tanpa perubahan dependensi. Anda mungkin melihat karakter ^ sebelum nomor versi. Ini menentukan bahwa Anda senang menerima pembaruan versi tambalan apa pun ke plugin.</p>
+<p>Misalnya, jika Anda menentukan versi <code>2.1.0</code>, maka hanya versi <code>2.1.0</code> yang akan digunakan oleh Anda dan pengembang lain yang menggunakan kode sumber ini. Jika Anda menentukan versi <code>^2.1.0</code>, maka versi <code>2.1.x</code> mana pun yang <code>x >= 0</code> dapat digunakan. Ini berarti Anda akan secara otomatis menerima pembaruan (saat Anda mengunduh plugin). Ada risiko bahwa Anda mungkin memiliki versi plugin yang sedikit berbeda dengan rekan kerja Anda, tetapi hanya akan ada perbedaan di tingkat <em>patch</em>.</p>
+<p>Plugin tersebut statusnya belum diunduh dan belum tersedia untuk proyek Anda. Untuk melakukan ini, kita akan menggunakan perintah yang sangat berguna yang disebut <code>flutter pub</code>, yang digunakan untuk mengelola plugin.</p>
+<h2 is-upgraded><strong>flutter pub</strong></h2>
+<p>Di dalam perintah <code>flutter</code>, ada perintah <code>pub</code> yang khusus digunakan untuk manajemen plugin. Ada beberapa cara Anda dapat menggunakannya, jadi perhatikan beberapa yang paling sering digunakan.</p>
+<h3 is-upgraded><strong>flutter pub get</strong></h3>
+<p>Perintah <code>flutter pub get</code> akan membaca semua dependensi di <code>pubspec</code>.<code>yaml</code>, ambil plugin yang relevan dari <code>pub.dev</code>, dan unduh ke komputer Anda, sehingga plugin tersebut siap digunakan untuk proyek Anda.</p>
+<p>Kita perlu menggunakan perintah berikut untuk mengunduh plugin <code>auto_size_text</code> yang bergantung pada proyek kita:</p>
+<pre><code>PS C:\Flutter\hello_world&gt; flutter pub get
+Running &#34;flutter pub get&#34; in hello_world... 2,142ms</code></pre>
+<p>Kadang-kadang, <code>flutter pub get</code> akan gagal karena dependensi yang tidak konsisten dan kita akan melihat cara mengatasinya di bagian <em>Common issues </em>nanti di codelab ini.</p>
+<p>Pada titik ini, dependensi plugin telah dideklarasikan dan diunduh ke komputer Anda.</p>
+<p>Anda siap untuk mengembangkan aplikasi, tetapi mari kita lihat beberapa perintah <code>flutter pub</code> berguna lainnya.</p>
+<h3 is-upgraded><strong>flutter pub outdated</strong></h3>
+<p>Perintah ini akan memeriksa apakah ada dependencies yang memiliki versi lebih baru yang mungkin ingin ditingkatkan. Menjalankan perintah ini akan memberi output seperti berikut:</p>
+<pre><code>PS C:\Flutter\hello_world&gt; flutter pub outdated
+Showing outdated packages.
+[*] indicates versions that are not the latest available.
+
+Package Name Current Upgradable Resolvable Latest
+
+direct dependencies: all up-to-date.
+
+transitive dev_dependencies:
+crypto  *3.0.0  *3.0.0  *3.0.0  3.0.1
+
+vm_service *6.1.0+1 *6.1.0+1 *6.1.0+1 6.2.0
+You are already using the newest resolvable versions listed in
+the &#39;Resolvable&#39; column.
+Newer versions, listed in &#39;Latest&#39;, may not be mutually
+compatible.</code></pre>
+<p>Meskipun ini terlihat cukup menakutkan, bagian penting yang perlu diperhatikan adalah bahwa dependencies langsung Anda semuanya mutakhir, jadi Anda tidak perlu melakukan apa-apa lagi.</p>
+<p>Jika perintah tersebut menunjukkan bahwa ada dependencies yang lebih baru, maka Anda harus terlebih dahulu memahami apa perubahannya, dengan membuka <code>pub.dev</code> dan membaca <strong>changelog</strong>. Kemudian, Anda dapat memperbarui <code>pubspec.yaml</code> untuk menentukan versi baru, dan akhirnya menjalankan <code>flutter pub get</code> untuk mengunduh versi terbaru ke komputer Anda.</p>
+<h3 is-upgraded><strong>flutter pub upgrade</strong></h3>
+<p>Disebutkan sebelumnya bahwa versi dapat menyertakan simbol <code>^</code> untuk menentukan bahwa Anda senang menerima pembaruan (<em>update</em>).</p>
+<p>Pembaruan patch ini tidak muncul secara ajaib di komputer Anda; Anda masih perlu memberi tahu Flutter untuk mengambil/mengunduh pembaruan. Anda dapat melakukan ini dengan perintah <code>flutter pub update</code>. Ini mirip seperti <code>flutter pub get</code>, tetapi Anda memberikannya izin untuk mendapatkan plugin terbaru dalam batasan versi yang ditentukan di <code>pubspec.yaml</code>.</p>
+<p>Jadi sekarang Anda telah memahami lebih banyak tentang manajemen plugin di Flutter.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Bagaimana plugin bekerja pada iOS dan Android ?" duration="10">
+        <p>Banyak plugin akan bekerja dengan platform dasar yang berbeda untuk menggunakan fungsionalitas sistem operasi. Dependensi ini mengubah cara proyek Anda dibangun dan dijalankan karena ada kode asli dalam proyek Anda yang berinteraksi dengan platform yang mendasarinya. Mari kita lihat bagaimana antarmuka itu bekerja.</p>
+<h2 is-upgraded><strong>MethodChannel</strong></h2>
+<p>Komunikasi Flutter antara klien (Flutter) dan aplikasi host (native) terjadi melalui saluran platform. Kelas <code>MethodChannel</code> bertanggung jawab untuk mengirim pesan (method invocations) ke sisi platform. Di sisi platform, <code>MethodChannel</code> di Android (API) dan <code>FlutterMethodChannel</code> di iOS (API) memungkinkan menerima panggilan metode dan mengirim kembali hasilnya. Struktur hubungan ini ditunjukkan dalam diagram berikut.</p>
+<p class="image-container"><img style="width: 382.00px" src="img\\f8c2d8e644bc95ba.png"></p>
+<p>Teknik channel platform memungkinkan pemisahan kode UI dari kode asli khusus platform. Host akan mendengarkan di saluran platform dan menerima permintaan pesan. Itu bisa menggunakan API platform untuk memberlakukan permintaan dan kemudian mengirim kembali respons ke klien, bagian Flutter dari aplikasi.</p>
+<p>Dengan cara ini, bagian Flutter dari aplikasi bersifat agnostik terhadap host yang memungkinkan Anda menulis kode yang akan berfungsi di semua platform.</p>
+<p>Memiliki pemahaman dasar tentang plugin ini akan memungkinkan Anda mendiagnosis masalah dengan lebih baik dan menilai kesesuaian plugin untuk aplikasi Anda.</p>
+<p>Mari kita jelajahi sedikit lebih jauh dengan menambahkan plugin ke proyek kita yang menggunakan kode asli. Contoh plugin tersebut adalah plugin <code>device_info_plus</code>. Ini mengambil informasi tentang perangkat Anda dari platform yang mendasarinya, seperti model dan nama perangkat.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\f667bf75586ec3a5.png"></p>
+<p>Jadi, tambahkan <code>device_info</code> terbaru ke file <code>pubspec.yaml</code> Anda menggunakan perintah berikut:</p>
+<pre><code>flutter pub add device_info_plus</code></pre>
+<p>Jika Anda ingin informasi lebih lanjut tentang plugin, kunjungi situs <code>pub.dev</code> dan cari <code>device_info_plus</code>.</p>
+<p>Lihatlah file <code>pubspec.yaml</code> dan Anda akan melihat bahwa plugin <code>device_info_plus</code> telah ditambahkan di dalam bagian <code>dependencies</code>. Selain itu, <code>flutter pub get</code> secara otomatis dijalankan untuk menarik kode Flutter ke dalam proyek Anda. Namun, Anda belum memiliki kode native yang tersedia.</p>
+<p>Jika Anda menjalankan (atau build) proyek, Flutter akan secara otomatis mengambil <code>dependencies</code> kode native. Ini dikelola oleh <strong>CocoaPods </strong>di iOS dan <strong>Gradle </strong>di Android.</p>
+<h2 is-upgraded><strong>CocoaPods</strong></h2>
+<p>Untuk library kode native iOS, Flutter menggunakan CocoaPods dependency manager. Plugin Flutter yang memerlukan kode native iOS akan menentukan dependensi pada pustaka CocoaPods dan pengelola dependensi CocoaPods akan mengunduh pustaka yang relevan pada versi yang benar dan memasukkannya ke dalam versi iOS Anda.</p>
+<p>Setelah Anda menjalankan proyek Anda di emulator atau perangkat iOS, Anda mungkin memperhatikan bahwa ada file yang muncul di dalam folder iOS di dalam file proyek Anda. Ini disebut PodFile dan memanage dependency CocoaPods Anda.</p>
+<p>Saat Anda menjalankan atau membangun proyek Anda, manajer dependensi CocoaPods dipanggil dengan memanggil perintah pod <code>install</code> di dalam folder <code>ios</code>. Semua dependency diambil pada versi yang sesuai untuk proyek Anda.</p>
+<p>Terkadang plugin akan meminta Anda untuk mengelola izin aplikasi Anda. Ini dapat dilakukan di file <code>ios/Runner/Info.plist.</code></p>
+<p>Bagian dari proses build ini sering kali dapat menyebabkan masalah saat Anda mengubah dependency Anda, jadi di bagian <em>Common issues</em> di codelab ini, kita akan mengeksplorasi beberapa solusi.</p>
+<h2 is-upgraded><strong>Gradle</strong></h2>
+<p>Membangun dan menjalankan aplikasi Flutter di Android menggunakan alat otomatisasi pembangunan Gradle. Anda dapat menjelajahi beberapa file di folder <code>android</code>, tetapi file yang terkadang perlu Anda ubah untuk mengonfigurasi plugin adalah sebagai berikut:</p>
+<ul>
+<li><code>android/build.gradle</code></li>
+<li><code>android/app/build.gradle</code></li>
+</ul>
+<p>File-file ini mengelola proses build dan dependensi yang dibutuhkan dalam proyek Anda, dan terkadang beberapa manipulasi versi atau alur build diperlukan agar plugin berfungsi dengan benar.</p>
+<p>Selain itu, seperti iOS, beberapa plugin akan memerlukan pembaruan untuk izin aplikasi. Ini dapat dilakukan di file <code>android/app/src/main/AndroidManifest.xml.</code></p>
+<p>Sekarang Anda memiliki pengetahuan dasar tentang proses plugin, mari kita lihat beberapa masalah umum yang mungkin Anda temui dan bagaimana mengatasinya di bagian selanjutnya.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Isu yang sering terjadi" duration="10">
+        <p>Terkadang Flutter run atau build Anda akan gagal, dan seringkali ini terkait dengan masalah plugin. Di bagian ini, kita akan melihat beberapa masalah umum dan memberikan beberapa petunjuk tentang cara mengatasinya.</p>
+<h2 is-upgraded><strong>Plugin breaking change</strong></h2>
+<p>Ketika sebuah plugin mengubah nomor versi mayor atau minornya, itu bisa berarti bahwa telah terjadi perubahan yang mengganggu dan Anda perlu membuat beberapa perubahan agar plugin tetap berfungsi dengan benar.</p>
+<p>Umumnya ada dua alasan melakukan perubahan:</p>
+<ul>
+<li>Melalui perubahan/pembaruan merupakan cara untuk menggunakan plugin pada tingkat pemrograman. Misalnya, parameter konstruktor untuk widget telah berubah, atau aliran pemanggilan metode ke plugin perlu dimodifikasi. Ini sering hanya diberitahukan melalui kesalahan kompilasi dan peringatan break point.</li>
+<li>Perubahan yang diperlukan dalam konfigurasi proyek Anda. Ini bisa jadi kurang jelas dan memeriksa plugin readme di pub.dev seringkali merupakan cara terbaik untuk menilai apakah Anda perlu mengubah konfigurasi proyek Anda.</li>
+</ul>
+<p>Di halaman <code>pub.dev</code>, ada bagian khusus yang didedikasikan untuk menjelaskan mengapa perubahan versi terjadi yang disebut <strong>Changelog</strong>:</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\ff429a70a61aa41b.png"></p>
+<p>Di bagian ini, pengembang plugin akan sering menampilkan berbagai jenis pembaruan yang terjadi pada setiap kenaikan versi, termasuk perubahan yang signifikan, sehingga pengembang aplikasi dapat dengan mudah melihat perubahan apa yang perlu mereka buat.</p>
+<p>Selain itu, pengembang plugin terkadang membuat kesalahan ketika merilis update. Pengembang plugin sering meluangkan waktu mereka secara sukarela untuk mengembangkan plugin, sehingga dapat membuat kesalahan karena kurangnya waktu atau pengalaman. Sekali lagi, ada baiknya memeriksa readme dan changelog di pub.dev jika Anda mengalami masalah, hanya untuk memeriksa tidak ada perubahan yang merusak aplikasi.</p>
+<h2 is-upgraded><strong>Plugin not working</strong></h2>
+<p>Akan ada saat-saat ketika Anda yakin bahwa sebuah plugin tidak berfungsi seperti yang Anda harapkan. Ada cara mudah untuk melaporkan masalah melalui tautan <strong>View/report issues</strong> di halaman <code>pub.dev</code> untuk plugin. Umumnya, tautan ini akan membawa Anda ke tab Issues dari repositori GitHub plugin tempat Anda dapat memeriksa apakah masalah telah disampaikan dan apakah perbaikan sedang berlangsung:</p>
+<p class="image-container"><img style="width: 595.00px" src="img\\c6e1ede2a132ab14.png"></p>
+<p>Perlu dicatat bahwa karena plugin umumnya dibuat oleh komunitas, sering kali ada pengembang lain yang mencoba memperbaiki plugin dan membagikan pull request (PR) dengan pengembang plugin untuk membantu mereka. Saat Anda yakin dengan Flutter, jangan ragu untuk mencoba membantu pengembang plugin jika Anda mengidentifikasi masalah dan merasa tahu solusinya.</p>
+<h2 is-upgraded><strong>PR not merged</strong></h2>
+<p>Terkadang Anda akan melihat masalah dengan plugin yang telah diperbaiki oleh seseorang di komunitas dan mereka telah mengeluarkan PR yang belum digabungkan ke dalam cabang kode master plugin. Ini sering terjadi dengan plugin yang kurang populer di mana jumlah kontributornya rendah, dan kontributor utama mungkin telah pindah dari plugin.</p>
+<p>Namun, bahkan tanpa PR merged, Anda masih dapat menggunakannya dalam proyek Anda sebagai dependensi. Ini bisa sangat berguna jika Anda memerlukan perbaikan, dan pengembang telah memperbaikinya tetapi belum di-<em>merge</em>. Terkadang, Anda tidak bisa menunggu <em>merger </em>itu terjadi karena masalah rilis aplikasi Anda berikutnya.</p>
+<p>Oleh karena itu, untuk memanfaatkan PR sebelum di <em>merge</em>, tambahkan bagian baru ke <code>pubspec.yaml</code> Anda yang disebut <code>dependency_overrides</code> dan tambahkan tautan ke entri git. Berikut adalah contoh plugin <code>device_calendar</code> yang diperlukan saat Flutter pindah ke keamanan nol dan PR plugin <code>device_calendar</code> untuk keamanan nol belum digabungkan ke cabang master plugin:</p>
+<pre><code>dependency_overrides:
+  device_calendar:
+    git:
+      url: https://github.com/thomassth/device_calendar_null.git</code></pre>
+<p>Seperti yang Anda lihat, Anda menentukan nama plugin dan kemudian lokasi repositori override.</p>
+<h2 is-upgraded><strong>Inconsistent dependencies</strong></h2>
+<p>Seperti halnya sistem manajemen dependensi, ada kalanya satu plugin bergantung pada dependensi tertentu yang berbenturan dengan versi plugin lain.</p>
+<p>Seringkali resolusinya adalah memastikan bahwa semua plugin Anda dalam versi terbaru.</p>
+<p>Namun, jika ini tidak menyelesaikan masalah, maka Anda mungkin perlu mengangkat masalah dengan pengembang plugin, dan kemudian kembali ke versi plugin yang lebih lama.</p>
+<p>Anda mungkin juga mengalami masalah ini saat menjalankan build di iOS. Dependensi CocoaPods terkadang berbenturan secara tak terduga. Anda sering dapat mengatasi ini dengan merapikan repository CocoaPods Anda secara manual.</p>
+<p>Jika Anda membuka terminal di folder ios proyek Anda, ada beberapa perintah yang dapat Anda coba untuk membersihkan data. Yang pertama adalah menjalankan instalasi pod secara manual dan melihat pesan kesalahan apa yang Anda dapatkan:</p>
+<pre><code>pod install</code></pre>
+<p>Anda dapat mencoba menghapus direktori ios/Pods (semua dependensi yang diunduh) dan file Podfile.lock dan kemudian menjalankan ulang pod install pada direktori baru.</p>
+<p>Selain itu, terkadang Anda perlu memperbarui repositori CocoaPods. Ini mencantumkan semua pod dan versi perpustakaan yang tersedia untuk CocoaPods dan dapat menjadi usang.</p>
+<p>Untuk melakukannya, jalankan perintah berikut:</p>
+<pre><code>pod repo update</code></pre>
+<p>Jika tidak satu pun dari solusi tersebut belum menyelesaikan masalah, maka dilaporkan pada Issue di GitHub yang mungkin menjadi jawaban Anda.</p>
+<h2 is-upgraded><strong>MissingPluginException</strong></h2>
+<p>Ada banyak masalah lain, termasuk <code>MissingPluginException</code> yang terkenal, yang sering diselesaikan dengan sedikit pembersihan folder Flutter.</p>
+<p>Membersihkannya cukup mudah. Pertama, jalankan perintah berikut:</p>
+<pre><code>flutter clean</code></pre>
+<p>Ini akan membersihkan dependensi dan membangun folder.</p>
+<p>Kemudian jalankan perintah berikut:</p>
+<pre><code>flutter pub get</code></pre>
+<p>Ini akan mengambil semua dependensi lagi.</p>
+<p>Ada banyak kesalahan lain yang bisa Anda dapatkan, yang sebagian besar telah dialami orang berkali-kali dan pencarian solusi di internet sering menemukan jawabannya, seperti <strong>StackOverflow </strong>menjadi sumber yang bagus untuk mendapatkan solusi.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum Menerapkan Plugin di Project Flutter" duration="30">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>flutter_plugin_pubdev</strong>. Lalu jadikan repository di GitHub Anda dengan nama <strong>flutter_plugin_pubdev.</strong></p>
+<h2 is-upgraded><strong>Langkah 2: Menambahkan Plugin</strong></h2>
+<p>Tambahkan plugin <code>auto_size_text</code> menggunakan perintah berikut di terminal</p>
+<pre><code>flutter pub add auto_size_text</code></pre>
+<p>Jika berhasil, maka akan tampil nama plugin beserta versinya di file <code>pubspec.yaml</code> pada bagian dependencies.</p>
+<h2 is-upgraded>Langkah 3: Buat file <strong><code>red_text_widget.dart</code></strong></h2>
+<p>Buat file baru bernama <code>red_text_widget.dart</code> di dalam folder lib lalu isi kode seperti berikut.</p>
+<pre><code>import &#39;package:flutter/material.dart&#39;;
+
+class RedTextWidget extends StatelessWidget {
+  const RedTextWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 4: Tambah Widget AutoSizeText</strong></h2>
+<p>Masih di file <code>red_text_widget.dart</code>, untuk menggunakan plugin <code>auto_size_text</code>, ubahlah kode <code>return Container()</code> menjadi seperti berikut.</p>
+<pre><code>return AutoSizeText(
+      text,
+      style: const TextStyle(color: Colors.red, fontSize: 14),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+);</code></pre>
+<p>Setelah Anda menambahkan kode di atas, Anda akan mendapatkan info error. Mengapa demikian? Jelaskan dalam laporan praktikum Anda!</p>
+<h2 is-upgraded><strong>Langkah 5: Buat Variabel text dan parameter di constructor</strong></h2>
+<p>Tambahkan variabel <code>text</code> dan parameter di constructor seperti berikut.</p>
+<pre><code>final String text;
+
+const RedTextWidget({Key? key, required this.text}) : super(key: key);</code></pre>
+<h2 is-upgraded><strong>Langkah 6: Tambahkan widget di main.dart</strong></h2>
+<p>Buka file <code>main.dart</code> lalu tambahkan di dalam <code>children: <Widget></code> pada <code>class _MyHomePageState</code></p>
+<pre><code>Container(
+   color: Colors.yellowAccent,
+   width: 50,
+   child: const RedTextWidget(
+             text: &#39;You have pushed the button this many times:&#39;,
+          ),
+),
+Container(
+    color: Colors.greenAccent,
+    width: 100,
+    child: const Text(
+           &#39;You have pushed the button this many times:&#39;,
+          ),
+),</code></pre>
+<p><strong>Run</strong> aplikasi tersebut dengan tekan <strong>F5</strong>, maka hasilnya akan seperti berikut.</p>
+<p class="image-container"><img style="width: 336.14px" src="img\\6a414bef06d7db92.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan Praktikum tersebut, lalu dokumentasikan dan push ke repository Anda berupa screenshot hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Jelaskan maksud dari langkah 2 pada praktikum tersebut!</li>
+<li>Jelaskan maksud dari langkah 5 pada praktikum tersebut!</li>
+<li>Pada langkah 6 terdapat dua widget yang ditambahkan, jelaskan fungsi dan perbedaannya!</li>
+<li>Jelaskan maksud dari tiap parameter yang ada di dalam plugin <code>auto_size_text</code> berdasarkan tautan pada dokumentasi <a href="https://pub.dev/documentation/auto_size_text/latest/" target="_blank">ini</a> !</li>
+<li>Kumpulkan laporan praktikum Anda berupa link repository GitHub ke spreadsheet yang telah disediakan!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Kelompok PBL" duration="90">
+        <ol type="1" start="1">
+<li>Tambahkan plugin untuk fungsi kamera pada aplikasi OCR kelompok Anda. Misalnya menggunakan plugin ini <a href="https://pub.dev/packages/camera" target="_blank">https://pub.dev/packages/camera</a> (silakan boleh gunakan plugin lain)</li>
+<li>Tambahkan plugin animasi loading dan transisi pada aplikasi OCR kelompok Anda.</li>
+<li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait plugin di pub.dev dan contoh penggunaannya.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Dasar <em>State Management</em>.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://pub.dev/documentation/auto_size_text/latest/" target="_blank">https://pub.dev/documentation/auto_size_text/latest/</a> </li>
+<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
+<li>Buku Ajar Pemrograman Mobile Dengan Flutter, Jurusan Teknologi Informasi, Politeknik Negeri Malang. 2021.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

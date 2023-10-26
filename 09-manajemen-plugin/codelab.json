@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-10-26T03:10:02Z",
+  "id": "09-manajemen-plugin",
+  "duration": 270,
+  "title": "#09 | Manajemen Plugin",
+  "authors": "Habibie Ed Dien",
+  "summary": "- Mahasiswa mampu menjelaskan manfaat plugin\n- Mahasiswa mampu memasang plugin ke dalam project flutter\n- Mahasiswa mampu memanfaatkan plugin dalam aplikasi",
+  "source": "1LZCARxvXpkQB9OVMLa_wlK_F3aitjsM6HADFDPLSKAI",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "09-manajemen-plugin"
+}
