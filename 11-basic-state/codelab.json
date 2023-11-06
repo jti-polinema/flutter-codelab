@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-11-06T08:18:52Z",
+  "id": "11-basic-state",
+  "duration": 370,
+  "title": "#11 | Dasar State Management",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mampu mengelola state di Flutter",
+  "source": "1DNQSaymqUZCsgXhNrsnwaAsUaWxll5_FQpGckhcMkA0",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "11-basic-state"
+}
