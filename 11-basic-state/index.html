@@ -259,7 +259,7 @@ void dispose() {
     
       <google-codelab-step label="Tugas Praktikum 1: Dasar State dengan Model-View" duration="90">
         <ol type="1" start="1">
-<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki.</li>
 <li>Jelaskan maksud dari langkah 4 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
 <li>Mengapa perlu variabel plan di langkah 6 pada praktikum tersebut? Mengapa dibuat konstanta ?</li>
 <li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
@@ -402,7 +402,7 @@ Widget build(BuildContext context) {
     
       <google-codelab-step label="Tugas Praktikum 2: InheritedWidget" duration="90">
         <ol type="1" start="1">
-<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.</li>
 <li>Jelaskan mana yang dimaksud <code>InheritedWidget</code> pada langkah 1 tersebut! Mengapa yang digunakan <code>InheritedNotifier</code>?</li>
 <li>Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
 <li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
@@ -413,10 +413,10 @@ Widget build(BuildContext context) {
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 3: Membuat State di Multiple Screens" duration="60">
-        <p>Satu kalimat populer atau viral yang beredar dalam komunitas Flutter adalah &#34;<strong>Lift State Up</strong>&#34;. Mantra ini merujuk ke sebuah ide di mana objek State seharusnya berada lebih tinggi dari pada widget yang membutuhkannya di dalam sebuah widget tree. InheritedWidget yang telah kita buat sebelum bekerja dengan sempurna pada satu screen, tapi apa yang akan terjadi jika kita tambah screen kedua ?</p>
+        <p>Satu kalimat populer atau viral yang beredar dalam komunitas Flutter adalah &#34;<strong>Lift State Up</strong>&#34;. Mantra ini merujuk ke sebuah ide di mana objek State seharusnya berada lebih tinggi dari pada widget yang membutuhkannya di dalam sebuah widget tree. <code>InheritedWidget</code> yang telah kita buat sebelumnya bekerja dengan sempurna pada satu screen, tapi apa yang akan terjadi jika kita tambah screen kedua ?</p>
 <p>Pada codelab ini, Anda akan menambah screen lain pada aplikasi Master Plan sehingga bisa membuat kelompok daftar plan lebih dari satu. </p>
 <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan praktikum 2.</p>
 </aside>
 <h2 is-upgraded>Langkah 1: Edit <strong><code>PlanProvider</code></strong></h2>
 <p>Perhatikan kode berikut, edit class <code>PlanProvider</code> sehingga dapat menangani List Plan.</p>
@@ -500,8 +500,7 @@ of(context);
       onPressed: () {
         Plan currentPlan = plan;
         int planIndex =
-            planNotifier.value.indexWhere((p) =&gt; p.name ==
-currentPlan.name);
+            planNotifier.value.indexWhere((p) =&gt; p.name == currentPlan.name);
         List&lt;Task&gt; updatedTasks = List&lt;Task&gt;.from(currentPlan.tasks)
           ..add(const Task());
         planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
@@ -649,7 +648,7 @@ PlanScreen(plan: plan,)));
     
       <google-codelab-step label="Tugas Praktikum 3: State di Multiple Screens" duration="90">
         <ol type="1" start="1">
-<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.</li>
 <li>Berdasarkan Praktikum 3 yang telah Anda lakukan, jelaskan maksud dari gambar diagram berikut ini!</li>
 </ol>
 <p class="image-container"><img style="width: 460.50px" src="img\\9ce81bcd2817adc8.png"></p>
