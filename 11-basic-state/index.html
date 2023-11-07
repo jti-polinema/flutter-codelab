@@ -28,7 +28,7 @@
                   feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
     
       <google-codelab-step label="Dasar Manajemen State di Flutter" duration="0">
-        <p><strong>Terakhir diperbarui:</strong> 06 November 2023</p>
+        <p><strong>Terakhir diperbarui:</strong> 07 November 2023</p>
 <p><strong>Penulis:</strong> Habibie Ed Dien</p>
 <p>Pada codelab ini, Anda akan mempelajari tentang dasar manajemen state di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara mengelola state di multi screen.</p>
 <p>Video berikut menjelaskan tentang apa itu state dan bagaimana manfaatnya. Silakan simak dan pahami!</p>
@@ -75,7 +75,7 @@
 <p>Model dan View merupakan konsep yang sangat penting dalam arsitektur aplikasi flutter. <strong>Model </strong>adalah kelas yang menangani dengan data untuk suatu aplikasi, sedangkan View adalah kelas yang menampilkan data tersebut di layar.</p>
 <p>Di Flutter, View dibuat dari <code>widget</code>. Selanjutnya, model akan menjadi kelas dasar Dart itu yang tidak mewarisi apa pun dari Framework Flutter. Masing-masing kelas ini bertanggung jawab</p>
 <p>untuk satu dan hanya satu pekerjaan. <strong>Model </strong>berkaitan dengan penanganan data untuk aplikasi Anda. <strong>View </strong>fokus untuk menampilkan UI di layar HP. Ketika Anda konsisten dengan konsep arsitektur model dan view, kode Anda akan menjadi lebih sederhana dan mudah dibaca.</p>
-<p>Dalam codelab ini, kita akan membangun aplikasi<strong> to-do</strong> dengan membuat kelas model dan view.</p>
+<p>Dalam codelab ini, kita akan membangun aplikasi<strong> master_plan</strong> dengan membuat kelas model dan view.</p>
 
 
       </google-codelab-step>
@@ -215,10 +215,12 @@ class _PlanScreenState extends State&lt;PlanScreen&gt; {
       ),
     );
   }</code></pre>
-<p><strong>Run </strong>atau tekan <strong>F5 </strong>untuk melihat hasil aplikasi yang Anda telah buat.</p>
-<h2 is-upgraded><strong>Langkah 10:</strong></h2>
+<p><strong>Run </strong>atau tekan <strong>F5 </strong>untuk melihat hasil aplikasi yang Anda telah buat. Capture hasilnya untuk soal praktikum nomor 4.</p>
+<h2 is-upgraded><strong>Langkah 10: Tambah Scroll Controller</strong></h2>
+<p>Anda dapat menambah tugas sebanyak-banyaknya, menandainya jika sudah beres, dan melakukan scroll jika sudah semakin banyak isinya. Namun, ada salah satu fitur tertentu di iOS perlu kita tambahkan. Ketika keyboard tampil, Anda akan kesulitan untuk mengisi yang paling bawah. Untuk mengatasi itu, Anda dapat menggunakan <code>ScrollController</code> untuk menghapus focus dari semua <code>TextField</code> selama event scroll dilakukan. Pada file <code>plan_screen.dart</code>, tambahkan variabel scroll controller di class State tepat setelah variabel <code>plan</code>.</p>
 <pre><code>late ScrollController scrollController;</code></pre>
-<h2 is-upgraded><strong>Langkah 11:</strong></h2>
+<h2 is-upgraded><strong>Langkah 11: Tambah Scroll Listener</strong></h2>
+<p>Tambahkan method <code>initState()</code> setelah deklarasi variabel <code>scrollController</code> seperti kode berikut.</p>
 <pre><code>@override
 void initState() {
   super.initState();
@@ -227,21 +229,23 @@ void initState() {
       FocusScope.of(context).requestFocus(FocusNode());
     });
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 12:</strong></h2>
+<h2 is-upgraded><strong>Langkah 12: Tambah controller dan keyboard behavior</strong></h2>
+<p>Tambahkan controller dan keyboard behavior pada ListView di method <code>_buildList</code> seperti kode berikut ini.</p>
 <pre><code>return ListView.builder(
   controller: scrollController,
  keyboardDismissBehavior: Theme.of(context).platform ==
  TargetPlatform.iOS
           ? ScrollViewKeyboardDismissBehavior.onDrag
           : ScrollViewKeyboardDismissBehavior.manual,</code></pre>
-<h2 is-upgraded><strong>Langkah 13:</strong></h2>
+<h2 is-upgraded><strong>Langkah 13: Terakhir, tambah method dispose()</strong></h2>
+<p>Terakhir, tambahkan method <code>dispose()</code> berguna ketika widget sudah tidak digunakan lagi.</p>
 <pre><code>@override
 void dispose() {
   scrollController.dispose();
   super.dispose();
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 14:</strong></h2>
-<p>Lakukan Hot restart (<strong>bukan</strong> hot reload) pada aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut.</p>
+<h2 is-upgraded><strong>Langkah 14: Hasil</strong></h2>
+<p>Lakukan Hot restart (<strong>bukan</strong> hot reload) pada aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut. Jika masih terdapat error, silakan diperbaiki hingga bisa running.</p>
 <p class="image-container"><img style="width: 226.00px" src="img\\110c35948b40a145.png"></p>
 <aside class="special"><p><strong>Catatan:</strong> Kedua fitur hot reload dan hot restart memiliki performa lebih cepat dibanding melakukan build ulang secara keseluruhan aplikasi. Secara umum:</p>
 <ul>
@@ -258,7 +262,8 @@ void dispose() {
 <li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>!</li>
 <li>Jelaskan maksud dari langkah 4 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
 <li>Mengapa perlu variabel plan di langkah 6 pada praktikum tersebut? Mengapa dibuat konstanta ?</li>
-<li>Lakukan capture hasil dari Langkah 9, kemudian jelaskan apa yang telah Anda buat!</li>
+<li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
+<li>Apa kegunaan method pada Langkah 11 dan 13 dalam <em>lifecyle state</em> ?</li>
 <li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!</li>
 </ol>
 
@@ -266,12 +271,18 @@ void dispose() {
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 2: Mengelola Data Layer dengan InheritedWidget dan InheritedNotifier" duration="60">
-        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+        <p>Bagaimana seharusnya Anda mengakses data pada aplikasi?</p>
+<p>Beberapa pilihan yang bisa dilakukan adalah meletakkan data dalam satu kelas yang sama sehingga menjadi bagian dari life cycle aplikasi Anda.</p>
+<p>Kemudian muncul pertanyaan, bagaimana meletakkan model dalam pohon widget ? sedangkan model bukanlah widget, sehingga tidak akan tampil pada screen.</p>
+<p>Solusi yang memungkinkan adalah menggunakan <code>InheritedWidget</code>. Sejauh ini kita hanya menggunakan dua jenis widget, yaitu <code>StatelessWidget</code> dan <code>StatefulWidget</code>. Kedua widget tersebut digunakan untuk layouting UI di screen. Di mana satu bersifat statis dan dinamis. Sedangkan <code>InheritedWidget</code> itu berbeda, ia dapat meneruskan data ke sub-widget turunannya (biasanya ketika Anda menerapkan <em>decomposition widget</em>). Jika dilihat dari perspektif user, itu tidak akan terlihat prosesnya (<em>invisible</em>). <code>InheritedWidget</code> dapat digunakan sebagai pintu untuk komunikasi antara <strong>view </strong>dan <strong>data </strong>layers.</p>
+<p>Pada codelab ini, kita akan memperbarui kode dari aplikasi Master Plan dengan memisahkan data todo list ke luar class view-nya.</p>
+<p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1 Model-View.</p>
 </aside>
-<h2 is-upgraded><strong>Langkah 1: </strong></h2>
+<h2 is-upgraded>Langkah 1: Buat file <strong><code>plan_provider.dart</code></strong></h2>
+<p>Buat folder baru <code>provider</code> di dalam folder <code>lib</code>, lalu buat file baru dengan nama <code>plan_provider.dart</code> berisi kode seperti berikut.</p>
 <pre><code>import &#39;package:flutter/material.dart&#39;;
-import &#39;./models/data_layer.dart&#39;;
+import &#39;../models/data_layer.dart&#39;;
 
 class PlanProvider extends InheritedNotifier&lt;ValueNotifier&lt;Plan&gt;&gt; {
   const PlanProvider({super.key, required Widget child, required
@@ -283,7 +294,8 @@ class PlanProvider extends InheritedNotifier&lt;ValueNotifier&lt;Plan&gt;&gt; {
     dependOnInheritedWidgetOfExactType&lt;PlanProvider&gt;()!.notifier!;
   }
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 2: </strong></h2>
+<h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
+<p>Gantilah pada bagian atribut <code>home</code> dengan <code>PlanProvider</code> seperti berikut. Jangan lupa sesuaikan bagian impor jika dibutuhkan.</p>
 <pre><code>return MaterialApp(
   theme: ThemeData(primarySwatch: Colors.purple),
   home: PlanProvider(
@@ -291,7 +303,8 @@ class PlanProvider extends InheritedNotifier&lt;ValueNotifier&lt;Plan&gt;&gt; {
     child: const PlanScreen(),
    ),
 );</code></pre>
-<h2 is-upgraded><strong>Langkah 3: </strong></h2>
+<h2 is-upgraded>Langkah 3: Tambah method pada model <strong><code>plan.dart</code></strong></h2>
+<p>Tambahkan dua <em>method </em>di dalam model <code>class Plan</code> seperti kode berikut.</p>
 <pre><code>int get completedCount =&gt; tasks
   .where((task) =&gt; task.complete)
   .length;
@@ -299,8 +312,10 @@ class PlanProvider extends InheritedNotifier&lt;ValueNotifier&lt;Plan&gt;&gt; {
 String get completenessMessage =&gt;
   &#39;$completedCount out of ${tasks.length} tasks&#39;;
 </code></pre>
-<h2 is-upgraded><strong>Langkah 4: </strong></h2>
-<h2 is-upgraded><strong>Langkah 5: </strong></h2>
+<h2 is-upgraded><strong>Langkah 4: Pindah ke PlanScreen</strong></h2>
+<p>Edit <code>PlanScreen</code> agar menggunakan data dari <code>PlanProvider</code>. Hapus deklarasi variabel <code>plan</code> (ini akan membuat error). Kita akan perbaiki pada langkah 5 berikut ini.</p>
+<h2 is-upgraded>Langkah 5: Edit method <strong><code>_buildAddTaskButton</code></strong></h2>
+<p>Tambahkan <code>BuildContext</code> sebagai parameter dan gunakan <code>PlanProvider</code> sebagai sumber datanya. Edit bagian kode seperti berikut.</p>
 <pre><code>Widget _buildAddTaskButton(BuildContext context) {
   ValueNotifier&lt;Plan&gt; planNotifier = PlanProvider.of(context);
   return FloatingActionButton(
@@ -314,7 +329,8 @@ String get completenessMessage =&gt;
     },
   );
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 6: </strong></h2>
+<h2 is-upgraded>Langkah 6: Edit method <strong><code>_buildTaskTile</code></strong></h2>
+<p>Tambahkan parameter <code>BuildContext</code>, gunakan <code>PlanProvider</code> sebagai sumber data. Ganti <code>TextField</code> menjadi <code>TextFormField</code> untuk membuat inisial <code>data provider</code> menjadi lebih mudah.</p>
 <pre><code>Widget _buildTaskTile(Task task, int index, BuildContext context) {
   ValueNotifier&lt;Plan&gt; planNotifier = PlanProvider.of(context);
   return ListTile(
@@ -347,7 +363,8 @@ String get completenessMessage =&gt;
     ),
   );
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 7: </strong></h2>
+<h2 is-upgraded>Langkah 7: Edit <strong><code>_buildList</code></strong></h2>
+<p>Sesuaikan parameter pada bagian <code>_buildTaskTile</code> seperti kode berikut.</p>
 <pre><code>Widget _buildList(Plan plan) {
    return ListView.builder(
      controller: scrollController,
@@ -356,8 +373,10 @@ String get completenessMessage =&gt;
         _buildTaskTile(plan.tasks[index], index, context),
    );
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 8: </strong></h2>
-<h2 is-upgraded><strong>Langkah 9: </strong></h2>
+<h2 is-upgraded>Langkah 8: Tetap di <strong><code>class PlanScreen</code></strong></h2>
+<p>Edit method build sehingga bisa tampil progress pada bagian bawah (footer). Caranya, bungkus (wrap) _buildList dengan widget Expanded dan masukkan ke dalam widget Column seperti kode pada Langkah 9.</p>
+<h2 is-upgraded>Langkah 9: Tambah widget <strong><code>SafeArea</code></strong></h2>
+<p>Terakhir, tambahkan widget <code>SafeArea</code> dengan berisi <code>completenessMessage</code> pada akhir widget <code>Column</code>. Perhatikan kode berikut ini.</p>
 <pre><code>@override
 Widget build(BuildContext context) {
    return Scaffold(
@@ -376,15 +395,31 @@ Widget build(BuildContext context) {
      floatingActionButton: _buildAddTaskButton(context),
    );
 }</code></pre>
+<p>Akhirnya, <strong>run </strong>atau tekan <strong>F5 </strong>jika aplikasi belum running. Tidak akan terlihat perubahan pada UI, namun dengan melakukan langkah-langkah di atas, Anda telah menerapkan cara memisahkan dengan baik antara <strong>view </strong>dan <strong>model</strong>. Ini merupakan hal terpenting dalam mengelola <strong>state </strong>di aplikasi Anda.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum 2: InheritedWidget" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Jelaskan mana yang dimaksud <code>InheritedWidget</code> pada langkah 1 tersebut! Mengapa yang digunakan <code>InheritedNotifier</code>?</li>
+<li>Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
+<li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
+<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!</li>
+</ol>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 3: Membuat State di Multiple Screens" duration="60">
-        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+        <p>Satu kalimat populer atau viral yang beredar dalam komunitas Flutter adalah &#34;<strong>Lift State Up</strong>&#34;. Mantra ini merujuk ke sebuah ide di mana objek State seharusnya berada lebih tinggi dari pada widget yang membutuhkannya di dalam sebuah widget tree. InheritedWidget yang telah kita buat sebelum bekerja dengan sempurna pada satu screen, tapi apa yang akan terjadi jika kita tambah screen kedua ?</p>
+<p>Pada codelab ini, Anda akan menambah screen lain pada aplikasi Master Plan sehingga bisa membuat kelompok daftar plan lebih dari satu. </p>
+<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
 </aside>
-<h2 is-upgraded><strong>Langkah 1: </strong></h2>
+<h2 is-upgraded>Langkah 1: Edit <strong><code>PlanProvider</code></strong></h2>
+<p>Perhatikan kode berikut, edit class <code>PlanProvider</code> sehingga dapat menangani List Plan.</p>
 <pre><code>class PlanProvider extends
 InheritedNotifier&lt;ValueNotifier&lt;List&lt;Plan&gt;&gt;&gt; {
   const PlanProvider({super.key, required Widget child, required
@@ -395,9 +430,9 @@ ValueNotifier&lt;List&lt;Plan&gt;&gt; notifier})
     return context.
 dependOnInheritedWidgetOfExactType&lt;PlanProvider&gt;()!.notifier!;
   }
-}
-</code></pre>
-<h2 is-upgraded><strong>Langkah 2: </strong></h2>
+}</code></pre>
+<h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
+<p>Langkah sebelumnya dapat menyebabkan error pada <code>main.dart</code> dan <code>plan_screen.dart</code>. Pada method <code>build</code>, gantilah menjadi kode seperti ini.</p>
 <pre><code>@override
 Widget build(BuildContext context) {
   return PlanProvider(
@@ -411,15 +446,19 @@ Widget build(BuildContext context) {
     ),
   );
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 3: </strong></h2>
+<h2 is-upgraded><strong>Langkah 3: Edit plan_screen.dart</strong></h2>
+<p>Tambahkan variabel <code>plan</code> dan atribut pada <em>constructor</em>-nya seperti berikut.</p>
 <pre><code>final Plan plan;
 const PlanScreen({super.key, required this.plan});</code></pre>
-<h2 is-upgraded><strong>Langkah 4: </strong></h2>
-<h2 is-upgraded><strong>Langkah 5: </strong></h2>
+<h2 is-upgraded><strong>Langkah 4: Error</strong></h2>
+<p>Itu akan terjadi error setiap kali memanggil <code>PlanProvider.of(context)</code>. Itu terjadi karena screen saat ini hanya menerima tugas-tugas untuk satu kelompok <code>Plan</code>, tapi sekarang <code>PlanProvider</code> menjadi list dari objek plan tersebut.</p>
+<h2 is-upgraded>Langkah 5: Tambah <strong><code>getter Plan</code></strong></h2>
+<p>Tambahkan getter pada <code>_PlanScreenState</code> seperti kode berikut.</p>
 <pre><code>class _PlanScreenState extends State&lt;PlanScreen&gt; {
   late ScrollController scrollController;
   Plan get plan =&gt; widget.plan;</code></pre>
-<h2 is-upgraded><strong>Langkah 6: </strong></h2>
+<h2 is-upgraded>Langkah 6: Method <strong><code>initState()</code></strong></h2>
+<p>Pada bagian ini kode tetap seperti berikut.</p>
 <pre><code>@override
 void initState() {
    super.initState();
@@ -430,7 +469,8 @@ void initState() {
 
 
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 7: </strong></h2>
+<h2 is-upgraded>Langkah 7: Widget <strong><code>build</code></strong></h2>
+<p>Pastikan Anda telah merubah ke <code>List<Plan></code> dan mengubah nilai pada <code>currentPlan</code> seperti kode berikut ini.</p>
 <pre><code>  @override
   Widget build(BuildContext context) {
     ValueNotifier&lt;List&lt;Plan&gt;&gt; plansNotifier = PlanProvider.of(context);
@@ -473,10 +513,9 @@ currentPlan.name);
           name: currentPlan.name,
           tasks: updatedTasks,
         );},);
-  }
-
-</code></pre>
-<h2 is-upgraded><strong>Langkah 8: </strong></h2>
+  }</code></pre>
+<h2 is-upgraded>Langkah 8: Edit <strong><code>_buildTaskTile</code></strong></h2>
+<p>Pastikan ubah ke <code>List<Plan></code> dan variabel <code>planNotifier</code> seperti kode berikut ini.</p>
 <pre><code>  Widget _buildTaskTile(Task task, int index, BuildContext context)
 {
     ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.
@@ -514,34 +553,34 @@ currentPlan.name);
                   complete: task.complete,
                 ),
             );
-},),);}
-
-</code></pre>
-<h2 is-upgraded><strong>Langkah 9: </strong></h2>
-<pre><code>home: const PlanCreatorScreen(),
-</code></pre>
-<h2 is-upgraded><strong>Langkah 10: </strong></h2>
+},),);}</code></pre>
+<h2 is-upgraded><strong>Langkah 9: Buat screen baru</strong></h2>
+<p>Pada folder <strong>view</strong>, buatlah file baru dengan nama <code>plan_creator_screen.dart</code> dan deklarasikan dengan <code>StatefulWidget</code> bernama <code>PlanCreatorScreen</code>. Gantilah di <code>main.dart</code> pada atribut home menjadi seperti berikut.</p>
+<pre><code>home: const PlanCreatorScreen(),</code></pre>
+<h2 is-upgraded><strong>Langkah 10: Pindah ke class _PlanCreatorScreenState</strong></h2>
+<p>Kita perlu tambahkan variabel <code>TextEditingController</code> sehingga bisa membuat <code>TextField</code> sederhana untuk menambah Plan baru. Jangan lupa tambahkan dispose ketika widget unmounted seperti kode berikut.</p>
 <pre><code>final textController = TextEditingController();
 
 @override
 void dispose() {
   textController.dispose();
   super.dispose();
-}
-</code></pre>
-<h2 is-upgraded><strong>Langkah 11: </strong></h2>
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 11: Pindah ke method build</strong></h2>
+<p>Letakkan method Widget <code>build</code> berikut di atas <code>void dispose</code>. Gantilah ‘<strong>Namaku</strong>&#39; dengan nama panggilan Anda.</p>
 <pre><code>@override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(title: const Text(&#39;Master Plans&#39;)),
+    // ganti ‘Namaku&#39; dengan nama panggilan Anda
+    appBar: AppBar(title: const Text(&#39;Master Plans Namaku&#39;)),
     body: Column(children: [
       _buildListCreator(),
       Expanded(child: _buildMasterPlans())
     ]),
   );
-}
-</code></pre>
-<h2 is-upgraded><strong>Langkah 12: </strong></h2>
+}</code></pre>
+<h2 is-upgraded>Langkah 12: Buat widget <strong><code>_buildListCreator</code></strong></h2>
+<p>Buatlah widget berikut setelah widget build.</p>
 <pre><code>Widget _buildListCreator() {
   return Padding(
      padding: const EdgeInsets.all(20.0),
@@ -555,9 +594,9 @@ Widget build(BuildContext context) {
              contentPadding: EdgeInsets.all(20)),
           onEditingComplete: addPlan),
      ));
-}
-</code></pre>
-<h2 is-upgraded><strong>Langkah 13: </strong></h2>
+}</code></pre>
+<h2 is-upgraded>Langkah 13: Buat <strong><code>void addPlan()</code></strong></h2>
+<p>Tambahkan method berikut untuk menerima inputan dari user berupa text plan.</p>
 <pre><code>void addPlan() {
   final text = textController.text;
     if (text.isEmpty) {
@@ -571,9 +610,9 @@ add(plan);
     textController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
-}
-</code></pre>
-<h2 is-upgraded><strong>Langkah 14: </strong></h2>
+}</code></pre>
+<h2 is-upgraded>Langkah 14: Buat <strong><code>widget _buildMasterPlans()</code></strong></h2>
+<p>Tambahkan widget seperti kode berikut.</p>
 <pre><code>Widget _buildMasterPlans() {
   ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.of(context);
     List&lt;Plan&gt; plans = planNotifier.value;
@@ -583,7 +622,7 @@ add(plan);
          mainAxisAlignment: MainAxisAlignment.center,
          children: &lt;Widget&gt;[
            const Icon(Icons.note, size: 100, color: Colors.grey),
-           Text(&#39;You do not have any plans yet.&#39;,
+           Text(&#39;Anda belum memiliki rencana apapun.&#39;,
               style: Theme.of(context).textTheme.headlineSmall)
          ]);
     }
@@ -602,14 +641,31 @@ PlanScreen(plan: plan,)));
         });
 }
 </code></pre>
+<p>Terakhir, <strong>run </strong>atau tekan <strong>F5 </strong>untuk melihat hasilnya jika memang belum running. Bisa juga lakukan<strong> hot restart</strong> jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini.</p>
+<p class="image-container"><img style="width: 260.50px" src="img\\918beb8a139abc7c.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum 3: State di Multiple Screens" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>!</li>
+<li>Berdasarkan Praktikum 3 yang telah Anda lakukan, jelaskan maksud dari gambar diagram berikut ini!</li>
+</ol>
+<p class="image-container"><img style="width: 460.50px" src="img\\9ce81bcd2817adc8.png"></p>
+<ol type="1" start="3">
+<li>Lakukan capture hasil dari Langkah 14 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
+<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!</li>
+</ol>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Tugas Kelompok PBL" duration="90">
         <ol type="1" start="1">
-<li>Tambahkan </li>
-<li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL.</li>
+<li>Tambahkan <em>class model </em>yang dibutuhkan sesuai aplikasi OCR kelompok Anda! Bagilah tugas dengan anggota kelompok Anda untuk merancang proses state yang akan dilakukan pada aplikasi kelompok Anda. Lalu terapkan state management pada project kelompok yang telah Anda pelajari melalui praktikum ini.</li>
+<li>Anda boleh menggunakan plugin/library pihak ketiga seperti riverpod, BLoC, provider atau lainnya untuk mengelola state pada project kelompok PBL.</li>
+<li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL. Beri keterangan commit dengan jelas fitur apa saja yang ditambahkan, tiap screen/fitur untuk setiap commit itu lebih baik.</li>
 </ol>
 
 
@@ -618,10 +674,14 @@ PlanScreen(plan: plan,)));
       <google-codelab-step label="Selamat!" duration="0">
         <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait state management dan contoh penggunaannya.</p>
 <p>Pada codelab berikutnya, Anda akan mempelajari tentang Pemrograman Asynchronous di Flutter.</p>
+<p>Jangan sungkan jika Anda menemukan kesalahan pada codelab ini untuk merevisi atau sekedar melaporkan issue melalui tautan di pojok kiri bawah (<a href="https://github.com/jti-polinema/flutter-codelab/issues" target="_blank">Report a mistake</a>).</p>
 <h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
 <p>Silakan cek beberapa sumber belajar lainnya...</p>
 <ul>
 <li><a href="https://www.youtube.com/watch?v=YZkRIHXhdGo" target="_blank">Konsep State Management Flutter : Definisi dan Kegunaannya</a></li>
+<li><a href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html" target="_blank">InheritedWidget class documentation API official</a></li>
+<li><a href="https://riverpod.dev/" target="_blank">https://riverpod.dev/</a> </li>
+<li><a href="https://pub.dev/packages/provider" target="_blank">https://pub.dev/packages/provider</a> </li>
 </ul>
 <h2 is-upgraded><strong>Referensi</strong></h2>
 <ul>
