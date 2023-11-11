@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-11-11T08:11:35Z",
+  "id": "12-async",
+  "duration": 640,
+  "title": "#12 | Pemrograman Asynchronous",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mampu melakukan pemrograman asynchronous di Flutter",
+  "source": "1HIUdsb_aulXG44JjBvQaiTbUlQQvoP06Z2-KOAs0crk",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "12-async"
+}
