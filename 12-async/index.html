@@ -93,13 +93,20 @@ int y = x * 7;</code></pre>
 <p class="image-container"><img style="width: 525.00px" src="img\\e3c11d0097211855.png"></p>
 <p>Pada diagram tersebut, Anda dapat melihat baris eksekusi utama, yaitu pada bagian UI, dapat melakukan pemanggilan operasi async (misalnya akses data via jaringan, database atau Stream). Namun, UI tetap dieksekusi tanpa harus menunggu hasil operasi async selesai.</p>
 <p>Dart adalah bahasa <em>single-thread</em>, namun Anda dapat melakukan operasi async agar dapat membuat aplikasi yang responsif. Di Dart dan Flutter Anda dapat menggunakan <code>class Future</code> untuk melakukan operasi async. </p>
+<aside class="special"><p><strong>Catatan:</strong> Future memiliki 3 kondisi yaitu:</p>
+<ul>
+<li><strong>Uncompleted</strong>: Anda memanggil Future, namun respon belum tersedia.</li>
+<li><strong>Completed successfully</strong>: ketika fungsi <code>then()</code> dipanggil.</li>
+<li><strong>Completed with an error</strong>: ketika fungsi catchError() dipanggil.</li>
+</ul>
+</aside>
 <p>Dalam codelab ini, kita akan membangun aplikasi<strong> books </strong>menggunakan plugin <code>http</code> untuk membaca data JSON dari <strong>Google Books API. </strong></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 1: Mengunduh Data dari Web Service" duration="20">
-        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+      <google-codelab-step label="Praktikum 1: Mengunduh Data dari Web Service (API)" duration="20">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
 </aside>
 <h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
@@ -117,7 +124,7 @@ int y = x * 7;</code></pre>
 <h2 is-upgraded>Langkah 3: Buka file <strong><code>main.dart</code></strong></h2>
 <p>Ketiklah kode seperti berikut ini.</p>
 <aside class="warning"><h3 is-upgraded><strong>Soal 1</strong></h3>
-<p>Tambahkan <strong>nama panggilan Anda</strong> pada title app sebagai identitas hasil pekerjaan Anda.</p>
+<p>Tambahkan <strong>nama panggilan Anda</strong> pada <code>title</code> app sebagai identitas hasil pekerjaan Anda.</p>
 </aside>
 <p class="image-container"><img style="width: 624.00px" src="img\\2d4f462d1686d7d.png"></p>
 <aside class="special"><p><strong>Catatan: </strong></p>
@@ -132,26 +139,41 @@ int y = x * 7;</code></pre>
 </ul>
 <p class="image-container"><img style="width: 610.00px" src="img\\29d0179018edd8d4.png"></p>
 <ul>
-<li>Kemudian cobalah akses di browser URI tersebut dengan lengkap seperti ini. Jika menampilkan data JSON, maka Anda telah berhasil. Lakukan <em>capture </em>milik Anda dan tulis di <code>README</code> pada laporan praktikum.</li>
+<li>Kemudian cobalah akses di browser URI tersebut dengan lengkap seperti ini. Jika menampilkan data JSON, maka Anda telah berhasil. Lakukan <em>capture </em>milik Anda dan tulis di <code>README</code> pada laporan praktikum. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 2</strong>&#34;.</li>
 </ul>
 <p class="image-container"><img style="width: 610.00px" src="img\\d441815f1bdf8e8.png"></p>
 </aside>
 <h2 is-upgraded>Langkah 5: Tambah kode di <strong><code>ElevatedButton</code></strong></h2>
 <p>Tambahkan kode pada <code>onPressed</code> di <code>ElevatedButton</code> seperti berikut.</p>
 <p class="image-container"><img style="width: 553.00px" src="img\\857bcdaae7213edf.png"></p>
-<p>Lakukan Hot restart (<strong>bukan</strong> hot reload) pada aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut. Jika masih terdapat error, silakan diperbaiki hingga bisa running.</p>
+<p>Lakukan run aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut. Jika masih terdapat error, silakan diperbaiki hingga bisa running.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 3</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 5 tersebut terkait <code>substring</code> dan <code>catchError</code>!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 3</strong>&#34;.</li>
+</ul>
+</aside>
+<p class="image-container"><img style="width: 346.00px" src="img\\6533382f0798e097.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 2: Menggunakan await/async untuk menghindari callbacks" duration="60">
-        <p>Pada codelab ini, kita akan menambah kode dari aplikasi books di praktikum sebelumnya.</p>
+      <google-codelab-step label="Praktikum 2: Menggunakan await/async untuk menghindari callbacks" duration="15">
+        <p>Ada alternatif penggunaan Future yang lebih clean, mudah dibaca dan dirawat, yaitu pola <strong>async/await</strong>. Intinya pada dua kata kunci ini:</p>
+<ul>
+<li><code>async</code> digunakan untuk menandai suatu method sebagai asynchronous dan itu harus ditambahkan di depan kode function.</li>
+<li><code>await</code> digunakan untuk memerintahkan menunggu sampai eksekusi suatu function itu selesai dan mengembalikan sebuah <code>value</code>. Untuk <code>then</code> bisa digunakan pada jenis method apapun, sedangkan <code>await</code> hanya bekerja di dalam method <code>async</code>.</li>
+</ul>
+<p>Berikut ini contoh kode perbedaan <code>Future</code> dengan <code>then</code> dan <code>async/await</code>.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\\7d1cc43f658e2318.png"></p>
+<p>Untuk memahami lebih dalam penggunaan <strong>async/await</strong>, simaklah video berikut.</p>
 <iframe class="youtube-video" src="https://www.youtube.com/embed/SmTCmDMi4BY?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1.</p>
 </aside>
+<p>Pada codelab ini, kita akan menambah kode dari aplikasi <strong>books </strong>di praktikum sebelumnya.</p>
 <h2 is-upgraded>Langkah 1: Buka file <strong><code>main.dart</code></strong></h2>
-<p>berisi kode seperti berikut.</p>
+<p>Tambahkan tiga method berisi kode seperti berikut di dalam <code>class _FuturePageState</code>.</p>
 <pre><code>Future&lt;int&gt; returnOneAsync() async {
   await Future.delayed(const Duration(seconds: 3));
   return 1;
@@ -166,27 +188,36 @@ Future&lt;int&gt; returnThreeAsync() async {
   await Future.delayed(const Duration(seconds: 3));
   return 3;
 }</code></pre>
-<h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
+<h2 is-upgraded>Langkah 2: Tambah method <strong><code>count()</code></strong></h2>
+<p>Lalu tambahkan lagi method ini di bawah ketiga method sebelumnya.</p>
 <p class="image-container"><img style="width: 378.00px" src="img\\5b83c8553b235a3a.png"></p>
-<h2 is-upgraded>Langkah 3: Tambah method pada model <strong><code>plan.dart</code></strong></h2>
-<p>Tambahkan.</p>
+<h2 is-upgraded>Langkah 3: Panggil <strong><code>count()</code></strong></h2>
+<p>Lakukan <em>comment </em>kode sebelumnya, ubah isi kode <code>onPressed()</code> menjadi seperti berikut.</p>
 <p class="image-container"><img style="width: 258.00px" src="img\\e447e023789e40.png"></p>
-<h2 is-upgraded><strong>Langkah 4: </strong></h2>
-<p>Akhirnya, <strong>run </strong>atau tekan <strong>F5 </strong>jika aplikasi belum running.</p>
+<h2 is-upgraded><strong>Langkah 4: Run</strong></h2>
+<p>Akhirnya, <strong>run </strong>atau tekan <strong>F5 </strong>jika aplikasi belum running. Maka Anda akan melihat seperti gambar berikut, hasil angka 6 akan tampil setelah delay 9 detik.</p>
 <p class="image-container"><img style="width: 374.00px" src="img\\c031719fe1ee4340.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 4</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 1 dan 2 tersebut!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 4</strong>&#34;.</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 3: Menggunakan Completer di Future" duration="15">
-        <p>Pada codelab ini, Anda akan menambah screen lain pada aplikasi Master Plan sehingga bisa membuat kelompok daftar plan lebih dari satu. </p>
-<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan praktikum 2.</p>
+        <p>Menggunakan Future dengan <code>then</code>, <code>catchError</code>, <code>async</code>, dan <code>await</code> mungkin sudah cukup untuk banyak kasus, tetapi ada alternatif melakukan operasi async di Dart dan Flutter yaitu dengan <code>class Completer</code>.</p>
+<p><strong>Completer </strong>membuat object Future yang mana Anda dapat menyelesaikannya nanti (late) dengan return sebuah value atau error.</p>
+<p>Setelah Anda menyelesaikan praktikum 2, Anda dapat melanjutkan praktikum 3 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 2.</p>
 </aside>
 <h2 is-upgraded>Langkah 1: Buka <strong><code>main.dart</code></strong></h2>
+<p>Pastikan telah impor package async berikut.</p>
 <pre><code>import &#39;package:async/async.dart&#39;;</code></pre>
-<h2 is-upgraded>Langkah 2: </h2>
-<p>menjadi kode seperti ini.</p>
+<h2 is-upgraded>Langkah 2: Tambahkan variabel dan method</h2>
+<p>Tambahkan variabel late dan method di <code>class _FuturePageState</code> seperti ini.</p>
 <pre><code>late Completer completer;
 
 Future getNumber() {
@@ -198,17 +229,24 @@ Future getNumber() {
 Future calculate() async {
   await Future.delayed(const Duration(seconds : 5));
   completer.complete(42);
-}
-</code></pre>
-<h2 is-upgraded><strong>Langkah 3: </strong></h2>
-<p>Tambahkan kode berikut pada fungsi <code>onPressed()</code>.</p>
+}</code></pre>
+<h2 is-upgraded>Langkah 3: Ganti isi kode <strong><code>onPressed()</code></strong></h2>
+<p>Tambahkan kode berikut pada fungsi <code>onPressed()</code>. Kode sebelumnya bisa Anda <em>comment</em>.</p>
 <p class="image-container"><img style="width: 398.00px" src="img\\bdb48de3fa852295.png"></p>
 <h2 is-upgraded><strong>Langkah 4: </strong></h2>
-<p>Terakhir, <strong>run </strong>atau tekan <strong>F5 </strong>untuk melihat hasilnya jika memang belum running. Bisa juga lakukan<strong> hot restart</strong> jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini.</p>
+<p>Terakhir, <strong>run </strong>atau tekan <strong>F5 </strong>untuk melihat hasilnya jika memang belum running. Bisa juga lakukan<strong> hot restart</strong> jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini. Setelah 5 detik, maka angka 42 akan tampil.</p>
 <p class="image-container"><img style="width: 252.00px" src="img\\4a03c022427c484e.png"></p>
-<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<aside class="warning"><h3 is-upgraded><strong>Soal 5</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 2 tersebut!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 5</strong>&#34;.</li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 5: Ganti method <strong><code>calculate()</code></strong></h2>
+<p>Gantilah isi code method <code>calculate()</code> seperti kode berikut, atau Anda dapat membuat <code>calculate2()</code></p>
 <p class="image-container"><img style="width: 544.00px" src="img\\6631dbe432b45450.png"></p>
-<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<h2 is-upgraded>Langkah 6: Pindah ke <strong><code>onPressed()</code></strong></h2>
+<p>Ganti menjadi kode seperti berikut.</p>
 <pre><code>getNumber().then((value) {
   setState(() {
     result = value.toString();
@@ -216,89 +254,189 @@ Future calculate() async {
 }).catchError((e) {
   result = &#39;An error occurred&#39;;
 });</code></pre>
+<aside class="warning"><h3 is-upgraded><strong>Soal 6</strong></h3>
+<ul>
+<li>Jelaskan maksud perbedaan kode langkah 2 dengan langkah 5-6 tersebut!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 6</strong>&#34;.</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 4: Memanggil Future secara paralel" duration="15">
-        <p>Satu </p>
+        <p>Ketika Anda membutuhkan untuk menjalankan banyak Future secara bersamaan, ada sebuah class yang dapat Anda gunakan yaitu: <code>FutureGroup</code>. </p>
+<p><code>FutureGroup</code> tersedia di package <code>async</code>, yang mana itu harus diimpor ke file dart Anda, seperti berikut.</p>
 <pre><code>import &#39;package:async/async.dart&#39;;</code></pre>
-<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<aside class="special"><p><strong>Catatan:</strong> Package <code>dart:async</code> dan <code>async/async.dart</code> merupakan library yang berbeda. Pada beberapa kasus, Anda membutuhkan kedua lib tersebut untuk me-<em>run code async</em>.</p>
+</aside>
+<p><strong>FutureGroup </strong>adalah sekumpulan dari Future yang dapat run secara paralel. Ketika run secara paralel, maka konsumsi waktu menjadi lebih hemat (cepat) dibanding run method async secara single setelah itu method async lainnya.</p>
+<p>Ketika semua code async paralel selesai dieksekusi, maka FutureGroup akan return value sebagai sebuah <code>List</code>, sama juga ketika ingin menambahkan operasi paralel dalam bentuk <code>List</code>.</p>
+<p>Setelah Anda menyelesaikan praktikum 3, Anda dapat melanjutkan praktikum 4 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 3.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Buka file <strong><code>main.dart</code></strong></h2>
+<p>Tambahkan method ini ke dalam <code>class _FuturePageState</code> </p>
 <p class="image-container"><img style="width: 479.00px" src="img\\4430acb8ffa21cf1.png"></p>
-<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<h2 is-upgraded>Langkah 2: Edit <strong><code>onPressed()</code></strong></h2>
+<p>Anda bisa hapus atau comment kode sebelumnya, kemudian panggil method dari langkah 1 tersebut.</p>
 <p class="image-container"><img style="width: 159.00px" src="img\\a8eae50272d363cf.png"></p>
 <h2 is-upgraded><strong>Langkah 3: Run</strong></h2>
-<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p>Anda akan melihat hasilnya dalam 3 detik berupa angka 6 lebih cepat dibandingkan praktikum sebelumnya menunggu sampai 9 detik.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 7</strong></h3>
+<ul>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 7</strong>&#34;.</li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 4: Ganti variabel <strong><code>futureGroup</code></strong></h2>
+<p>Anda dapat menggunakan FutureGroup dengan <code>Future.wait</code> seperti kode berikut.</p>
 <pre><code>final futures = Future.wait&lt;int&gt;([
-returnOneAsync(),
-returnTwoAsync(),
-returnThreeAsync(),
+  returnOneAsync(),
+  returnTwoAsync(),
+  returnThreeAsync(),
 ]);</code></pre>
+<aside class="warning"><h3 is-upgraded><strong>Soal 8</strong></h3>
+<ul>
+<li>Jelaskan maksud perbedaan kode langkah 1 dan 4!</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 5: Menangani Respon Error pada Async Code" duration="13">
-        <p>Satu kalimat popule</p>
-<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+        <p>Ada beberapa teknik untuk melakukan <em>handle error </em>pada code async. Pada praktikum ini Anda akan menggunakan 2 cara, yaitu <code>then()</code> callback dan pola <code>async/await</code>.</p>
+<p>Setelah Anda menyelesaikan praktikum 4, Anda dapat melanjutkan praktikum 5 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 4.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Buka file <strong><code>main.dart</code></strong></h2>
+<p>Tambahkan method ini ke dalam <code>class _FuturePageState</code></p>
 <p class="image-container"><img style="width: 461.00px" src="img\\2cba66fc6381820e.png"></p>
-<h2 is-upgraded><strong>Langkah 2: </strong></h2>
+<h2 is-upgraded><strong>Langkah 2: ElevatedButton</strong></h2>
+<p>Ganti dengan kode berikut</p>
 <p class="image-container"><img style="width: 474.00px" src="img\\9659bd29ea2724aa.png"></p>
-<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<h2 is-upgraded><strong>Langkah 3: Run</strong></h2>
+<p>Lakukan run dan klik tombol <strong>GO! </strong>maka akan menghasilkan seperti gambar berikut.</p>
 <p class="image-container"><img style="width: 395.00px" src="img\\8a644f3bb34dc4fb.png"></p>
+<p>Pada bagian debug console akan melihat teks <code>Complete</code> seperti berikut.</p>
 <p class="image-container"><img style="width: 309.00px" src="img\\b45bbfe7f2b1f61b.png"></p>
-<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<aside class="warning"><h3 is-upgraded><strong>Soal 9</strong></h3>
+<ul>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 9</strong>&#34;.</li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 4: Tambah method <strong><code>handleError()</code></strong></h2>
+<p>Tambahkan kode ini di dalam <code>class _FutureStatePage</code></p>
 <p class="image-container"><img style="width: 322.00px" src="img\\5b01a21f4e2717d3.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 10</strong></h3>
+<ul>
+<li>Panggil method <code>handleError()</code> tersebut di <code>ElevatedButton</code>, lalu run. Apa hasilnya? Jelaskan perbedaan kode langkah 1 dan 4!</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 6: Menggunakan Future dengan StatefulWidget" duration="15">
-        <p>Satu kalimat popule</p>
-<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+        <p>Seperti yang Anda telah pelajari, <code>Stateless</code> widget tidak dapat menyimpan informasi (state), <code>StatefulWidget</code> dapat mengelola variabel dan properti dengan method <code>setState()</code>, yang kemudian dapat ditampilkan pada UI. <code>State</code> adalah informasi yang dapat berubah selama life cycle widget itu berlangsung.</p>
+<p>Ada <strong>4 method utama </strong>dalam life cycle <code>StatefullWidget</code>:</p>
+<ul>
+<li><code>initState()</code>: dipanggil sekali ketika state dibangun. Bisa dikatakan ini juga sebagai konstruktor class.</li>
+<li><code>build()</code>: dipanggil setiap kali ada perubahan state atau UI. Method ini melakukan destroy UI dan membangun ulang dari nol.</li>
+<li><code>deactive()</code> dan <code>dispose()</code>: digunakan untuk menghapus widget dari tree, pada beberapa kasus dimanfaatkan untuk menutup koneksi ke database atau menyimpan data sebelum berpindah screen.</li>
+</ul>
+<p>Setelah Anda menyelesaikan praktikum 5, Anda dapat melanjutkan praktikum 6 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 5.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: install plugin geolocator</strong></h2>
+<p>Tambahkan plugin geolocator dengan mengetik perintah berikut di terminal.</p>
 <pre><code>flutter pub add geolocator</code></pre>
-<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<h2 is-upgraded><strong>Langkah 2: Tambah permission GPS</strong></h2>
+<p>Jika Anda menargetkan untuk platform <strong>Android</strong>, maka tambahkan baris kode berikut di file <code>android/app/src/main/androidmanifest.xml</code> </p>
 <pre><code>&lt;uses-permission android:name=&#34;android.permission.ACCESS_FINE_LOCATION&#34;/&gt;
 &lt;uses-permission android:name=&#34;android.permission.ACCESS_COARSE_LOCATION&#34;/&gt;</code></pre>
+<p>Jika Anda menargetkan untuk platform <strong>iOS</strong>, maka tambahkan kode ini ke file <code>Info.plist</code></p>
 <pre><code>&lt;key&gt;NSLocationWhenInUseUsageDescription&lt;/key&gt;
 &lt;string&gt;This app needs to access your location&lt;/string&gt;</code></pre>
-<h2 is-upgraded><strong>Langkah 3: </strong></h2>
-<h2 is-upgraded><strong>Langkah 4: </strong></h2>
-<h2 is-upgraded><strong>Langkah 5: </strong></h2>
+<h2 is-upgraded>Langkah 3: Buat file <strong><code>geolocation.dart</code></strong></h2>
+<p>Tambahkan file baru ini di folder lib project Anda.</p>
+<h2 is-upgraded><strong>Langkah 4: Buat StatefulWidget</strong></h2>
+<p>Buat <code>class LocationScreen</code> di dalam file <code>geolocation.dart</code></p>
+<h2 is-upgraded>Langkah 5: Isi kode <strong><code>geolocation.dart</code></strong></h2>
 <p class="image-container"><img style="width: 556.00px" src="img\\e9947082d70bbfbb.png"></p>
-<h2 is-upgraded><strong>Langkah 6: </strong></h2>
+<aside class="warning"><h3 is-upgraded><strong>Soal 11</strong></h3>
+<ul>
+<li>Tambahkan <strong>nama panggilan Anda</strong> pada tiap properti <code>title</code> sebagai identitas pekerjaan Anda.</li>
+</ul>
+</aside>
+<h2 is-upgraded><strong>Langkah 6: Edit main.dart</strong></h2>
+<p>Panggil screen baru tersebut di file main Anda seperti berikut.</p>
 <pre><code>home: LocationScreen(),</code></pre>
-<h2 is-upgraded><strong>Langkah 7: </strong></h2>
+<h2 is-upgraded><strong>Langkah 7: Run</strong></h2>
+<p>Run project Anda di <strong>device </strong>atau <strong>emulator </strong>(<strong>bukan browser</strong>), maka akan tampil seperti berikut ini.</p>
 <p class="image-container"><img style="width: 292.00px" src="img\\769ef7d3863f2f35.png"></p>
-<h2 is-upgraded><strong>Langkah 8: </strong></h2>
+<h2 is-upgraded><strong>Langkah 8: Tambahkan animasi loading</strong></h2>
+<p>Tambahkan widget loading seperti kode berikut. Lalu hot restart, perhatikan perubahannya.</p>
 <p class="image-container"><img style="width: 378.00px" src="img\\e528461199688c99.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 12</strong></h3>
+<ul>
+<li>Jika Anda tidak melihat animasi loading tampil, kemungkinan itu berjalan sangat cepat. Tambahkan delay pada method <code>getPosition()</code> dengan kode <code>await Future.delayed(const Duration(seconds: 3));</code></li>
+<li>Apakah Anda mendapatkan koordinat GPS ketika run di browser? Mengapa demikian?</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 12</strong>&#34;.</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 7: Manajemen Future dengan FutureBuilder" duration="15">
-        <p>Satu kalimat popule</p>
-<h2 is-upgraded><strong>Langkah 1: </strong></h2>
+        <p>Pola ketika menerima beberapa data secara async dan melakukan update pada UI sebenarnya itu tergantung pada ketersediaan data. Secara umum fakta di Flutter, ada sebuah widget yang membantu Anda untuk memudahkan manajemen future yaitu widget <code>FutureBuilder</code>.</p>
+<p>Anda dapat menggunakan FutureBuilder untuk manajemen future bersamaan dengan update UI ketika ada update Future. FutureBuilder memiliki status future sendiri, sehingga Anda dapat mengabaikan penggunaan <code>setState</code>, Flutter akan membangun ulang bagian UI ketika update itu dibutuhkan.</p>
+<p>Untuk lebih memahami widget FutureBuilder, mari kita coba dengan praktikum ini.</p>
+<p>Setelah Anda menyelesaikan praktikum 6, Anda dapat melanjutkan praktikum 7 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 6.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Modifikasi method <strong><code>getPosition()</code></strong></h2>
+<p>Buka file <code>geolocation.dart</code> kemudian ganti isi method dengan kode ini.</p>
 <p class="image-container"><img style="width: 450.00px" src="img\\d219a26080007e5f.png"></p>
-<h2 is-upgraded><strong>Langkah 2: </strong></h2>
+<h2 is-upgraded><strong>Langkah 2: Tambah variabel</strong></h2>
+<p>Tambah variabel ini di <code>class _LocationScreenState</code></p>
 <p class="image-container"><img style="width: 215.00px" src="img\\2bd8bac7676f257c.png"></p>
-<h2 is-upgraded><strong>Langkah 3: </strong></h2>
+<h2 is-upgraded>Langkah 3: Tambah <strong><code>initState()</code></strong></h2>
+<p>Tambah method ini dan set variabel <code>position</code></p>
 <p class="image-container"><img style="width: 222.00px" src="img\\3214e62efe9a252b.png"></p>
-<h2 is-upgraded><strong>Langkah 4: </strong></h2>
+<h2 is-upgraded>Langkah 4: Edit method <strong><code>build()</code></strong></h2>
+<p>Ketik kode berikut dan sesuaikan. Kode lama bisa Anda comment atau hapus.</p>
 <p class="image-container"><img style="width: 458.00px" src="img\\85adce0916edeb8e.png"></p>
-<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<aside class="warning"><h3 is-upgraded>Soal 13</h3>
+<ul>
+<li>Apakah ada perbedaan UI dengan praktikum sebelumnya? Mengapa demikian?</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 13</strong>&#34;.</li>
+<li>Seperti yang Anda lihat, menggunakan FutureBuilder lebih efisien, clean, dan reactive dengan Future bersama UI.</li>
+</ul>
+</aside>
+<h2 is-upgraded><strong>Langkah 5: Tambah handling error</strong></h2>
+<p>Tambahkan kode berikut untuk menangani ketika terjadi error. Kemudian hot restart.</p>
 <pre><code>else if (snapshot.connectionState == ConnectionState.done) {
   if (snapshot.hasError) {
      return Text(&#39;Something terrible happened!&#39;);
   }
   return Text(snapshot.data.toString());
 }</code></pre>
+<aside class="warning"><h3 is-upgraded>Soal 14</h3>
+<ul>
+<li>Apakah ada perbedaan UI dengan langkah sebelumnya? Mengapa demikian?</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 14</strong>&#34;.</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 8: Navigation route dengan Future Function" duration="15">
-        <p>Satu kalimat popule</p>
+        <p>Setelah Anda menyelesaikan praktikum 7, Anda dapat melanjutkan praktikum 8 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 7.</p>
+</aside>
 <h2 is-upgraded><strong>Langkah 1:</strong></h2>
 <h2 is-upgraded><strong>Langkah 2:</strong></h2>
 <p class="image-container"><img style="width: 478.00px" src="img\\94d4517fe205d4c7.png"></p>
@@ -322,6 +460,9 @@ returnThreeAsync(),
     
       <google-codelab-step label="Praktikum 9: Memanfaatkan async/await dengan Widget Dialog" duration="15">
         <p>Satu kalimat popule</p>
+<p>Setelah Anda menyelesaikan praktikum 8, Anda dapat melanjutkan praktikum 9 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 8.</p>
+</aside>
 <h2 is-upgraded><strong>Langkah 1:</strong></h2>
 <h2 is-upgraded><strong>Langkah 2:</strong></h2>
 <p class="image-container"><img style="width: 430.00px" src="img\\f8aa82ec1f684ef7.png"></p>
@@ -336,18 +477,9 @@ returnThreeAsync(),
 
       </google-codelab-step>
     
-      <google-codelab-step label="Tugas Kelompok PBL" duration="90">
-        <ol type="1" start="1">
-<li>Tambahkan </li>
-<li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL. Beri keterangan commit dengan jelas fitur apa saja yang ditambahkan, tiap screen/fitur untuk setiap commit itu lebih baik.</li>
-</ol>
-
-
-      </google-codelab-step>
-    
       <google-codelab-step label="Selamat!" duration="0">
         <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait pemrograman async dan contoh penggunaannya.</p>
-<p>Pada codelab berikutnya, Anda akan mempelajari tentang Pemrograman Asynchronous lanjutan dengan streams dan state BLoC.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Pemrograman <em>Asynchronous </em>lanjutan dengan <em>streams </em>dan<em> state BLoC</em>.</p>
 <p>Jangan sungkan jika Anda menemukan kesalahan pada codelab ini untuk merevisi atau sekedar melaporkan issue melalui tautan di pojok kiri bawah (<a href="https://github.com/jti-polinema/flutter-codelab/issues" target="_blank">Report a mistake</a>).</p>
 <h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
 <p>Silakan cek beberapa sumber belajar lainnya...</p>
