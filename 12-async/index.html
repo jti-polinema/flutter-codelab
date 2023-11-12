@@ -82,14 +82,23 @@
 <li>Menulis data ke database</li>
 <li>Membaca data dari sebuah file</li>
 </ul>
-<h2 is-upgraded><strong>Menggunakan Future</strong></h2>
+<h2 is-upgraded>Menggunakan <em>Future </em>untuk operasi <em>Asynchronous</em></h2>
 <p>Ketika Anda menulis kode program, pada umumnya berjalan secara sekuensial (baris per baris). Sebagai contoh kode berikut:</p>
-<p>Dalam codelab ini, kita akan membangun aplikasi<strong> books.</strong></p>
+<pre><code>int x = 3;
+int y = x * 7;</code></pre>
+<p>Anda akan menebak bahwa nilai <code>y</code> sama dengan 21 karena instruksi kode <code>x = 3</code> telah dieksekusi <strong>sebelum </strong>baris berikutnya. Dengan kata lain, baris kedua menunggu untuk instruksi baris pertama diselesaikan terlebih dahulu.</p>
+<p>Pada banyak kasus, pola seperti itu sangatlah sempurna, namun pada beberapa kasus, khususnya ketika Anda butuh waktu untuk menyelesaikan instruksi kode yang lebih lama, hal itu tidak direkomendasikan karena akan membuat tampilan aplikasi menjadi tidak responsif. Itulah mengapa hampir semua bahasa pemrograman modern termasuk Dart dapat melakukan operasi <em>asynchronous </em>(async).</p>
+<p>Operasi async tidak akan menghentikan eksekusi kode pada baris utama, sehingga dapat menyelesaikan operasi secara paralel dengan operasi di kode baris utama.</p>
+<p>Perhatikan gambar diagram berikut ini.</p>
+<p class="image-container"><img style="width: 525.00px" src="img\\e3c11d0097211855.png"></p>
+<p>Pada diagram tersebut, Anda dapat melihat baris eksekusi utama, yaitu pada bagian UI, dapat melakukan pemanggilan operasi async (misalnya akses data via jaringan, database atau Stream). Namun, UI tetap dieksekusi tanpa harus menunggu hasil operasi async selesai.</p>
+<p>Dart adalah bahasa <em>single-thread</em>, namun Anda dapat melakukan operasi async agar dapat membuat aplikasi yang responsif. Di Dart dan Flutter Anda dapat menggunakan <code>class Future</code> untuk melakukan operasi async. </p>
+<p>Dalam codelab ini, kita akan membangun aplikasi<strong> books </strong>menggunakan plugin <code>http</code> untuk membaca data JSON dari <strong>Google Books API. </strong></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 1: Mengunduh Data dari Web Service" duration="60">
+      <google-codelab-step label="Praktikum 1: Mengunduh Data dari Web Service" duration="20">
         <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
 </aside>
@@ -98,418 +107,231 @@
 <p>Kemudian Tambahkan dependensi <code>http</code> dengan mengetik perintah berikut di terminal.</p>
 <pre><code>flutter pub add http</code></pre>
 <h2 is-upgraded>Langkah 2: Cek file <strong><code>pubspec.yaml</code></strong></h2>
+<p>Jika berhasil install plugin, pastikan plugin <code>http</code> telah ada di file <code>pubspec</code> ini seperti berikut.</p>
 <pre><code>dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0</code></pre>
+<p><strong>Jika Anda menggunakan macOS</strong>, Anda harus mengaktifkan fitur networking pada file <code>macos/Runner/DebugProfile.entitlements</code> dan <code>macos/Runner/Release.entitlements</code> dengan menambahkan kode berikut:</p>
+<p class="image-container"><img style="width: 386.00px" src="img\\2ca9ef3a2e1c08ba.png"></p>
 <h2 is-upgraded>Langkah 3: Buka file <strong><code>main.dart</code></strong></h2>
-<p class="image-container"><img style="width: 599.00px" src="img\\2e8d42b4e93005.png"></p>
-<p class="image-container"><img style="width: 588.00px" src="img\\5bbac59592eba9e0.png"></p>
-<p class="image-container"><img style="width: 591.00px" src="img\\eb0b96ffff4360e8.png"></p>
+<p>Ketiklah kode seperti berikut ini.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 1</strong></h3>
+<p>Tambahkan <strong>nama panggilan Anda</strong> pada title app sebagai identitas hasil pekerjaan Anda.</p>
+</aside>
+<p class="image-container"><img style="width: 624.00px" src="img\\2d4f462d1686d7d.png"></p>
+<aside class="special"><p><strong>Catatan: </strong></p>
+<p>Tidak ada yang spesial dengan kode di <code>main.dart</code> tersebut. Perlu diperhatikan di kode tersebut terdapat widget <code>CircularProgressIndicator</code> yang akan menampilkan animasi berputar secara terus-menerus, itu pertanda bagus bahwa aplikasi Anda responsif (tidak freeze/lag). Ketika animasi terlihat berhenti, itu berarti UI menunggu proses lain sampai selesai.</p>
+</aside>
 <h2 is-upgraded>Langkah 4: Tambah method <strong><code>getData()</code></strong></h2>
+<p>Tambahkan method ini ke dalam <code>class _FuturePageState</code> yang berguna untuk mengambil data dari API Google Books.</p>
 <p class="image-container"><img style="width: 448.00px" src="img\\6d9f8a8143fc6e5e.png"></p>
-<h2 is-upgraded>Langkah 5: Pindah ke file <strong><code>main.dart</code></strong></h2>
+<aside class="warning"><h3 is-upgraded><strong>Soal 2</strong></h3>
+<ul>
+<li>Carilah judul buku favorit Anda di Google Books, lalu ganti ID buku pada variabel <code>path</code> di kode tersebut. Caranya ambil di URL browser Anda seperti gambar berikut ini.</li>
+</ul>
+<p class="image-container"><img style="width: 610.00px" src="img\\29d0179018edd8d4.png"></p>
+<ul>
+<li>Kemudian cobalah akses di browser URI tersebut dengan lengkap seperti ini. Jika menampilkan data JSON, maka Anda telah berhasil. Lakukan <em>capture </em>milik Anda dan tulis di <code>README</code> pada laporan praktikum.</li>
+</ul>
+<p class="image-container"><img style="width: 610.00px" src="img\\d441815f1bdf8e8.png"></p>
+</aside>
+<h2 is-upgraded>Langkah 5: Tambah kode di <strong><code>ElevatedButton</code></strong></h2>
+<p>Tambahkan kode pada <code>onPressed</code> di <code>ElevatedButton</code> seperti berikut.</p>
 <p class="image-container"><img style="width: 553.00px" src="img\\857bcdaae7213edf.png"></p>
-<h2 is-upgraded>Langkah 6: </h2>
-<pre><code></code></pre>
-<h2 is-upgraded>Langkah 7: </h2>
-<pre><code></code></pre>
 <p>Lakukan Hot restart (<strong>bukan</strong> hot reload) pada aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut. Jika masih terdapat error, silakan diperbaiki hingga bisa running.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 2: Menggunakan await/async untuk menghindari callbacks" duration="60">
-        <p>Pada codelab ini, kita akan memperbarui kode dari aplikasi Master Plan dengan memisahkan data todo list ke luar class view-nya.</p>
+        <p>Pada codelab ini, kita akan menambah kode dari aplikasi books di praktikum sebelumnya.</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/SmTCmDMi4BY?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1 Model-View.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1.</p>
 </aside>
-<h2 is-upgraded>Langkah 1: Buat file <strong><code>plan_provider.dart</code></strong></h2>
-<p>Buat folder baru <code>provider</code> di dalam folder <code>lib</code>, lalu buat file baru dengan nama <code>plan_provider.dart</code> berisi kode seperti berikut.</p>
-<pre><code>import &#39;package:flutter/material.dart&#39;;
-import &#39;../models/data_layer.dart&#39;;
+<h2 is-upgraded>Langkah 1: Buka file <strong><code>main.dart</code></strong></h2>
+<p>berisi kode seperti berikut.</p>
+<pre><code>Future&lt;int&gt; returnOneAsync() async {
+  await Future.delayed(const Duration(seconds: 3));
+  return 1;
+}
 
-class PlanProvider extends InheritedNotifier&lt;ValueNotifier&lt;Plan&gt;&gt; {
-  const PlanProvider({super.key, required Widget child, required
-   ValueNotifier&lt;Plan&gt; notifier})
-  : super(child: child, notifier: notifier);
+Future&lt;int&gt; returnTwoAsync() async {
+  await Future.delayed(const Duration(seconds: 3));
+  return 2;
+}
 
-  static ValueNotifier&lt;Plan&gt; of(BuildContext context) {
-   return context.
-    dependOnInheritedWidgetOfExactType&lt;PlanProvider&gt;()!.notifier!;
-  }
+Future&lt;int&gt; returnThreeAsync() async {
+  await Future.delayed(const Duration(seconds: 3));
+  return 3;
 }</code></pre>
 <h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
-<p>Gantilah pada bagian atribut <code>home</code> dengan <code>PlanProvider</code> seperti berikut. Jangan lupa sesuaikan bagian impor jika dibutuhkan.</p>
-<pre><code>return MaterialApp(
-  theme: ThemeData(primarySwatch: Colors.purple),
-  home: PlanProvider(
-    notifier: ValueNotifier&lt;Plan&gt;(const Plan()),
-    child: const PlanScreen(),
-   ),
-);</code></pre>
+<p class="image-container"><img style="width: 378.00px" src="img\\5b83c8553b235a3a.png"></p>
 <h2 is-upgraded>Langkah 3: Tambah method pada model <strong><code>plan.dart</code></strong></h2>
-<p>Tambahkan dua <em>method </em>di dalam model <code>class Plan</code> seperti kode berikut.</p>
-<pre><code>int get completedCount =&gt; tasks
-  .where((task) =&gt; task.complete)
-  .length;
-
-String get completenessMessage =&gt;
-  &#39;$completedCount out of ${tasks.length} tasks&#39;;
-</code></pre>
-<h2 is-upgraded><strong>Langkah 4: Pindah ke PlanScreen</strong></h2>
-<p>Edit <code>PlanScreen</code> agar menggunakan data dari <code>PlanProvider</code>. Hapus deklarasi variabel <code>plan</code> (ini akan membuat error). Kita akan perbaiki pada langkah 5 berikut ini.</p>
-<h2 is-upgraded>Langkah 5: Edit method <strong><code>_buildAddTaskButton</code></strong></h2>
-<p>Tambahkan <code>BuildContext</code> sebagai parameter dan gunakan <code>PlanProvider</code> sebagai sumber datanya. Edit bagian kode seperti berikut.</p>
-<pre><code>Widget _buildAddTaskButton(BuildContext context) {
-  ValueNotifier&lt;Plan&gt; planNotifier = PlanProvider.of(context);
-  return FloatingActionButton(
-    child: const Icon(Icons.add),
-    onPressed: () {
-      Plan currentPlan = planNotifier.value;
-      planNotifier.value = Plan(
-        name: currentPlan.name,
-        tasks: List&lt;Task&gt;.from(currentPlan.tasks)..add(const Task()),
-      );
-    },
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 6: Edit method <strong><code>_buildTaskTile</code></strong></h2>
-<p>Tambahkan parameter <code>BuildContext</code>, gunakan <code>PlanProvider</code> sebagai sumber data. Ganti <code>TextField</code> menjadi <code>TextFormField</code> untuk membuat inisial <code>data provider</code> menjadi lebih mudah.</p>
-<pre><code>Widget _buildTaskTile(Task task, int index, BuildContext context) {
-  ValueNotifier&lt;Plan&gt; planNotifier = PlanProvider.of(context);
-  return ListTile(
-    leading: Checkbox(
-       value: task.complete,
-       onChanged: (selected) {
-         Plan currentPlan = planNotifier.value;
-         planNotifier.value = Plan(
-           name: currentPlan.name,
-           tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-             ..[index] = Task(
-               description: task.description,
-               complete: selected ?? false,
-             ),
-         );
-       }),
-    title: TextFormField(
-      initialValue: task.description,
-      onChanged: (text) {
-        Plan currentPlan = planNotifier.value;
-        planNotifier.value = Plan(
-          name: currentPlan.name,
-          tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-            ..[index] = Task(
-              description: text,
-              complete: task.complete,
-            ),
-        );
-      },
-    ),
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 7: Edit <strong><code>_buildList</code></strong></h2>
-<p>Sesuaikan parameter pada bagian <code>_buildTaskTile</code> seperti kode berikut.</p>
-<pre><code>Widget _buildList(Plan plan) {
-   return ListView.builder(
-     controller: scrollController,
-     itemCount: plan.tasks.length,
-     itemBuilder: (context, index) =&gt;
-        _buildTaskTile(plan.tasks[index], index, context),
-   );
-}</code></pre>
-<h2 is-upgraded>Langkah 8: Tetap di <strong><code>class PlanScreen</code></strong></h2>
-<p>Edit method build sehingga bisa tampil progress pada bagian bawah (footer). Caranya, bungkus (wrap) _buildList dengan widget Expanded dan masukkan ke dalam widget Column seperti kode pada Langkah 9.</p>
-<h2 is-upgraded>Langkah 9: Tambah widget <strong><code>SafeArea</code></strong></h2>
-<p>Terakhir, tambahkan widget <code>SafeArea</code> dengan berisi <code>completenessMessage</code> pada akhir widget <code>Column</code>. Perhatikan kode berikut ini.</p>
-<pre><code>@override
-Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: AppBar(title: const Text(&#39;Master Plan&#39;)),
-     body: ValueListenableBuilder&lt;Plan&gt;(
-       valueListenable: PlanProvider.of(context),
-       builder: (context, plan, child) {
-         return Column(
-           children: [
-             Expanded(child: _buildList(plan)),
-             SafeArea(child: Text(plan.completenessMessage))
-           ],
-         );
-       },
-     ),
-     floatingActionButton: _buildAddTaskButton(context),
-   );
-}</code></pre>
-<p>Akhirnya, <strong>run </strong>atau tekan <strong>F5 </strong>jika aplikasi belum running. Tidak akan terlihat perubahan pada UI, namun dengan melakukan langkah-langkah di atas, Anda telah menerapkan cara memisahkan dengan baik antara <strong>view </strong>dan <strong>model</strong>. Ini merupakan hal terpenting dalam mengelola <strong>state </strong>di aplikasi Anda.</p>
+<p>Tambahkan.</p>
+<p class="image-container"><img style="width: 258.00px" src="img\\e447e023789e40.png"></p>
+<h2 is-upgraded><strong>Langkah 4: </strong></h2>
+<p>Akhirnya, <strong>run </strong>atau tekan <strong>F5 </strong>jika aplikasi belum running.</p>
+<p class="image-container"><img style="width: 374.00px" src="img\\c031719fe1ee4340.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 3: Melengkapi Future" duration="60">
-        <p>Satu kalimat populer atau viral yang beredar dalam komunitas Flutter adalah &#34;<strong>Lift State Up</strong>&#34;. Mantra ini merujuk ke sebuah ide di mana objek State seharusnya berada lebih tinggi dari pada widget yang membutuhkannya di dalam sebuah widget tree. <code>InheritedWidget</code> yang telah kita buat sebelumnya bekerja dengan sempurna pada satu screen, tapi apa yang akan terjadi jika kita tambah screen kedua ?</p>
-<p>Pada codelab ini, Anda akan menambah screen lain pada aplikasi Master Plan sehingga bisa membuat kelompok daftar plan lebih dari satu. </p>
+      <google-codelab-step label="Praktikum 3: Menggunakan Completer di Future" duration="15">
+        <p>Pada codelab ini, Anda akan menambah screen lain pada aplikasi Master Plan sehingga bisa membuat kelompok daftar plan lebih dari satu. </p>
 <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan praktikum 2.</p>
 </aside>
-<h2 is-upgraded>Langkah 1: Edit <strong><code>PlanProvider</code></strong></h2>
-<p>Perhatikan kode berikut, edit class <code>PlanProvider</code> sehingga dapat menangani List Plan.</p>
-<pre><code>class PlanProvider extends
-InheritedNotifier&lt;ValueNotifier&lt;List&lt;Plan&gt;&gt;&gt; {
-  const PlanProvider({super.key, required Widget child, required
-ValueNotifier&lt;List&lt;Plan&gt;&gt; notifier})
-     : super(child: child, notifier: notifier);
+<h2 is-upgraded>Langkah 1: Buka <strong><code>main.dart</code></strong></h2>
+<pre><code>import &#39;package:async/async.dart&#39;;</code></pre>
+<h2 is-upgraded>Langkah 2: </h2>
+<p>menjadi kode seperti ini.</p>
+<pre><code>late Completer completer;
 
-  static ValueNotifier&lt;List&lt;Plan&gt;&gt; of(BuildContext context) {
-    return context.
-dependOnInheritedWidgetOfExactType&lt;PlanProvider&gt;()!.notifier!;
-  }
-}</code></pre>
-<h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
-<p>Langkah sebelumnya dapat menyebabkan error pada <code>main.dart</code> dan <code>plan_screen.dart</code>. Pada method <code>build</code>, gantilah menjadi kode seperti ini.</p>
-<pre><code>@override
-Widget build(BuildContext context) {
-  return PlanProvider(
-    notifier: ValueNotifier&lt;List&lt;Plan&gt;&gt;(const []),
-    child: MaterialApp(
-      title: &#39;State management app&#39;,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const PlanScreen(),
-    ),
-  );
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 3: Edit plan_screen.dart</strong></h2>
-<p>Tambahkan variabel <code>plan</code> dan atribut pada <em>constructor</em>-nya seperti berikut.</p>
-<pre><code>final Plan plan;
-const PlanScreen({super.key, required this.plan});</code></pre>
-<h2 is-upgraded><strong>Langkah 4: Error</strong></h2>
-<p>Itu akan terjadi error setiap kali memanggil <code>PlanProvider.of(context)</code>. Itu terjadi karena screen saat ini hanya menerima tugas-tugas untuk satu kelompok <code>Plan</code>, tapi sekarang <code>PlanProvider</code> menjadi list dari objek plan tersebut.</p>
-<h2 is-upgraded>Langkah 5: Tambah <strong><code>getter Plan</code></strong></h2>
-<p>Tambahkan getter pada <code>_PlanScreenState</code> seperti kode berikut.</p>
-<pre><code>class _PlanScreenState extends State&lt;PlanScreen&gt; {
-  late ScrollController scrollController;
-  Plan get plan =&gt; widget.plan;</code></pre>
-<h2 is-upgraded>Langkah 6: Method <strong><code>initState()</code></strong></h2>
-<p>Pada bagian ini kode tetap seperti berikut.</p>
-<pre><code>@override
-void initState() {
-   super.initState();
-   scrollController = ScrollController()
-    ..addListener(() {
-      FocusScope.of(context).requestFocus(FocusNode());
-    });
+Future getNumber() {
+  completer = Completer&lt;int&gt;();
+  calculate();
+  return completer.future;
+}
 
-
-}</code></pre>
-<h2 is-upgraded>Langkah 7: Widget <strong><code>build</code></strong></h2>
-<p>Pastikan Anda telah merubah ke <code>List<Plan></code> dan mengubah nilai pada <code>currentPlan</code> seperti kode berikut ini.</p>
-<pre><code>  @override
-  Widget build(BuildContext context) {
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; plansNotifier = PlanProvider.of(context);
-
-    return Scaffold(
-      appBar: AppBar(title: Text(_plan.name)),
-      body: ValueListenableBuilder&lt;List&lt;Plan&gt;&gt;(
-        valueListenable: plansNotifier,
-        builder: (context, plans, child) {
-          Plan currentPlan = plans.firstWhere((p) =&gt; p.name == plan.
-name);
-          return Column(
-            children: [
-              Expanded(child: _buildList(currentPlan)),
-              SafeArea(child: Text(currentPlan.
-completenessMessage)),
-            ],);},),
-      floatingActionButton: _buildAddTaskButton(context,)
-  ,);
- }
-
-  Widget _buildAddTaskButton(BuildContext context) {
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.
-of(context);
-    return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () {
-        Plan currentPlan = plan;
-        int planIndex =
-            planNotifier.value.indexWhere((p) =&gt; p.name == currentPlan.name);
-        List&lt;Task&gt; updatedTasks = List&lt;Task&gt;.from(currentPlan.tasks)
-          ..add(const Task());
-        planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
-          ..[planIndex] = Plan(
-            name: currentPlan.name,
-            tasks: updatedTasks,
-          );
-        plan = Plan(
-          name: currentPlan.name,
-          tasks: updatedTasks,
-        );},);
-  }</code></pre>
-<h2 is-upgraded>Langkah 8: Edit <strong><code>_buildTaskTile</code></strong></h2>
-<p>Pastikan ubah ke <code>List<Plan></code> dan variabel <code>planNotifier</code> seperti kode berikut ini.</p>
-<pre><code>  Widget _buildTaskTile(Task task, int index, BuildContext context)
-{
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.
-of(context);
-
-    return ListTile(
-      leading: Checkbox(
-         value: task.complete,
-         onChanged: (selected) {
-           Plan currentPlan = plan;
-           int planIndex = planNotifier.value
-              .indexWhere((p) =&gt; p.name == currentPlan.name);
-           planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
-             ..[planIndex] = Plan(
-               name: currentPlan.name,
-               tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-                 ..[index] = Task(
-                   description: task.description,
-                   complete: selected ?? false,
-                 ),);
-         }),
-      title: TextFormField(
-        initialValue: task.description,
-        onChanged: (text) {
-          Plan currentPlan = plan;
-          int planIndex =
-             planNotifier.value.indexWhere((p) =&gt; p.name ==
-currentPlan.name);
-          planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
-            ..[planIndex] = Plan(
-              name: currentPlan.name,
-              tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-                ..[index] = Task(
-                  description: text,
-                  complete: task.complete,
-                ),
-            );
-},),);}</code></pre>
-<h2 is-upgraded><strong>Langkah 9: Buat screen baru</strong></h2>
-<p>Pada folder <strong>view</strong>, buatlah file baru dengan nama <code>plan_creator_screen.dart</code> dan deklarasikan dengan <code>StatefulWidget</code> bernama <code>PlanCreatorScreen</code>. Gantilah di <code>main.dart</code> pada atribut home menjadi seperti berikut.</p>
-<pre><code>home: const PlanCreatorScreen(),</code></pre>
-<h2 is-upgraded><strong>Langkah 10: Pindah ke class _PlanCreatorScreenState</strong></h2>
-<p>Kita perlu tambahkan variabel <code>TextEditingController</code> sehingga bisa membuat <code>TextField</code> sederhana untuk menambah Plan baru. Jangan lupa tambahkan dispose ketika widget unmounted seperti kode berikut.</p>
-<pre><code>final textController = TextEditingController();
-
-@override
-void dispose() {
-  textController.dispose();
-  super.dispose();
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 11: Pindah ke method build</strong></h2>
-<p>Letakkan method Widget <code>build</code> berikut di atas <code>void dispose</code>. Gantilah ‘<strong>Namaku</strong>&#39; dengan nama panggilan Anda.</p>
-<pre><code>@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    // ganti ‘Namaku&#39; dengan nama panggilan Anda
-    appBar: AppBar(title: const Text(&#39;Master Plans Namaku&#39;)),
-    body: Column(children: [
-      _buildListCreator(),
-      Expanded(child: _buildMasterPlans())
-    ]),
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 12: Buat widget <strong><code>_buildListCreator</code></strong></h2>
-<p>Buatlah widget berikut setelah widget build.</p>
-<pre><code>Widget _buildListCreator() {
-  return Padding(
-     padding: const EdgeInsets.all(20.0),
-     child: Material(
-       color: Theme.of(context).cardColor,
-       elevation: 10,
-       child: TextField(
-          controller: textController,
-          decoration: const InputDecoration(
-             labelText: &#39;Add a plan&#39;,
-             contentPadding: EdgeInsets.all(20)),
-          onEditingComplete: addPlan),
-     ));
-}</code></pre>
-<h2 is-upgraded>Langkah 13: Buat <strong><code>void addPlan()</code></strong></h2>
-<p>Tambahkan method berikut untuk menerima inputan dari user berupa text plan.</p>
-<pre><code>void addPlan() {
-  final text = textController.text;
-    if (text.isEmpty) {
-      return;
-    }
-    final plan = Plan(name: text, tasks: []);
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier =
-PlanProvider.of(context);
-    planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)..
-add(plan);
-    textController.clear();
-    FocusScope.of(context).requestFocus(FocusNode());
-    setState(() {});
-}</code></pre>
-<h2 is-upgraded>Langkah 14: Buat <strong><code>widget _buildMasterPlans()</code></strong></h2>
-<p>Tambahkan widget seperti kode berikut.</p>
-<pre><code>Widget _buildMasterPlans() {
-  ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.of(context);
-    List&lt;Plan&gt; plans = planNotifier.value;
-
-    if (plans.isEmpty) {
-      return Column(
-         mainAxisAlignment: MainAxisAlignment.center,
-         children: &lt;Widget&gt;[
-           const Icon(Icons.note, size: 100, color: Colors.grey),
-           Text(&#39;Anda belum memiliki rencana apapun.&#39;,
-              style: Theme.of(context).textTheme.headlineSmall)
-         ]);
-    }
-    return ListView.builder(
-        itemCount: plans.length,
-        itemBuilder: (context, index) {
-          final plan = plans[index];
-          return ListTile(
-              title: Text(plan.name),
-              subtitle: Text(plan.completenessMessage),
-              onTap: () {
-                Navigator.of(context).push(
-                   MaterialPageRoute(builder: (_) =&gt;
-PlanScreen(plan: plan,)));
-              });
-        });
+Future calculate() async {
+  await Future.delayed(const Duration(seconds : 5));
+  completer.complete(42);
 }
 </code></pre>
+<h2 is-upgraded><strong>Langkah 3: </strong></h2>
+<p>Tambahkan kode berikut pada fungsi <code>onPressed()</code>.</p>
+<p class="image-container"><img style="width: 398.00px" src="img\\bdb48de3fa852295.png"></p>
+<h2 is-upgraded><strong>Langkah 4: </strong></h2>
 <p>Terakhir, <strong>run </strong>atau tekan <strong>F5 </strong>untuk melihat hasilnya jika memang belum running. Bisa juga lakukan<strong> hot restart</strong> jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini.</p>
+<p class="image-container"><img style="width: 252.00px" src="img\\4a03c022427c484e.png"></p>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<p class="image-container"><img style="width: 544.00px" src="img\\6631dbe432b45450.png"></p>
+<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<pre><code>getNumber().then((value) {
+  setState(() {
+    result = value.toString();
+  });
+}).catchError((e) {
+  result = &#39;An error occurred&#39;;
+});</code></pre>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 4: Memanggil Future secara paralel" duration="60">
-        <p>Satu kalimat popule</p>
+      <google-codelab-step label="Praktikum 4: Memanggil Future secara paralel" duration="15">
+        <p>Satu </p>
+<pre><code>import &#39;package:async/async.dart&#39;;</code></pre>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p class="image-container"><img style="width: 479.00px" src="img\\4430acb8ffa21cf1.png"></p>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p class="image-container"><img style="width: 159.00px" src="img\\a8eae50272d363cf.png"></p>
+<h2 is-upgraded><strong>Langkah 3: Run</strong></h2>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<pre><code>final futures = Future.wait&lt;int&gt;([
+returnOneAsync(),
+returnTwoAsync(),
+returnThreeAsync(),
+]);</code></pre>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 5: Menangani Respon Error pada Async Code" duration="60">
+      <google-codelab-step label="Praktikum 5: Menangani Respon Error pada Async Code" duration="13">
         <p>Satu kalimat popule</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<p class="image-container"><img style="width: 461.00px" src="img\\2cba66fc6381820e.png"></p>
+<h2 is-upgraded><strong>Langkah 2: </strong></h2>
+<p class="image-container"><img style="width: 474.00px" src="img\\9659bd29ea2724aa.png"></p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p class="image-container"><img style="width: 395.00px" src="img\\8a644f3bb34dc4fb.png"></p>
+<p class="image-container"><img style="width: 309.00px" src="img\\b45bbfe7f2b1f61b.png"></p>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p class="image-container"><img style="width: 322.00px" src="img\\5b01a21f4e2717d3.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 6: Menggunakan Future dengan StatefulWidget" duration="60">
+      <google-codelab-step label="Praktikum 6: Menggunakan Future dengan StatefulWidget" duration="15">
         <p>Satu kalimat popule</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<pre><code>flutter pub add geolocator</code></pre>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<pre><code>&lt;uses-permission android:name=&#34;android.permission.ACCESS_FINE_LOCATION&#34;/&gt;
+&lt;uses-permission android:name=&#34;android.permission.ACCESS_COARSE_LOCATION&#34;/&gt;</code></pre>
+<pre><code>&lt;key&gt;NSLocationWhenInUseUsageDescription&lt;/key&gt;
+&lt;string&gt;This app needs to access your location&lt;/string&gt;</code></pre>
+<h2 is-upgraded><strong>Langkah 3: </strong></h2>
+<h2 is-upgraded><strong>Langkah 4: </strong></h2>
+<h2 is-upgraded><strong>Langkah 5: </strong></h2>
+<p class="image-container"><img style="width: 556.00px" src="img\\e9947082d70bbfbb.png"></p>
+<h2 is-upgraded><strong>Langkah 6: </strong></h2>
+<pre><code>home: LocationScreen(),</code></pre>
+<h2 is-upgraded><strong>Langkah 7: </strong></h2>
+<p class="image-container"><img style="width: 292.00px" src="img\\769ef7d3863f2f35.png"></p>
+<h2 is-upgraded><strong>Langkah 8: </strong></h2>
+<p class="image-container"><img style="width: 378.00px" src="img\\e528461199688c99.png"></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 7: Manajemen Future dengan FutureBuilder" duration="60">
+      <google-codelab-step label="Praktikum 7: Manajemen Future dengan FutureBuilder" duration="15">
         <p>Satu kalimat popule</p>
+<h2 is-upgraded><strong>Langkah 1: </strong></h2>
+<p class="image-container"><img style="width: 450.00px" src="img\\d219a26080007e5f.png"></p>
+<h2 is-upgraded><strong>Langkah 2: </strong></h2>
+<p class="image-container"><img style="width: 215.00px" src="img\\2bd8bac7676f257c.png"></p>
+<h2 is-upgraded><strong>Langkah 3: </strong></h2>
+<p class="image-container"><img style="width: 222.00px" src="img\\3214e62efe9a252b.png"></p>
+<h2 is-upgraded><strong>Langkah 4: </strong></h2>
+<p class="image-container"><img style="width: 458.00px" src="img\\85adce0916edeb8e.png"></p>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<pre><code>else if (snapshot.connectionState == ConnectionState.done) {
+  if (snapshot.hasError) {
+     return Text(&#39;Something terrible happened!&#39;);
+  }
+  return Text(snapshot.data.toString());
+}</code></pre>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 8: Navigation route dengan Future Function" duration="60">
+      <google-codelab-step label="Praktikum 8: Navigation route dengan Future Function" duration="15">
         <p>Satu kalimat popule</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p class="image-container"><img style="width: 478.00px" src="img\\94d4517fe205d4c7.png"></p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<pre><code>Future _navigateAndGetColor(BuildContext context) async {
+   color = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) =&gt; const NavigationSecond()),) ?? Colors.blue;
+   setState(() {});
+   });
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<p class="image-container"><img style="width: 469.00px" src="img\\faf70be0b0b003fd.png"></p>
+<h2 is-upgraded><strong>Langkah 7:</strong></h2>
+<pre><code>home: const NavigationFirst(),</code></pre>
+<h2 is-upgraded><strong>Langkah 8:</strong></h2>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Praktikum 9: Memanfaatkan async/await dengan Widget Dialog" duration="60">
+      <google-codelab-step label="Praktikum 9: Memanfaatkan async/await dengan Widget Dialog" duration="15">
         <p>Satu kalimat popule</p>
+<h2 is-upgraded><strong>Langkah 1:</strong></h2>
+<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<p class="image-container"><img style="width: 430.00px" src="img\\f8aa82ec1f684ef7.png"></p>
+<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<p class="image-container"><img style="width: 344.00px" src="img\\a3094d0b4e110748.png"></p>
+<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<p class="image-container"><img style="width: 222.00px" src="img\\ddafc9ca6d33033b.png"></p>
+<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<p class="image-container"><img style="width: 235.00px" src="img\\c121e1408898fb65.png"></p>
+<h2 is-upgraded><strong>Langkah 6:</strong></h2>
 
 
       </google-codelab-step>
@@ -531,6 +353,11 @@ PlanScreen(plan: plan,)));
 <p>Silakan cek beberapa sumber belajar lainnya...</p>
 <ul>
 <li><a href="https://dart.dev/codelabs/async-await" target="_blank">https://dart.dev/codelabs/async-await</a> </li>
+<li><a href="https://api.flutter.dev/flutter/dart-async/Completer-class.html" target="_blank">https://api.flutter.dev/flutter/dart-async/Completer-class.html</a> </li>
+<li><a href="https://www.youtube.com/watch?v=AJQuw-fnooA" target="_blank">Video tentang Async, Await, Future (Bahasa Indonesia)</a></li>
+<li><a href="https://dart.dev/guides/libraries/futures-error-handling" target="_blank">https://dart.dev/guides/libraries/futures-error-handling</a> </li>
+<li><a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html" target="_blank">https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html</a> </li>
+<li><a href="https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html" target="_blank">https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html</a> </li>
 <li><a href="https://api.flutter.dev/flutter/material/AlertDialog-class.html" target="_blank">https://api.flutter.dev/flutter/material/AlertDialog-class.html</a> </li>
 </ul>
 <h2 is-upgraded><strong>Referensi</strong></h2>
