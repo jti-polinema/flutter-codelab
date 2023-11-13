@@ -434,45 +434,76 @@ Future calculate() async {
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 8: Navigation route dengan Future Function" duration="15">
-        <p>Setelah Anda menyelesaikan praktikum 7, Anda dapat melanjutkan praktikum 8 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+        <p>Praktikum kali ini Anda akan melihat manfaat Future untuk Navigator dalam transformasi Route menjadi sebuah function async. Anda akan melakukan push screen baru dan fungsi await menunggu data untuk melakukan update warna background pada screen.</p>
+<p>Setelah Anda menyelesaikan praktikum 7, Anda dapat melanjutkan praktikum 8 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 7.</p>
 </aside>
-<h2 is-upgraded><strong>Langkah 1:</strong></h2>
-<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<h2 is-upgraded>Langkah 1: Buat file baru <strong><code>navigation_first.dart</code></strong></h2>
+<p>Buatlah file baru ini di project lib Anda.</p>
+<h2 is-upgraded>Langkah 2: Isi kode <strong><code>navigation_first.dart</code></strong></h2>
 <p class="image-container"><img style="width: 478.00px" src="img\\94d4517fe205d4c7.png"></p>
-<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<aside class="warning"><h3 is-upgraded><strong>Soal 15</strong></h3>
+<ul>
+<li>Tambahkan <strong>nama panggilan Anda</strong> pada tiap properti <code>title</code> sebagai identitas pekerjaan Anda.</li>
+<li>Silakan ganti dengan warna tema favorit Anda.</li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 3: Tambah method di <strong><code>class _NavigationFirstState</code></strong></h2>
+<p>Tambahkan method ini.</p>
 <pre><code>Future _navigateAndGetColor(BuildContext context) async {
    color = await Navigator.push(context,
         MaterialPageRoute(builder: (context) =&gt; const NavigationSecond()),) ?? Colors.blue;
    setState(() {});
    });
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 4:</strong></h2>
-<h2 is-upgraded><strong>Langkah 5:</strong></h2>
-<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<h2 is-upgraded>Langkah 4: Buat file baru <strong><code>navigation_second.dart</code></strong></h2>
+<p>Buat file baru ini di project lib Anda. Silakan jika ingin mengelompokkan view menjadi satu folder dan sesuaikan impor yang dibutuhkan.</p>
+<h2 is-upgraded><strong>Langkah 5: Buat class NavigationSecond dengan StatefulWidget</strong></h2>
 <p class="image-container"><img style="width: 469.00px" src="img\\faf70be0b0b003fd.png"></p>
-<h2 is-upgraded><strong>Langkah 7:</strong></h2>
+<h2 is-upgraded>Langkah 6: Edit <strong><code>main.dart</code></strong></h2>
+<p>Lakukan edit properti home.</p>
 <pre><code>home: const NavigationFirst(),</code></pre>
-<h2 is-upgraded><strong>Langkah 8:</strong></h2>
+<h2 is-upgraded><strong>Langkah 8: Run</strong></h2>
+<p>Lakukan run, jika terjadi error silakan diperbaiki.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 16</strong></h3>
+<ul>
+<li>Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?</li>
+<li>Gantilah 3 warna pada langkah 5 dengan warna favorit Anda!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 16</strong>&#34;.</li>
+</ul>
+</aside>
+<p>Hasilnya akan seperti gambar berikut ini.</p>
+<p class="image-container"><img style="width: 322.00px" src="img\\b363de9b154b9314.png"> <img style="width: 338.00px" src="img\\e08980d087e7968d.png"></p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Praktikum 9: Memanfaatkan async/await dengan Widget Dialog" duration="15">
-        <p>Satu kalimat popule</p>
+        <p>Pada praktikum ini, Anda akan memanfaatkan widget <code>AlertDialog</code>. Anda bisa manfaatkan widget ini misal untuk memilih operasi Save, Delete, Accept, dan sebagainya.</p>
 <p>Setelah Anda menyelesaikan praktikum 8, Anda dapat melanjutkan praktikum 9 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 8.</p>
 </aside>
-<h2 is-upgraded><strong>Langkah 1:</strong></h2>
-<h2 is-upgraded><strong>Langkah 2:</strong></h2>
+<h2 is-upgraded>Langkah 1: Buat file baru <strong><code>navigation_dialog.dart</code></strong></h2>
+<p>Buat file dart baru di folder lib project Anda.</p>
+<h2 is-upgraded>Langkah 2: Isi kode <strong><code>navigation_dialog.dart</code></strong></h2>
 <p class="image-container"><img style="width: 430.00px" src="img\\f8aa82ec1f684ef7.png"></p>
-<h2 is-upgraded><strong>Langkah 3:</strong></h2>
+<h2 is-upgraded><strong>Langkah 3: Tambah method async</strong></h2>
 <p class="image-container"><img style="width: 344.00px" src="img\\a3094d0b4e110748.png"></p>
-<h2 is-upgraded><strong>Langkah 4:</strong></h2>
+<h2 is-upgraded>Langkah 4: Panggil method di <strong><code>ElevatedButton</code></strong></h2>
 <p class="image-container"><img style="width: 222.00px" src="img\\ddafc9ca6d33033b.png"></p>
-<h2 is-upgraded><strong>Langkah 5:</strong></h2>
+<h2 is-upgraded>Langkah 5: Edit <strong><code>main.dart</code></strong></h2>
+<p>Ubah properti home </p>
 <p class="image-container"><img style="width: 235.00px" src="img\\c121e1408898fb65.png"></p>
-<h2 is-upgraded><strong>Langkah 6:</strong></h2>
+<h2 is-upgraded><strong>Langkah 6: Run</strong></h2>
+<p>Coba ganti warna background dengan widget dialog tersebut. Jika terjadi error, silakan diperbaiki. Jika berhasil, akan tampil seperti gambar berikut.</p>
+<p class="image-container"><img style="width: 199.00px" src="img\\9d5e185f3478976f.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 17</strong></h3>
+<ul>
+<li>Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?</li>
+<li>Gantilah 3 warna pada langkah 3 dengan warna favorit Anda!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 17</strong>&#34;.</li>
+</ul>
+</aside>
 
 
       </google-codelab-step>
