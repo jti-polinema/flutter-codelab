@@ -1,0 +1,480 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#13 | Lanjutan State Management dengan Streams</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="13-state-streams-bloc"
+                  title="#13 | Lanjutan State Management dengan Streams"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Lanjutan State Management dengan Streams" duration="0">
+        <p><strong>Terakhir diperbarui:</strong> 20 November 2023</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada codelab ini, Anda akan mempelajari tentang streams dan BLoC di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara mengelola state lebih lanjut.</p>
+<p>Video berikut menjelaskan tentang apa itu Streams dan BLoC serta bagaimana manfaatnya terhadap pengelolaan state. Silakan simak dan pahami!</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/nQBpOIHE4eE?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>Menggunakan streams</li>
+<li>Menggunakan stream controllers dan sinks</li>
+<li>Menginjeksi transformasi data ke dalam streams</li>
+<li>Mendaftar di stream events</li>
+<li>Menggunakan multi stream subscriptions</li>
+<li>Menggunakan StreamBuilder untuk membuat UI reactive</li>
+<li>Menggunakan BLoC pattern</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023).</p>
+</aside>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>Koneksi internet minimal kecepatan 1 Mbps</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart Dasar</li>
+<li>Teknik Dasar Pemrograman Asynchronous</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Pendahuluan Dart Streams" duration="10">
+        <p>Di Dart dan Flutter, future dan stream merupakan tool utama untuk melakukan pemrograman asynchronous. <code>Future</code> merepresentasikan single value yang diterima di waktu yang akan datang, sedangkan <code>Stream</code> adalah sebuah <code>set</code> (<em>sequence</em>) yang bisa memiliki nilai 0 atau lainnya dikirim secara asinkronus secara terus-menerus. Intinya, Stream merupakan aliran data yang dikirim terus-menerus.</p>
+<p>Untuk mendapatkan data dari Stream, Anda harus melakukan subscribe (listen). Setiap kali data itu diterima, Anda mendapatkan data tersebut dan dapat dimanipulasi sesuai kebutuhan aplikasi.</p>
+<aside class="special"><p><strong>Catatan:</strong> Secara default, setiap stream hanya mengizinkan <em>single subscription</em>. Namun, Anda dapat juga mengaktifkan multiple subscription, nanti Anda akan lakukan pada praktikum 5.</p>
+</aside>
+<p>Pada codelab ini, Anda akan fokus bekerja dengan berbagai studi kasus pada stream di Flutter. Anda akan menggunakan stream dengan berbagai skenario berbeda, cara menulis dan membaca data ke stream, membangun UI berdasarkan stream, dan menggunakan pola BLoC untuk state management.</p>
+<p>Seperti halnya Future, stream juga dapat menghasilkan data atau error, sehingga Anda akan melakukan praktikum seperti halnya Future di pekan lalu.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Dart Streams" duration="20">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda (ketik di <strong>README.md</strong>) pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>stream_nama</strong> (beri nama panggilan Anda) di folder <strong>week-13/src/ </strong>repository GitHub Anda. </p>
+<h2 is-upgraded>Langkah 2: Buka file <strong><code>main.dart</code></strong></h2>
+<p>Ketiklah kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 448.00px" src="img\\117047be09411966.png"></p>
+<p class="image-container"><img style="width: 425.00px" src="img\\8543debe3b5260d7.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 1</strong></h3>
+<ul>
+<li>Tambahkan <strong>nama panggilan Anda</strong> pada <code>title</code> app sebagai identitas hasil pekerjaan Anda.</li>
+<li>Gantilah warna tema aplikasi sesuai kesukaan Anda.</li>
+<li>Lakukan commit hasil jawaban Soal 1 dengan pesan <strong>&#34;W13: Jawaban Soal 1&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 3: Buat file baru <strong><code>stream.dart</code></strong></h2>
+<p>Buat file baru di folder lib project Anda. Lalu isi dengan kode berikut.</p>
+<p class="image-container"><img style="width: 298.00px" src="img\\ee0f84f142b60d33.png"></p>
+<h2 is-upgraded>Langkah 4: Tambah variabel <strong><code>colors</code></strong></h2>
+<p>Tambahkan variabel di dalam class <code>ColorStream</code> seperti berikut.</p>
+<p class="image-container"><img style="width: 240.00px" src="img\\56185835fefa3f26.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 2</strong></h3>
+<ul>
+<li>Tambahkan 5 warna lainnya sesuai keinginan Anda pada variabel <code>colors</code> tersebut.</li>
+<li>Lakukan commit hasil jawaban Soal 2 dengan pesan <strong>&#34;W13: Jawaban Soal 2&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 5: Tambah method <strong><code>getColors()</code></strong></h2>
+<p>Di dalam <code>class ColorStream</code> ketik method seperti kode berikut. Perhatikan tanda bintang di akhir keyword <code>async*</code> (ini digunakan untuk melakukan <code>Stream</code> data)</p>
+<p class="image-container"><img style="width: 268.00px" src="img\\6fb085270ef336a.png"></p>
+<h2 is-upgraded>Langkah 6: Tambah perintah <strong><code>yield*</code></strong></h2>
+<p>Tambahkan kode berikut ini.</p>
+<pre><code>yield* Stream.periodic(
+  const Duration(seconds: 1), (int t) {
+    int index = t % colors.length;
+    return colors[index];
+});</code></pre>
+<aside class="warning"><h3 is-upgraded><strong>Soal 3</strong></h3>
+<ul>
+<li>Jelaskan fungsi keyword <code>yield*</code> pada kode tersebut!</li>
+<li>Apa maksud isi perintah kode tersebut?</li>
+<li>Lakukan commit hasil jawaban Soal 3 dengan pesan <strong>&#34;W13: Jawaban Soal 3&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 7: Buka <strong><code>main.dart</code></strong></h2>
+<p>Ketik kode impor file ini pada file <code>main.dart</code></p>
+<pre><code>import &#39;stream.dart&#39;;</code></pre>
+<h2 is-upgraded><strong>Langkah 8: Tambah variabel</strong></h2>
+<p>Ketik dua properti ini di dalam <code>class _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 257.00px" src="img\\6b7a118ed08dc151.png"></p>
+<h2 is-upgraded>Langkah 9: Tambah method <strong><code>changeColor()</code></strong></h2>
+<p>Tetap di file main, Ketik kode seperti berikut</p>
+<p class="image-container"><img style="width: 424.00px" src="img\\2fa890309883b601.png"></p>
+<h2 is-upgraded><strong>Langkah</strong> 10: Lakukan override <strong><code>initState()</code></strong></h2>
+<p>Ketika kode seperti berikut</p>
+<p class="image-container"><img style="width: 257.00px" src="img\\5c0e083382c433ef.png"></p>
+<h2 is-upgraded><strong>Langkah</strong> 11: Ubah isi <strong><code>Scaffold()</code></strong></h2>
+<p>Sesuaikan kode seperti berikut.</p>
+<p class="image-container"><img style="width: 378.00px" src="img\\9f1aa5e1c733354c.png"></p>
+<h2 is-upgraded><strong>Langkah 12: Run</strong></h2>
+<p>Lakukan running pada aplikasi Flutter Anda, maka akan terlihat berubah warna background setiap detik.</p>
+<p class="image-container"><img style="width: 316.00px" src="img\\eeea38d307556be2.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 4</strong></h3>
+<ul>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lakukan commit hasil jawaban Soal 4 dengan pesan <strong>&#34;W13: Jawaban Soal 4&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 13: Ganti isi method <code>changeColor()</code></h2>
+<p>Anda boleh comment atau hapus kode sebelumnya, lalu ketika kode seperti berikut.</p>
+<p class="image-container"><img style="width: 356.00px" src="img\\cad95b6e412a09ea.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 5</strong></h3>
+<ul>
+<li>Jelaskan perbedaan menggunakan <code>listen</code> dan <code>await for</code> (langkah 9) !</li>
+<li>Lakukan commit hasil jawaban Soal 5 dengan pesan <strong>&#34;W13: Jawaban Soal 5&#34;</strong></li>
+</ul>
+</aside>
+<aside class="special"><p><strong>Catatan:</strong> Stream di Flutter memiliki fitur yang powerfull untuk menangani data secara async. Stream dapat dimanfaatkan pada skenario dunia nyata seperti real-time messaging, unggah dan unduh file, tracking lokasi user, bekerja dengan data sensor IoT, dan lain sebagainya.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Stream controllers dan sinks" duration="15">
+        <p><code>StreamControllers</code> akan membuat jembatan antara <code>Stream</code> dan <code>Sink</code>. <code>Stream</code> berisi data secara sekuensial yang dapat diterima oleh subscriber manapun, sedangkan <code>Sink</code> digunakan untuk mengisi (injeksi) data.</p>
+<p>Secara sederhana, StreamControllers merupakan stream management. Ia akan otomatis membuat stream dan sink serta beberapa method untuk melakukan kontrol terhadap event dan fitur-fitur yang ada di dalamnya.</p>
+<p>Anda dapat membayangkan stream sebagai pipa air yang mengalir searah, dari salah satu ujung Anda dapat mengisi data dan dari ujung lain data itu keluar. Anda dapat melihat konsep stream pada gambar diagram berikut ini.</p>
+<p class="image-container"><img style="width: 468.00px" src="img\\34169bce391f6f.png"></p>
+<p>Di Flutter, Anda dapat menggunakan <code>StreamController</code> untuk mengontrol aliran data <code>stream</code>. Sebuah <code>StreamController</code> memiliki sebuah properti bernama <code>sink</code> yang berguna untuk insert data. Sedangkan properti <code>stream</code> berguna untuk menerima atau keluarnya data dari <code>StreamController</code> tersebut.</p>
+<p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1.</p>
+</aside>
+<p>Pada codelab ini, kita akan menambah kode dari aplikasi <strong>stream </strong>di praktikum sebelumnya.</p>
+<h2 is-upgraded>Langkah 1: Buka file <strong><code>stream.dart</code></strong></h2>
+<p>Lakukan impor dengan mengetik kode ini.</p>
+<pre><code>import &#39;dart:async&#39;;</code></pre>
+<h2 is-upgraded>Langkah 2: Tambah <strong><code>class NumberStream</code></strong></h2>
+<p>Tetap di file <code>stream.dart</code> tambah class baru seperti berikut.</p>
+<p class="image-container"><img style="width: 159.00px" src="img\\840e1f465b0db416.png"></p>
+<h2 is-upgraded>Langkah 3: Tambah <strong><code>StreamController</code></strong></h2>
+<p>Di dalam <code>class NumberStream</code> buatlah variabel seperti berikut.</p>
+<p class="image-container"><img style="width: 455.00px" src="img\\acf2fd2f75a106bb.png"></p>
+<h2 is-upgraded>Langkah 4: Tambah method <strong><code>addNumberToSink</code></strong></h2>
+<p>Tetap di <code>class NumberStream</code> buatlah method ini</p>
+<p class="image-container"><img style="width: 285.00px" src="img\\3602f50e8f6264d.png"></p>
+<h2 is-upgraded>Langkah 5: Tambah method <strong><code>close()</code></strong></h2>
+<p class="image-container"><img style="width: 184.00px" src="img\\c7da255974c6058a.png"></p>
+<h2 is-upgraded><strong>Langkah</strong> 6: Buka <strong><code>main.dart</code></strong></h2>
+<p>Ketik kode import seperti berikut</p>
+<p class="image-container"><img style="width: 155.00px" src="img\\25d8c5dc2ae7200b.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 7: Tambah variabel</strong></h2>
+<p>Di dalam <code>class _StreamHomePageState</code> ketik variabel berikut</p>
+<p class="image-container"><img style="width: 339.00px" src="img\\17d0a4dd4d52707.png"></p>
+<h2 is-upgraded>Langkah 8: Edit <strong><code>initState()</code></strong></h2>
+<p class="image-container"><img style="width: 385.00px" src="img\\ad0ce0258ad8b488.png"></p>
+<h2 is-upgraded><strong>Langkah 9: Edit dispose()</strong></h2>
+<p class="image-container"><img style="width: 278.00px" src="img\\7c29c662b5a593ea.png"></p>
+<h2 is-upgraded>Langkah 10: Tambah method <strong><code>addRandomNumber()</code></strong></h2>
+<pre><code>void addRandomNumber() {
+  Random random = Random();
+  int myNum = random.nextInt(10);
+  numberStream.addNumberToSink(myNum);
+}</code></pre>
+<h2 is-upgraded>Langkah 11: Edit method <strong><code>build()</code></strong></h2>
+<p class="image-container"><img style="width: 435.00px" src="img\\2400befe50948646.png"></p>
+<h2 is-upgraded><strong>Langkah 12: Run</strong></h2>
+<p>Lakukan running pada aplikasi Flutter Anda, maka akan terlihat seperti gambar berikut.</p>
+<p class="image-container"><img style="width: 183.00px" src="img\\2615c42c4b04287f.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 6</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 8 dan 10 tersebut!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. </li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 6</strong>&#34;.</li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 13: Buka <strong><code>stream.dart</code></strong></h2>
+<p>Tambahkan method berikut ini.</p>
+<p class="image-container"><img style="width: 286.00px" src="img\\a1377abf68eff433.png"></p>
+<h2 is-upgraded><strong>Langkah 14: Buka main.dart</strong></h2>
+<p>Tambahkan method <code>onError</code> di dalam <code>class StreamHomePageState</code> pada method <code>listen</code> di fungsi <code>initState()</code> seperti berikut ini.</p>
+<p class="image-container"><img style="width: 241.00px" src="img\\375aa77837220363.png"></p>
+<h2 is-upgraded><strong>Langkah</strong> 15: Edit method <strong><code>addRandomNumber()</code></strong></h2>
+<p>Lakukan <em>comment </em>pada dua baris kode berikut, lalu ketik kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 301.00px" src="img\\3ad742a1b10700db.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 7</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 13 sampai 15 tersebut!</li>
+<li>Kembalikan kode seperti semula pada Langkah 15, comment <code>addError()</code> agar Anda dapat melanjutkan ke praktikum 3 berikutnya. </li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 7</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Injeksi data ke streams" duration="15">
+        <p>Skenario yang umum dilakukan adalah melakukan manipulasi atau transformasi data stream sebelum sampai pada UI end user. Hal ini sangatlah berguna ketika Anda membutuhkan untuk filter data berdasarkan kondisi tertentu, melakukan validasi data, memodifikasinya, atau melakukan proses lain yang memicu beberapa output baru. Contohnya melakukan konversi angka ke string, membuat sebuah perhitungan, atau menghilangkan data yang berulang terus tampil.</p>
+<p>Pada praktikum 3 ini, Anda akan menggunakan <code>StreamTransformers</code> ke dalam <code>stream</code> untuk melakukan <code>map</code> dan filter data.</p>
+<p>Setelah Anda menyelesaikan praktikum 2, Anda dapat melanjutkan praktikum 3 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 2.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Buka <strong><code>main.dart</code></strong></h2>
+<p>Tambahkan variabel baru di dalam <code>class _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 299.00px" src="img\\a39393768efc5b8.png"></p>
+<h2 is-upgraded>Langkah 2: Tambahkan kode ini di <strong><code>initState</code></strong></h2>
+<p class="image-container"><img style="width: 391.00px" src="img\\83e8106b154a3233.png"></p>
+<h2 is-upgraded>Langkah 3: Tetap di <strong><code>initState</code></strong></h2>
+<p>Lakukan edit seperti kode berikut.</p>
+<p class="image-container"><img style="width: 343.00px" src="img\\72d67ab1adaa9e17.png"></p>
+<h2 is-upgraded><strong>Langkah 4: Run</strong></h2>
+<p>Terakhir, <strong>run </strong>atau tekan <strong>F5 </strong>untuk melihat hasilnya jika memang belum running. Bisa juga lakukan<strong> hot restart</strong> jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini. Anda akan melihat tampilan angka dari 0 hingga 90.</p>
+<p class="image-container"><img style="width: 261.00px" src="img\\c599643509de04b3.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 8</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 1-3 tersebut!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 8</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 4: Subscribe ke stream events" duration="15">
+        <p>Dari praktikum sebelumnya, Anda telah menggunakan method <code>listen</code> mendapatkan nilai dari <code>stream</code>. Ini akan menghasilkan sebuah <code>Subscription</code>. <code>Subscription</code> berisi method yang dapat digunakan untuk melakukan <code>listen</code> pada suatu event dari <code>stream</code> secara terstruktur.</p>
+<p>Pada praktikum 4 ini, kita akan gunakan <code>Subscription</code> untuk menangani event dan error dengan teknik praktik baik (<em>best practice</em>), dan menutup <code>Subscription</code> tersebut.</p>
+<p>Setelah Anda menyelesaikan praktikum 3, Anda dapat melanjutkan praktikum 4 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 3.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Tambah variabel</h2>
+<p>Tambahkan variabel berikut di <code>class _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 281.00px" src="img\\7c8447240f68726b.png"></p>
+<h2 is-upgraded>Langkah 2: Edit <strong><code>initState()</code></strong></h2>
+<p>Edit kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 385.00px" src="img\\84d63a39f3ec870e.png"></p>
+<h2 is-upgraded>Langkah 3: Tetap di <strong><code>initState()</code></strong></h2>
+<p>Tambahkan kode berikut ini.</p>
+<p class="image-container"><img style="width: 244.00px" src="img\\78200f76243befdb.png"></p>
+<h2 is-upgraded>Langkah 4: Tambah properti onDone()</h2>
+<p>Tambahkan dibawahnya kode ini setelah <code>onError</code></p>
+<p class="image-container"><img style="width: 266.00px" src="img\\77ab03fde9b5ed8d.png"></p>
+<h2 is-upgraded><strong>Langkah 5: Tambah method baru</strong></h2>
+<p>Ketik method ini di dalam <code>class _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 271.00px" src="img\\de1e277fdf84eed4.png"></p>
+<h2 is-upgraded>Langkah 6: Pindah ke method <strong><code>dispose()</code></strong></h2>
+<p>Jika method <code>dispose()</code> belum ada, Anda dapat mengetiknya dan dibuat override. Ketik kode ini didalamnya.</p>
+<p class="image-container"><img style="width: 173.00px" src="img\\5dd0b3a1fe7f836d.png"></p>
+<h2 is-upgraded>Langkah 7: Pindah ke method <strong><code>build()</code></strong></h2>
+<p>Tambahkan button kedua dengan isi kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 312.00px" src="img\\d5e80fb3e54f20ed.png"></p>
+<h2 is-upgraded>Langkah 8: Edit method <strong><code>addRandomNumber()</code></strong></h2>
+<p>Edit kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 335.00px" src="img\\23ce6aa2bbe515ae.png"></p>
+<h2 is-upgraded><strong>Langkah 9: Run</strong></h2>
+<p>Anda akan melihat dua button seperti gambar berikut.</p>
+<p class="image-container"><img style="width: 294.00px" src="img\\5e23ead7712e4908.png"></p>
+<h2 is-upgraded>Langkah 10: Tekan button ‘Stop Subscription&#39;</h2>
+<p>Anda akan melihat pesan di Debug Console seperti berikut.</p>
+<p class="image-container"><img style="width: 267.00px" src="img\\b051d83d7e5d963a.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 9</strong></h3>
+<ul>
+<li>Jelaskan maksud kode langkah 2, 6 dan 8 tersebut!</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 9</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 5: Multiple stream subscriptions" duration="13">
+        <p>Secara default, stream hanya bisa digunakan untuk satu subscription. Jika Anda mencoba untuk melakukan subscription yang sama lebih dari satu, maka akan terjadi error. Untuk menangani hal itu, tersedia <strong>broadcast </strong>stream yang dapat digunakan untuk multiple subscriptions. Pada praktikum ini, Anda akan mencoba untuk melakukan multiple stream subscriptions.</p>
+<p>Setelah Anda menyelesaikan praktikum 4, Anda dapat melanjutkan praktikum 5 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 4.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Buka file <strong><code>main.dart</code></strong></h2>
+<p>Ketik variabel berikut di <code>class _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 300.00px" src="img\\eada5b3aec216c00.png"></p>
+<h2 is-upgraded>Langkah 2: Edit <strong><code>initState()</code></strong></h2>
+<p>Ketik kode seperti berikut.</p>
+<p class="image-container"><img style="width: 303.00px" src="img\\b952c35d1b3c5514.png"></p>
+<h2 is-upgraded><strong>Langkah 3: Run</strong></h2>
+<p>Lakukan run maka akan tampil error seperti gambar berikut.</p>
+<p class="image-container"><img style="width: 254.00px" src="img\\f4b1267b6e8dd7a8.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 10</strong></h3>
+<ul>
+<li>Jelaskan mengapa error itu bisa terjadi ?</li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 4: Set broadcast stream</h2>
+<p>Ketik kode seperti berikut di method <code>initState()</code></p>
+<p class="image-container"><img style="width: 378.00px" src="img\\60e78d10901303ae.png"></p>
+<h2 is-upgraded>Langkah 5: Edit method <strong><code>build()</code></strong></h2>
+<p>Tambahkan text seperti berikut</p>
+<p class="image-container"><img style="width: 427.00px" src="img\\5ebb31e63b3632c7.png"></p>
+<h2 is-upgraded><strong>Langkah 6: Run</strong></h2>
+<p>Tekan button ‘<strong>New Random Number</strong>&#39; beberapa kali, maka akan tampil teks angka terus bertambah sebanyak dua kali.</p>
+<p class="image-container"><img style="width: 262.00px" src="img\\bbd6d5897fbcd346.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 11</strong></h3>
+<ul>
+<li>Jelaskan mengapa hal itu bisa terjadi ?</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 10,11</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 6: StreamBuilder" duration="15">
+        <p><code>StreamBuilder</code> adalah sebuah widget untuk melakukan listen terhadap event dari stream. Ketika sebuah event terkirim, maka akan dibangun ulang semua turunannya. Seperti halnya widget <code>FutureBuilder</code> pada pertemuan pekan lalu, <code>StreamBuilder</code> berguna untuk membangun UI secara reaktif yang diperbarui setiap data baru tersedia.</p>
+<p>Setelah Anda menyelesaikan praktikum 5, Anda dapat melanjutkan praktikum 6 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 5.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>streambuilder_nama</strong> (beri nama panggilan Anda) di folder <strong>week-13/src/ </strong>repository GitHub Anda. </p>
+<h2 is-upgraded>Langkah 2: Buat file baru <strong><code>stream.dart</code></strong></h2>
+<p>Ketik kode ini</p>
+<p class="image-container"><img style="width: 177.00px" src="img\\c952cad89fb49540.png"></p>
+<h2 is-upgraded>Langkah 3: Tetap di file <strong><code>stream.dart</code></strong></h2>
+<p>Ketik kode seperti berikut.</p>
+<p class="image-container"><img style="width: 465.00px" src="img\\4ecb0d492ba54d33.png"></p>
+<h2 is-upgraded><strong>Langkah 4: Edit main.dart</strong></h2>
+<p>Ketik kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 489.00px" src="img\\9349f18826354e82.png"></p>
+<p class="image-container"><img style="width: 488.00px" src="img\\e8626e45db22c790.png"></p>
+<p class="image-container"><img style="width: 486.00px" src="img\\deb59a89025d3352.png"></p>
+<h2 is-upgraded>Langkah 5: Tambah variabel</h2>
+<p>Di dalam <code>class _StreamHomePageState</code>, ketika variabel ini. </p>
+<p class="image-container"><img style="width: 258.00px" src="img\\f2ae28da6ce5365a.png"></p>
+<h2 is-upgraded>Langkah 6: Edit <strong><code>initState()</code></strong></h2>
+<p>Ketik kode seperti berikut.</p>
+<p class="image-container"><img style="width: 335.00px" src="img\\7b2ef7e0e992ad21.png"></p>
+<h2 is-upgraded>Langkah 7: Edit method <strong><code>build()</code></strong></h2>
+<p class="image-container"><img style="width: 483.00px" src="img\\cc6f77aff0be2685.png"></p>
+<p class="image-container"><img style="width: 487.00px" src="img\\89827c57e6cd573d.png"></p>
+<h2 is-upgraded><strong>Langkah 8: Run</strong></h2>
+<p>Hasilnya, setiap detik akan tampil angka baru seperti berikut.</p>
+<p class="image-container"><img style="width: 196.00px" src="img\\7ac5b7804a489a0e.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 12</strong></h3>
+<ul>
+<li>Jelaskan maksud kode pada langkah 3 dan 7 !</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 12</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 7: BLoC Pattern" duration="15">
+        <p>Ketika menggunakan pola BLoC, maka segalanya merupakan stream event. BLoC atau <strong>Business Logic Component</strong> adalah lapisan antara semua sumber data dan UI yang mengonsumsi data itu. Contohnya seperti sumber data dari HTTP layanan web servis atau JSON dari sebuah basis data.</p>
+<p>Sebuah BLoC menerima stream data dari sumbernya, proses itu membutuhkan logika bisnis Anda, dan return stream data ke <em>subscriber</em>-nya. Perhatikan diagram pola kerja BLoC berikut ini.</p>
+<p class="image-container"><img style="width: 113.00px" src="img\\228c7b30c7e22075.png"></p>
+<p>Alasan utama menggunakan BLoC adalah memisahkan logika bisnis aplikasi dengan presentasi UI pada widget, terutama akan sangat berguna ketika aplikasi Anda mulai semakin kompleks dan membutuhkan akses state di berbagai tempat. Hal ini akan membuat semakin mudah dalam menggunakan kode Anda, pada beberapa bagian di aplikasi atau bahkan berbeda aplikasi. Selain itu, BLoC secara independen berdiri sendiri dengan UI, sehingga sangat mudah dilakukan isolasi dalam proses testing.</p>
+<p>Pada praktikum codelab ini, Anda akan membuat aplikasi sederhana menggunakan BLoC, namun Anda dapat dengan mudah mengembangkannya untuk aplikasi yang lebih besar ruang lingkupnya.</p>
+<p>Setelah Anda menyelesaikan praktikum 6, Anda dapat melanjutkan praktikum 7 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 6.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Buat Project baru</h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>bloc_random_nama</strong> (beri nama panggilan Anda) di folder <strong>week-13/src/</strong> repository GitHub Anda. Lalu buat file baru di folder <code>lib</code> dengan nama <code>random_bloc.dart</code></p>
+<h2 is-upgraded>Langkah 2: Isi kode <strong><code>random_bloc.dart</code></strong></h2>
+<p>Ketik kode impor berikut ini.</p>
+<p class="image-container"><img style="width: 178.00px" src="img\\3e31e44d64abed6c.png"></p>
+<h2 is-upgraded>Langkah 3: Buat <strong><code>class RandomNumberBloc()</code></strong></h2>
+<p class="image-container"><img style="width: 194.00px" src="img\\f8279786361eafe6.png"></p>
+<h2 is-upgraded>Langkah 4: Buat variabel <strong><code>StreamController</code></strong></h2>
+<p>Di dalam <code>class RandomNumberBloc()</code> ketik variabel berikut ini</p>
+<p class="image-container"><img style="width: 467.00px" src="img\\49848a01c3a9b3e7.png"></p>
+<h2 is-upgraded><strong>Langkah 5: Buat constructor</strong></h2>
+<p class="image-container"><img style="width: 376.00px" src="img\\115b5d60e44a90d4.png"></p>
+<h2 is-upgraded>Langkah 6: Buat method <strong><code>dispose()</code></strong></h2>
+<p class="image-container"><img style="width: 296.00px" src="img\\9544226586ee483c.png"></p>
+<h2 is-upgraded>Langkah 7: Edit <strong><code>main.dart</code></strong></h2>
+<p class="image-container"><img style="width: 282.00px" src="img\\8f8f9a0717921287.png"></p>
+<h2 is-upgraded>Langkah 8: Buat file baru <strong><code>random_screen.dart</code></strong></h2>
+<p>Di dalam folder <code>lib</code> project Anda, buatlah file baru ini.</p>
+<h2 is-upgraded>Langkah 9: Lakukan impor material dan <strong><code>random_bloc.dart</code></strong></h2>
+<p>Ketik kode ini di file baru <code>random_screen.dart</code></p>
+<p class="image-container"><img style="width: 306.00px" src="img\\24057319fd50d6ec.png"></p>
+<h2 is-upgraded><strong>Langkah 10: Buat StatefulWidget RandomScreen</strong></h2>
+<p>Buatlah di dalam file <code>random_screen.dart</code></p>
+<h2 is-upgraded><strong>Langkah 11: Buat variabel</strong></h2>
+<p>Ketik kode ini di dalam <code>class  _RandomScreenState</code></p>
+<p class="image-container"><img style="width: 252.00px" src="img\\dcf513303d2047bd.png"></p>
+<h2 is-upgraded>Langkah 12: Buat method <strong><code>dispose()</code></strong></h2>
+<p>Ketik kode ini di dalam <code>class  _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 195.00px" src="img\\436b00e0493c597f.png"></p>
+<h2 is-upgraded>Langkah 13: Edit method <strong><code>build()</code></strong></h2>
+<p>Ketik kode ini di dalam <code>class  _StreamHomePageState</code></p>
+<p class="image-container"><img style="width: 403.00px" src="img\\5703e6af910526cd.png"></p>
+<p>Run aplikasi, maka Anda akan melihat angka acak antara angka 0 sampai 9 setiap kali menekan tombol <code>FloactingActionButton</code>.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 13</strong></h3>
+<ul>
+<li>Jelaskan maksud praktikum ini ! Dimanakah letak konsep pola BLoC-nya ?</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 13</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait stream, BLoC dan contoh penggunaannya.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Persistensi Data.</p>
+<p>Jangan sungkan jika Anda menemukan kesalahan pada codelab ini untuk merevisi atau sekedar melaporkan issue melalui tautan di pojok kiri bawah (<a href="https://github.com/jti-polinema/flutter-codelab/issues" target="_blank">Report a mistake</a>).</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=mGkuOQK3kAM" target="_blank">Best practice guidance for live streaming programming</a></li>
+<li><a href="https://dart.dev/tutorials/language/streams" target="_blank">https://dart.dev/tutorials/language/streams</a> </li>
+<li><a href="https://dart.dev/articles/libraries/creating-streams" target="_blank">https://dart.dev/articles/libraries/creating-streams</a> </li>
+<li><a href="https://api.dart.dev/stable/2.18.6/dart-async/Stream/map.html" target="_blank">https://api.dart.dev/stable/2.18.6/dart-async/Stream/map.html</a> </li>
+<li><a href="https://api.flutter.dev/flutter/dart-async/StreamController-class.html" target="_blank">https://api.flutter.dev/flutter/dart-async/StreamController-class.html</a> </li>
+<li><a href="https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html" target="_blank">https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html</a> </li>
+<li><a href="https://pub.dev/packages/flutter_bloc" target="_blank">https://pub.dev/packages/flutter_bloc</a> </li>
+<li><a href="https://docs.flutter.dev/data-and-backend/state-mgmt/options" target="_blank">https://docs.flutter.dev/data-and-backend/state-mgmt/options</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1W9uSLC9wlf9fFudmCWFHTx9dan5SXII0/view?usp=sharing" target="_blank">Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023)</a></li>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
