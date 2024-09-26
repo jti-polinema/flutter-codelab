@@ -13,6 +13,9 @@ Copyright 2022-2023
 
 [Materi Google Docs](https://drive.google.com/drive/folders/1u69xRZv5ven6hs36EQ_MovktsbY6nZiX)
 
+Perintah export ke codelab menggunakan claat
+
+    claat export 1OiFTlbQ_zwYrNDNDuDgmSNhOteZ_N7fN6nZbMabg1MI (token google docs di link terkait)
 
 ## Codelab
 
