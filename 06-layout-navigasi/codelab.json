@@ -3,10 +3,10 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2023-10-15T08:56:47Z",
-  "id": "07-layout-navigasi",
+  "updated": "2024-10-02T03:18:40Z",
+  "id": "06-layout-navigasi",
   "duration": 390,
-  "title": "#07 | Layout dan Navigasi",
+  "title": "#06 | Layout dan Navigasi",
   "authors": "Habibie Ed Dien",
   "summary": "Mampu melakukan penyusunan layout dan navigasi serta routing",
   "source": "1zCou4usd-DriL3tcXmLLP686aTiUulyyzygyfQmyio4",
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "07-layout-navigasi"
+  "url": "06-layout-navigasi"
 }
