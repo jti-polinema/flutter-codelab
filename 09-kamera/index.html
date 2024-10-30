@@ -93,11 +93,11 @@
 <li>Untuk Android, Anda harus update variabel <code>minSdkVersion</code> = <code>21</code> (atau lebih tinggi) pada file <code>gradle</code>.</li>
 <li>Pada iOS, baris kode berikut harus ditambahkan pada file <code>ios/Runner/Info.plist</code> untuk mengakses kamera dan microphone.</li>
 </ul>
-<p><code><key>NSCameraUsageDescription</key></code></p>
-<p><code><string>Explanation on why the camera access is needed.</string></code></p>
-<p><code><key>NSMicrophoneUsageDescription</key></code></p>
-<p><code><string>Explanation on why the microphone access is needed.</string></code></p>
 </aside>
+<pre><code>&lt;key&gt;NSCameraUsageDescription&lt;/key&gt;
+&lt;string&gt;Explanation on why the camera access is needed.&lt;/string&gt;
+&lt;key&gt;NSMicrophoneUsageDescription&lt;/key&gt;
+&lt;string&gt;Explanation on why the microphone access is needed.&lt;/string&gt;</code></pre>
 <h2 is-upgraded><strong>Langkah 3: Ambil Sensor Kamera dari device</strong></h2>
 <p>Selanjutnya, kita perlu mengecek jumlah kamera yang tersedia pada perangkat menggunakan plugin <code>camera</code> seperti pada kode berikut ini. Kode ini letakkan dalam <code>void main()</code>.</p>
 <p><strong>lib/main.dart</strong></p>
@@ -199,7 +199,7 @@ class TakePictureScreenState extends State&lt;TakePictureScreen&gt; {
         },
       ),</code></pre>
 <h2 is-upgraded>Langkah 6: Ambil foto dengan <strong><code>CameraController</code></strong></h2>
-<p>Anda dapat menggunakan <code>CameraController</code> untuk mengambil gambar menggunakan metode <code>takePicture()</code>, yang mengembalikan objek <code>XFile</code>, merupakan sebuah objek abstraksi <code>File</code> lintas platform yang disederhanakan. Pada Android dan iOS, gambar baru disimpan dalam direktori cache masing-masing, dan <code>path</code> ke lokasi tersebut dikembalikan dalam XFile.</p>
+<p>Anda dapat menggunakan <code>CameraController</code> untuk mengambil gambar menggunakan metode <code>takePicture()</code>, yang mengembalikan objek <code>XFile</code>, merupakan sebuah objek abstraksi <code>File</code> lintas platform yang disederhanakan. Pada Android dan iOS, gambar baru disimpan dalam direktori cache masing-masing, dan <code>path</code> ke lokasi tersebut dikembalikan dalam <code>XFile</code>.</p>
 <p>Pada codelab ini, buatlah sebuah <code>FloatingActionButton</code> yang digunakan untuk mengambil gambar menggunakan <code>CameraController</code> saat pengguna mengetuk tombol.</p>
 <p>Pengambilan gambar memerlukan 2 langkah:</p>
 <ol type="1" start="1">
@@ -228,7 +228,7 @@ class TakePictureScreenState extends State&lt;TakePictureScreen&gt; {
   },
   child: const Icon(Icons.camera_alt),
 )</code></pre>
-<h2 is-upgraded><strong>Langkah 7: Buat widget baru DisplayPictureScreen</strong></h2>
+<h2 is-upgraded>Langkah 7: Buat widget baru <strong><code>DisplayPictureScreen</code></strong></h2>
 <p>Buatlah file baru pada folder widget yang berisi kode berikut.</p>
 <p><strong>lib/widget/displaypicture_screen.dart</strong></p>
 <pre><code>// A widget that displays the picture taken by the user.
