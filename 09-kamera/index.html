@@ -1,0 +1,684 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#09 | Kamera</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="09-kamera"
+                  title="#09 | Kamera"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Kamera" duration="0">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/d1sRCa5k2Sg?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p><strong>Terakhir diperbarui:</strong> 22 Oktober 2024</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada codelab ini, Anda akan mempelajari cara menggunakan kamera di Flutter.</p>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>Menggunakan plugin kamera di Flutter</li>
+<li>Menampilkan preview foto di kamera</li>
+<li>Mengambil foto dari kamera</li>
+<li>Menampilkan hasil pengambilan foto dari kamera</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 6GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Kamera di Flutter" duration="10">
+        <p>Banyak aplikasi yang mengharuskan penggunaan kamera perangkat untuk mengambil foto dan video. Flutter menyediakan plugin kamera untuk tujuan ini. Plugin kamera menyediakan alat untuk mendapatkan daftar kamera yang tersedia, menampilkan pratinjau yang berasal dari kamera tertentu, dan mengambil foto atau video.</p>
+<p>Pada codelab ini Anda akan mempelajari cara menggunakan plugin kamera untuk menampilkan pratinjau, mengambil foto, dan menampilkannya menggunakan langkah-langkah berikut:</p>
+<ol type="1" start="1">
+<li>Tambahkan dependensi yang diperlukan.</li>
+<li>Dapatkan daftar kamera yang tersedia.</li>
+<li>Buat dan inisialisasi <code>CameraController</code>.</li>
+<li>Gunakan <code>CameraPreview</code> untuk menampilkan kamera.</li>
+<li>Ambil gambar dengan <code>CameraController</code>.</li>
+<li>Tampilkan gambar hasil foto dengan widget <code>Image</code>.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Mengambil Foto dengan Kamera di Flutter" duration="90">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>kamera_flutter</strong>, lalu sesuaikan style laporan praktikum yang Anda buat.</p>
+<h2 is-upgraded>Langkah 2: Tambah dependensi yang diperlukan</h2>
+<p>Anda memerlukan tiga dependensi pada project flutter untuk menyelesaikan praktikum ini.</p>
+<p><code>camera</code> → menyediakan seperangkat alat untuk bekerja dengan kamera pada device.</p>
+<p><code>path_provider</code> → menyediakan lokasi atau path untuk menyimpan hasil foto.</p>
+<p><code>path</code> → membuat path untuk mendukung berbagai platform.</p>
+<p>Untuk menambahkan dependensi plugin, jalankan perintah <code>flutter pub add</code> seperti berikut di terminal:</p>
+<pre><code>flutter pub add camera path_provider path</code></pre>
+<aside class="special"><p><strong>Tips</strong></p>
+<ul>
+<li>Untuk Android, Anda harus update variabel <code>minSdkVersion</code> = <code>21</code> (atau lebih tinggi) pada file <code>gradle</code>.</li>
+<li>Pada iOS, baris kode berikut harus ditambahkan pada file <code>ios/Runner/Info.plist</code> untuk mengakses kamera dan microphone.</li>
+</ul>
+<p><code><key>NSCameraUsageDescription</key></code></p>
+<p><code><string>Explanation on why the camera access is needed.</string></code></p>
+<p><code><key>NSMicrophoneUsageDescription</key></code></p>
+<p><code><string>Explanation on why the microphone access is needed.</string></code></p>
+</aside>
+<h2 is-upgraded><strong>Langkah 3: Ambil Sensor Kamera dari device</strong></h2>
+<p>Selanjutnya, kita perlu mengecek jumlah kamera yang tersedia pada perangkat menggunakan plugin <code>camera</code> seperti pada kode berikut ini. Kode ini letakkan dalam <code>void main()</code>.</p>
+<p><strong>lib/main.dart</strong></p>
+<pre><code>// Ensure that plugin services are initialized so that `availableCameras()`
+// can be called before `runApp()`
+WidgetsFlutterBinding.ensureInitialized();
+
+// Obtain a list of the available cameras on the device.
+final cameras = await availableCameras();
+
+// Get a specific camera from the list of available cameras.
+final firstCamera = cameras.first;</code></pre>
+<p>Ubah <code>void main()</code> menjadi async function seperti berikut ini.</p>
+<p><strong>lib/main.dart</strong></p>
+<pre><code>Future&lt;void&gt; main() async {
+  ...
+}</code></pre>
+<p>Pastikan melakukan impor plugin sesuai yang dibutuhkan.</p>
+<h2 is-upgraded>Langkah 4: Buat dan inisialisasi <strong><code>CameraController</code></strong></h2>
+<p>Setelah Anda dapat mengakses kamera, gunakan langkah-langkah berikut untuk membuat dan menginisialisasi <code>CameraController</code>. Pada langkah berikut ini, Anda akan membuat koneksi ke kamera perangkat yang memungkinkan Anda untuk mengontrol kamera dan menampilkan pratinjau umpan kamera.</p>
+<ol type="1" start="1">
+<li>Buat <code>StatefulWidget</code> dengan kelas <code>State</code> pendamping.</li>
+<li>Tambahkan variabel ke kelas <code>State</code> untuk menyimpan <code>CameraController</code>.</li>
+<li>Tambahkan variabel ke kelas <code>State</code> untuk menyimpan <code>Future</code> yang dikembalikan dari <code>CameraController.initialize()</code>.</li>
+<li>Buat dan inisialisasi controller dalam metode <code>initState()</code>.</li>
+<li>Hapus controller dalam metode <code>dispose()</code>.</li>
+</ol>
+<p><strong>lib/widget/takepicture_screen.dart</strong></p>
+<pre><code>// A screen that allows users to take a picture using a given camera.
+class TakePictureScreen extends StatefulWidget {
+  const TakePictureScreen({
+    super.key,
+    required this.camera,
+  });
+
+  final CameraDescription camera;
+
+  @override
+  TakePictureScreenState createState() =&gt; TakePictureScreenState();
+}
+
+class TakePictureScreenState extends State&lt;TakePictureScreen&gt; {
+  late CameraController _controller;
+  late Future&lt;void&gt; _initializeControllerFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // To display the current output from the Camera,
+    // create a CameraController.
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      widget.camera,
+      // Define the resolution to use.
+      ResolutionPreset.medium,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed.
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Fill this out in the next steps.
+    return Container();
+  }
+}</code></pre>
+<aside class="warning"><p><strong>Perhatian:</strong> Jika Anda tidak menginisialisasi <code>CameraController</code>, Anda tidak dapat menggunakan kamera untuk menampilkan pratinjau dan mengambil gambar.</p>
+</aside>
+<h2 is-upgraded>Langkah 5: Gunakan <code>CameraPreview </code><strong>untuk menampilkan preview foto</strong></h2>
+<p>Gunakan widget <code>CameraPreview</code> dari package <code>camera</code> untuk menampilkan preview foto. Anda perlu tipe objek void berupa <code>FutureBuilder</code> untuk menangani proses async.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Pada kode ini Anda perlu logic untuk menunggu controller selesai proses inisialisasi sebelum bekerja dengan kamera. Anda harus menunggu hasil dari method <code>_initializeControllerFuture()</code>, yang telah dibuat sebelumnya, agar dapat menampilkan preview foto dengan <code>CameraPreview</code>.</p>
+</aside>
+<p><strong>lib/widget/takepicture_screen.dart</strong></p>
+<pre><code>@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text(&#39;Take a picture - NIM Anda&#39;)),
+      // You must wait until the controller is initialized before displaying the
+      // camera preview. Use a FutureBuilder to display a loading spinner until the
+      // controller has finished initializing.
+      body: FutureBuilder&lt;void&gt;(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If the Future is complete, display the preview.
+            return CameraPreview(_controller);
+          } else {
+            // Otherwise, display a loading indicator.
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),</code></pre>
+<h2 is-upgraded>Langkah 6: Ambil foto dengan <strong><code>CameraController</code></strong></h2>
+<p>Anda dapat menggunakan <code>CameraController</code> untuk mengambil gambar menggunakan metode <code>takePicture()</code>, yang mengembalikan objek <code>XFile</code>, merupakan sebuah objek abstraksi <code>File</code> lintas platform yang disederhanakan. Pada Android dan iOS, gambar baru disimpan dalam direktori cache masing-masing, dan <code>path</code> ke lokasi tersebut dikembalikan dalam XFile.</p>
+<p>Pada codelab ini, buatlah sebuah <code>FloatingActionButton</code> yang digunakan untuk mengambil gambar menggunakan <code>CameraController</code> saat pengguna mengetuk tombol.</p>
+<p>Pengambilan gambar memerlukan 2 langkah:</p>
+<ol type="1" start="1">
+<li>Pastikan kamera telah diinisialisasi.</li>
+<li>Gunakan controller untuk mengambil gambar dan pastikan ia mengembalikan objek <code>Future<XFile></code>.</li>
+</ol>
+<p>Praktik baik untuk membungkus operasi kode ini dalam blok <code>try / catch</code> guna menangani berbagai kesalahan yang mungkin terjadi.</p>
+<p>Kode berikut letakkan dalam <code>Widget build</code> setelah field <code>body</code>.</p>
+<p><strong>lib/widget/takepicture_screen.dart</strong></p>
+<pre><code>FloatingActionButton(
+  // Provide an onPressed callback.
+  onPressed: () async {
+    // Take the Picture in a try / catch block. If anything goes wrong,
+    // catch the error.
+    try {
+      // Ensure that the camera is initialized.
+      await _initializeControllerFuture;
+
+      // Attempt to take a picture and then get the location
+      // where the image file is saved.
+      final image = await _controller.takePicture();
+    } catch (e) {
+      // If an error occurs, log the error to the console.
+      print(e);
+    }
+  },
+  child: const Icon(Icons.camera_alt),
+)</code></pre>
+<h2 is-upgraded><strong>Langkah 7: Buat widget baru DisplayPictureScreen</strong></h2>
+<p>Buatlah file baru pada folder widget yang berisi kode berikut.</p>
+<p><strong>lib/widget/displaypicture_screen.dart</strong></p>
+<pre><code>// A widget that displays the picture taken by the user.
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
+
+  const DisplayPictureScreen({super.key, required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text(&#39;Display the Picture - NIM Anda&#39;)),
+      // The image is stored as a file on the device. Use the `Image.file`
+      // constructor with the given path to display the image.
+      body: Image.file(File(imagePath)),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded>Langkah 8: Edit <strong><code>main.dart</code></strong></h2>
+<p>Edit pada file ini bagian <code>runApp</code> seperti kode berikut.</p>
+<p><strong>lib/main.dart</strong></p>
+<pre><code>runApp(
+    MaterialApp(
+      theme: ThemeData.dark(),
+      home: TakePictureScreen(
+        // Pass the appropriate camera to the TakePictureScreen widget.
+        camera: firstCamera,
+      )
+      debugShowCheckedModeBanner: false,
+    ),
+  );</code></pre>
+<h2 is-upgraded><strong>Langkah 9: Menampilkan hasil foto</strong></h2>
+<p>Tambahkan kode seperti berikut pada bagian <code>try / catch</code> agar dapat menampilkan hasil foto pada <code>DisplayPictureScreen</code>.</p>
+<p><strong>lib/widget/takepicture_screen.dart</strong></p>
+<pre><code>// Take the Picture in a try / catch block. If anything goes wrong,
+          // catch the error.
+          try {
+            // Ensure that the camera is initialized.
+            await _initializeControllerFuture;
+
+            // Attempt to take a picture and get the file `image`
+            // where it was saved.
+            final image = await _controller.takePicture();
+
+            if (!context.mounted) return;
+
+            // If the picture was taken, display it on a new screen.
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =&gt; DisplayPictureScreen(
+                  // Pass the automatically generated path to
+                  // the DisplayPictureScreen widget.
+                  imagePath: image.path,
+                ),
+              ),
+            );
+          } catch (e) {
+            // If an error occurs, log the error to the console.
+            print(e);
+          }</code></pre>
+<p>Silakan deploy pada device atau smartphone Anda dan perhatikan hasilnya! 🙂</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Membuat photo filter carousel" duration="90">
+        <p>Semua orang tahu bahwa foto akan terlihat lebih bagus dengan filter. Pada codelab ini, Anda akan membuat rangkaian pilihan filter yang dapat digeser sesuai pilihan warna.</p>
+<p>Berikut ini menunjukkan aplikasi yang akan Anda buat:</p>
+<p class="image-container"><img style="width: 274.00px" src="img\\d6bc522d40ee316e.gif"></p>
+<p>Selesaikan langkah-langkah praktikum berikut ini.</p>
+<h2 is-upgraded><strong>Langkah 1: Buat project baru</strong></h2>
+<p>Buatlah project flutter baru di pertemuan 09 dengan nama <strong>photo_filter_carousel</strong></p>
+<h2 is-upgraded><strong>Langkah 2: Buat widget Selector ring dan dark gradient</strong></h2>
+<p>Buatlah folder <code>widget</code> dan file baru yang berisi kode berikut.</p>
+<p><strong>lib/widget/filter_selector.dart</strong></p>
+<pre><code>@immutable
+class FilterSelector extends StatefulWidget {
+  const FilterSelector({
+    super.key,
+    required this.filters,
+    required this.onFilterChanged,
+    this.padding = const EdgeInsets.symmetric(vertical: 24),
+  });
+
+  final List&lt;Color&gt; filters;
+  final void Function(Color selectedColor) onFilterChanged;
+  final EdgeInsets padding;
+
+  @override
+  State&lt;FilterSelector&gt; createState() =&gt; _FilterSelectorState();
+}
+
+class _FilterSelectorState extends State&lt;FilterSelector&gt; {
+  static const _filtersPerScreen = 5;
+  static const _viewportFractionPerItem = 1.0 / _filtersPerScreen;
+
+  late final PageController _controller;
+  late int _page;
+
+  int get filterCount =&gt; widget.filters.length;
+
+  Color itemColor(int index) =&gt; widget.filters[index % filterCount];
+
+  @override
+  void initState() {
+    super.initState();
+    _page = 0;
+    _controller = PageController(
+      initialPage: _page,
+      viewportFraction: _viewportFractionPerItem,
+    );
+    _controller.addListener(_onPageChanged);
+  }
+
+  void _onPageChanged() {
+    final page = (_controller.page ?? 0).round();
+    if (page != _page) {
+      _page = page;
+      widget.onFilterChanged(widget.filters[page]);
+    }
+  }
+
+  void _onFilterTapped(int index) {
+    _controller.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.ease,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scrollable(
+      controller: _controller,
+      axisDirection: AxisDirection.right,
+      physics: const PageScrollPhysics(),
+      viewportBuilder: (context, viewportOffset) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final itemSize = constraints.maxWidth * _viewportFractionPerItem;
+            viewportOffset
+              ..applyViewportDimension(constraints.maxWidth)
+              ..applyContentDimensions(0.0, itemSize * (filterCount - 1));
+
+            return Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                _buildShadowGradient(itemSize),
+                _buildCarousel(
+                  viewportOffset: viewportOffset,
+                  itemSize: itemSize,
+                ),
+                _buildSelectionRing(itemSize),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildShadowGradient(double itemSize) {
+    return SizedBox(
+      height: itemSize * 2 + widget.padding.vertical,
+      child: const DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              Colors.black,
+            ],
+          ),
+        ),
+        child: SizedBox.expand(),
+      ),
+    );
+  }
+
+  Widget _buildCarousel({
+    required ViewportOffset viewportOffset,
+    required double itemSize,
+  }) {
+    return Container(
+      height: itemSize,
+      margin: widget.padding,
+      child: Flow(
+        delegate: CarouselFlowDelegate(
+          viewportOffset: viewportOffset,
+          filtersPerScreen: _filtersPerScreen,
+        ),
+        children: [
+          for (int i = 0; i &lt; filterCount; i++)
+            FilterItem(
+              onFilterSelected: () =&gt; _onFilterTapped(i),
+              color: itemColor(i),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelectionRing(double itemSize) {
+    return IgnorePointer(
+      child: Padding(
+        padding: widget.padding,
+        child: SizedBox(
+          width: itemSize,
+          height: itemSize,
+          child: const DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.fromBorderSide(
+                BorderSide(width: 6, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 3: Buat widget photo filter carousel</strong></h2>
+<p>Buat file baru di folder widget dengan kode seperti berikut.</p>
+<p><strong>lib/widget/filter_carousel.dart</strong></p>
+<pre><code>@immutable
+class PhotoFilterCarousel extends StatefulWidget {
+  const PhotoFilterCarousel({super.key});
+
+  @override
+  State&lt;PhotoFilterCarousel&gt; createState() =&gt; _PhotoFilterCarouselState();
+}
+
+class _PhotoFilterCarouselState extends State&lt;PhotoFilterCarousel&gt; {
+  final _filters = [
+    Colors.white,
+    ...List.generate(
+      Colors.primaries.length,
+      (index) =&gt; Colors.primaries[(index * 4) % Colors.primaries.length],
+    )
+  ];
+
+  final _filterColor = ValueNotifier&lt;Color&gt;(Colors.white);
+
+  void _onFilterChanged(Color value) {
+    _filterColor.value = value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.black,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: _buildPhotoWithFilter(),
+          ),
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            bottom: 0.0,
+            child: _buildFilterSelector(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhotoWithFilter() {
+    return ValueListenableBuilder(
+      valueListenable: _filterColor,
+      builder: (context, color, child) {
+        // Anda bisa ganti dengan foto Anda sendiri
+        return Image.network(
+          &#39;https://docs.flutter.dev/cookbook/img-files&#39;
+          &#39;/effects/instagram-buttons/millennial-dude.jpg&#39;,
+          color: color.withOpacity(0.5),
+          colorBlendMode: BlendMode.color,
+          fit: BoxFit.cover,
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterSelector() {
+    return FilterSelector(
+      onFilterChanged: _onFilterChanged,
+      filters: _filters,
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 4: Membuat filter warna - bagian 1</strong></h2>
+<p>Buat file baru di folder widget seperti kode berikut.</p>
+<p><strong>lib/widget/carousel_flowdelegate.dart</strong></p>
+<pre><code>class CarouselFlowDelegate extends FlowDelegate {
+  CarouselFlowDelegate({
+    required this.viewportOffset,
+    required this.filtersPerScreen,
+  }) : super(repaint: viewportOffset);
+
+  final ViewportOffset viewportOffset;
+  final int filtersPerScreen;
+
+  @override
+  void paintChildren(FlowPaintingContext context) {
+    final count = context.childCount;
+
+    // All available painting width
+    final size = context.size.width;
+
+    // The distance that a single item &#34;page&#34; takes up from the perspective
+    // of the scroll paging system. We also use this size for the width and
+    // height of a single item.
+    final itemExtent = size / filtersPerScreen;
+
+    // The current scroll position expressed as an item fraction, e.g., 0.0,
+    // or 1.0, or 1.3, or 2.9, etc. A value of 1.3 indicates that item at
+    // index 1 is active, and the user has scrolled 30% towards the item at
+    // index 2.
+    final active = viewportOffset.pixels / itemExtent;
+
+    // Index of the first item we need to paint at this moment.
+    // At most, we paint 3 items to the left of the active item.
+    final min = math.max(0, active.floor() - 3).toInt();
+
+    // Index of the last item we need to paint at this moment.
+    // At most, we paint 3 items to the right of the active item.
+    final max = math.min(count - 1, active.ceil() + 3).toInt();
+
+    // Generate transforms for the visible items and sort by distance.
+    for (var index = min; index &lt;= max; index++) {
+      final itemXFromCenter = itemExtent * index - viewportOffset.pixels;
+      final percentFromCenter = 1.0 - (itemXFromCenter / (size / 2)).abs();
+      final itemScale = 0.5 + (percentFromCenter * 0.5);
+      final opacity = 0.25 + (percentFromCenter * 0.75);
+
+      final itemTransform = Matrix4.identity()
+        ..translate((size - itemExtent) / 2)
+        ..translate(itemXFromCenter)
+        ..translate(itemExtent / 2, itemExtent / 2)
+        ..multiply(Matrix4.diagonal3Values(itemScale, itemScale, 1.0))
+        ..translate(-itemExtent / 2, -itemExtent / 2);
+
+      context.paintChild(
+        index,
+        transform: itemTransform,
+        opacity: opacity,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CarouselFlowDelegate oldDelegate) {
+    return oldDelegate.viewportOffset != viewportOffset;
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 5: Membuat filter warna</strong></h2>
+<p>Buat file baru di folder widget seperti kode berikut ini.</p>
+<p><strong>lib/widget/filter_item.dart</strong></p>
+<pre><code>@immutable
+class FilterItem extends StatelessWidget {
+  const FilterItem({
+    super.key,
+    required this.color,
+    this.onFilterSelected,
+  });
+
+  final Color color;
+  final VoidCallback? onFilterSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onFilterSelected,
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ClipOval(
+            child: Image.network(
+              &#39;https://docs.flutter.dev/cookbook/img-files&#39;
+              &#39;/effects/instagram-buttons/millennial-texture.jpg&#39;,
+              color: color.withOpacity(0.5),
+              colorBlendMode: BlendMode.hardLight,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 6: Implementasi filter carousel</strong></h2>
+<p>Terakhir, kita impor widget <code>PhotoFilterCarousel</code> ke <code>main</code> seperti kode berikut ini.</p>
+<p><strong>lib/main.dart</strong></p>
+<pre><code>void main() {
+  runApp(
+    const MaterialApp(
+      home: PhotoFilterCarousel(),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
+}</code></pre>
+<h2 is-upgraded><strong>Troubleshoot</strong></h2>
+<p>Jika diperlukan, beberapa widget yang telah Anda buat sebelumnya, memerlukan kode import berikut ini.</p>
+<pre><code>import &#39;dart:math&#39; as math;
+
+import &#39;package:flutter/material.dart&#39;;
+import &#39;package:flutter/rendering.dart&#39; show ViewportOffset;</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Praktikum" duration="60">
+        <ol type="1" start="1">
+<li>Selesaikan Praktikum 1 dan 2, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>! Jika terdapat error atau kode yang tidak dapat berjalan, silakan Anda perbaiki sesuai tujuan aplikasi dibuat!</li>
+<li>Gabungkan hasil praktikum 1 dengan hasil praktikum 2 sehingga setelah melakukan pengambilan foto, dapat dibuat filter carouselnya!</li>
+<li>Jelaskan maksud <code>void async</code> pada praktikum 1?</li>
+<li>Jelaskan fungsi dari anotasi <code>@immutable</code> dan <code>@override</code> ?</li>
+<li>Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari tentang kamera di Flutter.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang dasar <em>state management</em> di Flutter.</p>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://docs.flutter.dev/cookbook/plugins/picture-using-camera" target="_blank">https://docs.flutter.dev/cookbook/plugins/picture-using-camera</a> </li>
+<li><a href="https://docs.flutter.dev/cookbook/effects/photo-filter-carousel" target="_blank">https://docs.flutter.dev/cookbook/effects/photo-filter-carousel</a> </li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
