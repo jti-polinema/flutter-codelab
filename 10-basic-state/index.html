@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
-  <title>#11 | Dasar State Management</title>
+  <title>#10 | Dasar State Management</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
@@ -22,13 +22,13 @@
 <body>
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
   <google-codelab codelab-gaid="G-H7507PFEJB"
-                  id="11-basic-state"
-                  title="#11 | Dasar State Management"
+                  id="10-basic-state"
+                  title="#10 | Dasar State Management"
                   environment="web"
                   feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
     
       <google-codelab-step label="Dasar Manajemen State di Flutter" duration="0">
-        <p><strong>Terakhir diperbarui:</strong> 07 November 2023</p>
+        <p><strong>Terakhir diperbarui:</strong> 07 November 2024</p>
 <p><strong>Penulis:</strong> Habibie Ed Dien</p>
 <p>Pada codelab ini, Anda akan mempelajari tentang dasar manajemen state di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara mengelola state di multi screen.</p>
 <p>Video berikut menjelaskan tentang apa itu state dan bagaimana manfaatnya. Silakan simak dan pahami!</p>
@@ -45,7 +45,7 @@
 <h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
 <p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
 <ul>
-<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 8GB Processor Core i3</li>
 <li>Koneksi internet minimal kecepatan 1 Mbps</li>
 <li>Chrome Browser</li>
 <li>Perangkat mobile (Android/iOS)</li>
@@ -85,7 +85,7 @@
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
 </aside>
 <h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
-<p>Buatlah sebuah project flutter baru dengan nama <strong>master_plan</strong> di folder <strong>src week-11</strong> repository GitHub Anda. Lalu buatlah susunan folder dalam project seperti gambar berikut ini.</p>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>master_plan</strong> di folder <strong>src week-10</strong> repository GitHub Anda atau sesuai style laporan praktikum yang telah disepakati. Lalu buatlah susunan folder dalam project seperti gambar berikut ini.</p>
 <p class="image-container"><img style="width: 142.00px" src="img\\59cfd690dfef3866.png"></p>
 <h2 is-upgraded>Langkah 2: Membuat model <strong><code>task.dart</code></strong></h2>
 <p>Praktik terbaik untuk memulai adalah pada lapisan data (<em>data layer</em>). Ini akan memberi Anda gambaran yang jelas tentang aplikasi Anda, tanpa masuk ke detail antarmuka pengguna Anda. Di folder model, buat file bernama <code>task.dart</code> dan buat <code>class Task</code>. Class ini memiliki atribut <code>description</code> dengan tipe data String dan <code>complete</code> dengan tipe data Boolean, serta ada konstruktor. Kelas ini akan menyimpan data tugas untuk aplikasi kita. Tambahkan kode berikut:</p>
@@ -264,7 +264,7 @@ void dispose() {
 <li>Mengapa perlu variabel plan di langkah 6 pada praktikum tersebut? Mengapa dibuat konstanta ?</li>
 <li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
 <li>Apa kegunaan method pada Langkah 11 dan 13 dalam <em>lifecyle state</em> ?</li>
-<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!</li>
+<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !</li>
 </ol>
 
 
@@ -406,7 +406,7 @@ Widget build(BuildContext context) {
 <li>Jelaskan mana yang dimaksud <code>InheritedWidget</code> pada langkah 1 tersebut! Mengapa yang digunakan <code>InheritedNotifier</code>?</li>
 <li>Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
 <li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
-<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!</li>
+<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !</li>
 </ol>
 
 
@@ -466,8 +466,6 @@ void initState() {
     ..addListener(() {
       FocusScope.of(context).requestFocus(FocusNode());
     });
-
-
 }</code></pre>
 <h2 is-upgraded>Langkah 7: Widget <strong><code>build</code></strong></h2>
 <p>Pastikan Anda telah merubah ke <code>List<Plan></code> dan mengubah nilai pada <code>currentPlan</code> seperti kode berikut ini.</p>
@@ -654,7 +652,7 @@ PlanScreen(plan: plan,)));
 <p class="image-container"><img style="width: 460.50px" src="img\\9ce81bcd2817adc8.png"></p>
 <ol type="1" start="3">
 <li>Lakukan capture hasil dari Langkah 14 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
-<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke spreadsheet yang telah disediakan!</li>
+<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !</li>
 </ol>
 
 
@@ -662,7 +660,7 @@ PlanScreen(plan: plan,)));
     
       <google-codelab-step label="Tugas Kelompok PBL" duration="90">
         <ol type="1" start="1">
-<li>Tambahkan <em>class model </em>yang dibutuhkan sesuai aplikasi OCR kelompok Anda! Bagilah tugas dengan anggota kelompok Anda untuk merancang proses state yang akan dilakukan pada aplikasi kelompok Anda. Lalu terapkan state management pada project kelompok yang telah Anda pelajari melalui praktikum ini.</li>
+<li>Tambahkan <em>class model </em>yang dibutuhkan sesuai aplikasi PBL kelompok Anda! Bagilah tugas dengan anggota kelompok Anda untuk merancang proses state yang akan dilakukan pada aplikasi kelompok Anda. Lalu terapkan <em>state management</em> pada project kelompok yang telah Anda pelajari melalui praktikum ini.</li>
 <li>Anda boleh menggunakan plugin/library pihak ketiga seperti riverpod, BLoC, provider atau lainnya untuk mengelola state pada project kelompok PBL.</li>
 <li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL. Beri keterangan commit dengan jelas fitur apa saja yang ditambahkan, tiap screen/fitur untuk setiap commit itu lebih baik.</li>
 </ol>

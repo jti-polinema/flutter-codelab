@@ -3,10 +3,10 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2023-11-07T22:34:19Z",
-  "id": "11-basic-state",
+  "updated": "2024-11-07T02:24:22Z",
+  "id": "10-basic-state",
   "duration": 550,
-  "title": "#11 | Dasar State Management",
+  "title": "#10 | Dasar State Management",
   "authors": "Habibie Ed Dien",
   "summary": "Mampu mengelola state di Flutter",
   "source": "1DNQSaymqUZCsgXhNrsnwaAsUaWxll5_FQpGckhcMkA0",
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "11-basic-state"
+  "url": "10-basic-state"
 }
