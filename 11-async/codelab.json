@@ -3,10 +3,10 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2023-11-12T23:45:26Z",
-  "id": "12-async",
+  "updated": "2024-11-14T02:58:50Z",
+  "id": "11-async",
   "duration": 148,
-  "title": "#12 | Pemrograman Asynchronous",
+  "title": "#11 | Pemrograman Asynchronous",
   "authors": "Habibie Ed Dien",
   "summary": "Mampu melakukan pemrograman asynchronous di Flutter",
   "source": "1HIUdsb_aulXG44JjBvQaiTbUlQQvoP06Z2-KOAs0crk",
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "12-async"
+  "url": "11-async"
 }

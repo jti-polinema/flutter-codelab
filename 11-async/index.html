@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
-  <title>#12 | Pemrograman Asynchronous</title>
+  <title>#11 | Pemrograman Asynchronous</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
@@ -22,13 +22,13 @@
 <body>
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
   <google-codelab codelab-gaid="G-H7507PFEJB"
-                  id="12-async"
-                  title="#12 | Pemrograman Asynchronous"
+                  id="11-async"
+                  title="#11 | Pemrograman Asynchronous"
                   environment="web"
                   feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
     
       <google-codelab-step label="Pemrograman Asynchronous di Flutter" duration="0">
-        <p><strong>Terakhir diperbarui:</strong> 13 November 2023</p>
+        <p><strong>Terakhir diperbarui:</strong> 14 November 2024</p>
 <p><strong>Penulis:</strong> Habibie Ed Dien</p>
 <p>Pada codelab ini, Anda akan mempelajari tentang pemrograman asynchronous di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara mengelola thread asynchronous.</p>
 <p>Video berikut menjelaskan tentang apa itu Future dan bagaimana manfaatnya terhadap pemrograman asynchronous. Silakan simak dan pahami!</p>
@@ -50,7 +50,7 @@
 <h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
 <p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
 <ul>
-<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 8GB Processor Core i3</li>
 <li>Koneksi internet minimal kecepatan 1 Mbps</li>
 <li>Chrome Browser</li>
 <li>Perangkat mobile (Android/iOS)</li>
@@ -68,7 +68,7 @@
       <google-codelab-step label="Pendahuluan Pemrograman Asynchronous" duration="10">
         <p>Pemrograman <em>asynchronous </em>(<em>async</em>) dimanfaatkan untuk aplikasi menyelesaikan tugas-tugas yang membutuhkan waktu (user harus menunggu hasilnya). Contohnya seperti mengunduh gambar dari web, menulis data ke web server, mengerjakan tugas paralel lainnya, hingga menangani inputan dari user. Dengan pemrograman async ini akan meningkatkan kualitas UX dan perangkat lunak kita.</p>
 <p>Di Dart dan Flutter Anda dapat menulis program async dengan memanfaatkan <strong>Future</strong> dan pola async/await. Pola ini tersedia hampir di semua bahasa pemrograman modern. Flutter memiliki cara yang efisien untuk membangun UI async dengan class <code>FutureBuilder</code>.</p>
-<p>Pada pertemuan 13 berikutnya, kita akan menggunakan streams yaitu lanjutan dari pemrograman async.</p>
+<p>Pada pertemuan 12 berikutnya, kita akan menggunakan streams yaitu lanjutan dari pemrograman async.</p>
 <aside class="special"><p><strong>Catatan:</strong> Secara umum ada beberapa perbedaan antara <strong>Future </strong>dan <strong>Stream</strong>, yaitu:</p>
 <ul>
 <li><strong>Future </strong>digunakan untuk melakukan <strong>satu operasi asynchronous</strong>, seperti mengunggah data ke web server.</li>
@@ -110,7 +110,7 @@ int y = x * 7;</code></pre>
 <aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
 </aside>
 <h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
-<p>Buatlah sebuah project flutter baru dengan nama <strong>books</strong> di folder <strong>src week-12</strong> repository GitHub Anda. </p>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>books</strong> di folder <strong>src week-11</strong> repository GitHub Anda. </p>
 <p>Kemudian Tambahkan dependensi <code>http</code> dengan mengetik perintah berikut di terminal.</p>
 <pre><code>flutter pub add http</code></pre>
 <h2 is-upgraded>Langkah 2: Cek file <strong><code>pubspec.yaml</code></strong></h2>
@@ -139,7 +139,7 @@ int y = x * 7;</code></pre>
 </ul>
 <p class="image-container"><img style="width: 610.00px" src="img\\29d0179018edd8d4.png"></p>
 <ul>
-<li>Kemudian cobalah akses di browser URI tersebut dengan lengkap seperti ini. Jika menampilkan data JSON, maka Anda telah berhasil. Lakukan <em>capture </em>milik Anda dan tulis di <code>README</code> pada laporan praktikum. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 2</strong>&#34;.</li>
+<li>Kemudian cobalah akses di browser URI tersebut dengan lengkap seperti ini. Jika menampilkan data JSON, maka Anda telah berhasil. Lakukan <em>capture </em>milik Anda dan tulis di <code>README</code> pada laporan praktikum. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 2</strong>&#34;.</li>
 </ul>
 <p class="image-container"><img style="width: 610.00px" src="img\\d441815f1bdf8e8.png"></p>
 </aside>
@@ -150,7 +150,7 @@ int y = x * 7;</code></pre>
 <aside class="warning"><h3 is-upgraded><strong>Soal 3</strong></h3>
 <ul>
 <li>Jelaskan maksud kode langkah 5 tersebut terkait <code>substring</code> dan <code>catchError</code>!</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 3</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 3</strong>&#34;.</li>
 </ul>
 </aside>
 <p class="image-container"><img style="width: 346.00px" src="img\\6533382f0798e097.png"></p>
@@ -200,7 +200,7 @@ Future&lt;int&gt; returnThreeAsync() async {
 <aside class="warning"><h3 is-upgraded><strong>Soal 4</strong></h3>
 <ul>
 <li>Jelaskan maksud kode langkah 1 dan 2 tersebut!</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 4</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 4</strong>&#34;.</li>
 </ul>
 </aside>
 
@@ -239,7 +239,7 @@ Future calculate() async {
 <aside class="warning"><h3 is-upgraded><strong>Soal 5</strong></h3>
 <ul>
 <li>Jelaskan maksud kode langkah 2 tersebut!</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 5</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 5</strong>&#34;.</li>
 </ul>
 </aside>
 <h2 is-upgraded>Langkah 5: Ganti method <strong><code>calculate()</code></strong></h2>
@@ -257,7 +257,7 @@ Future calculate() async {
 <aside class="warning"><h3 is-upgraded><strong>Soal 6</strong></h3>
 <ul>
 <li>Jelaskan maksud perbedaan kode langkah 2 dengan langkah 5-6 tersebut!</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 6</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 6</strong>&#34;.</li>
 </ul>
 </aside>
 
@@ -285,7 +285,7 @@ Future calculate() async {
 <p>Anda akan melihat hasilnya dalam 3 detik berupa angka 6 lebih cepat dibandingkan praktikum sebelumnya menunggu sampai 9 detik.</p>
 <aside class="warning"><h3 is-upgraded><strong>Soal 7</strong></h3>
 <ul>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 7</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 7</strong>&#34;.</li>
 </ul>
 </aside>
 <h2 is-upgraded>Langkah 4: Ganti variabel <strong><code>futureGroup</code></strong></h2>
@@ -322,7 +322,7 @@ Future calculate() async {
 <p class="image-container"><img style="width: 309.00px" src="img\\b45bbfe7f2b1f61b.png"></p>
 <aside class="warning"><h3 is-upgraded><strong>Soal 9</strong></h3>
 <ul>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 9</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 9</strong>&#34;.</li>
 </ul>
 </aside>
 <h2 is-upgraded>Langkah 4: Tambah method <strong><code>handleError()</code></strong></h2>
@@ -382,7 +382,7 @@ Future calculate() async {
 <ul>
 <li>Jika Anda tidak melihat animasi loading tampil, kemungkinan itu berjalan sangat cepat. Tambahkan delay pada method <code>getPosition()</code> dengan kode <code>await Future.delayed(const Duration(seconds: 3));</code></li>
 <li>Apakah Anda mendapatkan koordinat GPS ketika run di browser? Mengapa demikian?</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 12</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 12</strong>&#34;.</li>
 </ul>
 </aside>
 
@@ -411,7 +411,7 @@ Future calculate() async {
 <aside class="warning"><h3 is-upgraded>Soal 13</h3>
 <ul>
 <li>Apakah ada perbedaan UI dengan praktikum sebelumnya? Mengapa demikian?</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 13</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 13</strong>&#34;.</li>
 <li>Seperti yang Anda lihat, menggunakan FutureBuilder lebih efisien, clean, dan reactive dengan Future bersama UI.</li>
 </ul>
 </aside>
@@ -426,7 +426,7 @@ Future calculate() async {
 <aside class="warning"><h3 is-upgraded>Soal 14</h3>
 <ul>
 <li>Apakah ada perbedaan UI dengan langkah sebelumnya? Mengapa demikian?</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 14</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 14</strong>&#34;.</li>
 </ul>
 </aside>
 
@@ -469,7 +469,7 @@ Future calculate() async {
 <ul>
 <li>Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?</li>
 <li>Gantilah 3 warna pada langkah 5 dengan warna favorit Anda!</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 16</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 16</strong>&#34;.</li>
 </ul>
 </aside>
 <p>Hasilnya akan seperti gambar berikut ini.</p>
@@ -501,7 +501,7 @@ Future calculate() async {
 <ul>
 <li>Cobalah klik setiap button, apa yang terjadi ? Mengapa demikian ?</li>
 <li>Gantilah 3 warna pada langkah 3 dengan warna favorit Anda!</li>
-<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W12: Soal 17</strong>&#34;.</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README. Lalu lakukan commit dengan pesan &#34;<strong>W11: Soal 17</strong>&#34;.</li>
 </ul>
 </aside>
 
