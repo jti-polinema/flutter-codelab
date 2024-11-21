@@ -3,10 +3,10 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2023-11-19T23:59:43Z",
-  "id": "13-state-streams-bloc",
+  "updated": "2024-11-21T07:09:25Z",
+  "id": "12-state-streams-bloc",
   "duration": 118,
-  "title": "#13 | Lanjutan State Management dengan Streams",
+  "title": "#12 | Lanjutan State Management dengan Streams",
   "authors": "Habibie Ed Dien",
   "summary": "Mampu mengelola state dengan streams dan BLoC pattern di Flutter",
   "source": "1-L6H7Ga8nH7ApniG91bvVvRgOXFAYqN1McfqEmHH5lI",
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "13-state-streams-bloc"
+  "url": "12-state-streams-bloc"
 }
