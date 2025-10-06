@@ -28,7 +28,7 @@
                   feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
     
       <google-codelab-step label="Manajemen Plugin di Flutter" duration="0">
-        <p><strong>Terakhir diperbarui:</strong> 10 Oktober 2024</p>
+        <p><strong>Terakhir diperbarui:</strong> 05 Oktober 2025</p>
 <p><strong>Penulis:</strong> Habibie Ed Dien</p>
 <p>Pada codelab ini, Anda akan mempelajari tentang plugin Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara memasang plugin ke dalam project flutter.</p>
 <p>Video berikut menjelaskan tentang perbedaan dan persamaan <em>package </em>dan <em>plugin</em>. Silakan simak dan pahami!</p>
@@ -43,7 +43,7 @@
 <aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
 </aside>
 <h2 is-upgraded><strong>Tujuan Visual</strong></h2>
-<p class="image-container"><img style="width: 336.14px" src="img\\6a414bef06d7db92.png"></p>
+<p class="image-container"><img style="width: 336.14px" src="img/6a414bef06d7db92.png"></p>
 <h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
 <p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
 <ul>
@@ -121,7 +121,7 @@
 <h2 is-upgraded><strong>Plugin entry</strong></h2>
 <p>Salah satu contoh plugin di sini adalah widget <code>AutoSizeText</code>. Seperti namanya, widget ini akan mengubah ukuran teks yang berada didalamnya sehingga sesuai dengan batasannya.</p>
 <p>Untuk menemukan plugin, cukup ketik &#34;<strong><em>auto size text</em></strong>&#34; di bilah pencarian dan hasil Anda akan terlihat seperti ini:</p>
-<p class="image-container"><img style="width: 579.00px" src="img\\a33ac3cbeca3abc5.png"></p>
+<p class="image-container"><img style="width: 579.00px" src="img/a33ac3cbeca3abc5.png"></p>
 <p>Hal pertama yang akan Anda perhatikan adalah ada banyak plugin yang melakukan hal serupa, jadi akan sangat sulit untuk menentukan plugin mana yang paling baik dan paling sering digunakan.</p>
 <p>Seperti yang dapat Anda bayangkan, secara tidak sengaja menggunakan plugin yang tidak lagi dipelihara berarti perbaikan bug tidak ditindaklanjuti dan peningkatan dependensi sementara (plugin lain yang menjadi sandaran plugin ini) tidak terjadi. Selain itu, memilih plugin yang tidak digunakan orang lain berarti mungkin belum diuji secara menyeluruh seperti plugin lain yang tersedia.</p>
 <p>Namun, pub.dev sekarang menampilkan serangkaian metrik dan informasi lainnya sehingga Anda dapat membuat pilihan yang lebih tepat. Mungkin terasa seperti terlalu fokus pada pencarian plugin, tetapi membuat pilihan yang tepat dapat membuat perbedaan besar pada proyek Anda, dan berpotensi membuat atau menghancurkannya.</p>
@@ -132,7 +132,7 @@
 <li><strong>Version: </strong>versi plugin yang telah dirilis, menunjukkan versi stabil dari plugin tersebut.</li>
 </ul>
 <p>Jika kita mengklik <strong>auto_size_text</strong>, kita dapat melihat detail lebih lanjut tentang plugin:</p>
-<p class="image-container"><img style="width: 624.00px" src="img\\c4c8041be6425533.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/c4c8041be6425533.png"></p>
 <p>Rincian informasi bagian plugin lain seperti berikut:</p>
 <ul>
 <li><strong>Likes</strong>: Seperti yang Anda harapkan, jika orang menyukai plugin, mereka dapat &#34;menyukainya&#34;.</li>
@@ -158,7 +158,7 @@
       <google-codelab-step label="Bagaimana cara menambahkan plugin ke project ?" duration="15">
         <p>Menambahkan plugin ke proyek Anda umumnya sangat mudah. Namun, sangat penting bagi Anda untuk membaca readme sepenuhnya karena untuk beberapa plugin, mungkin ada konfigurasi khusus platform yang perlu Anda atur sebelum plugin dijalankan. Dalam beberapa kasus ekstrem (seperti <code>google_mobile_ads</code>), aplikasi Anda akan gagal dijalankan sepenuhnya kecuali penyiapan plugin telah diselesaikan dengan benar.</p>
 <p>Di sini menggunakan contoh <code>auto_size_text</code> sebagai plugin yang ingin ditambahkan. Klik pada bagian <strong>Installing</strong> sekarang. Tangkapan layar berikut menunjukkan instruksi untuk instalasi:</p>
-<p class="image-container"><img style="width: 624.00px" src="img\\cf768065d67e00f9.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/cf768065d67e00f9.png"></p>
 <p>Ada <strong>dua cara</strong> untuk menambahkan plugin ke proyek Anda, tetapi hasilnya sama.</p>
 <p>Opsi pertama adalah menjalankan perintah flutter pada terminal seperti berikut:</p>
 <pre><code>flutter pub add auto_size_text</code></pre>
@@ -223,12 +223,12 @@ compatible.</code></pre>
         <p>Banyak plugin akan bekerja dengan platform dasar yang berbeda untuk menggunakan fungsionalitas sistem operasi. Dependensi ini mengubah cara proyek Anda dibangun dan dijalankan karena ada kode asli dalam proyek Anda yang berinteraksi dengan platform yang mendasarinya. Mari kita lihat bagaimana antarmuka itu bekerja.</p>
 <h2 is-upgraded><strong>MethodChannel</strong></h2>
 <p>Komunikasi Flutter antara klien (Flutter) dan aplikasi host (native) terjadi melalui saluran platform. Kelas <code>MethodChannel</code> bertanggung jawab untuk mengirim pesan (method invocations) ke sisi platform. Di sisi platform, <code>MethodChannel</code> di Android (API) dan <code>FlutterMethodChannel</code> di iOS (API) memungkinkan menerima panggilan metode dan mengirim kembali hasilnya. Struktur hubungan ini ditunjukkan dalam diagram berikut.</p>
-<p class="image-container"><img style="width: 382.00px" src="img\\f8c2d8e644bc95ba.png"></p>
+<p class="image-container"><img style="width: 382.00px" src="img/f8c2d8e644bc95ba.png"></p>
 <p>Teknik channel platform memungkinkan pemisahan kode UI dari kode asli khusus platform. Host akan mendengarkan di saluran platform dan menerima permintaan pesan. Itu bisa menggunakan API platform untuk memberlakukan permintaan dan kemudian mengirim kembali respons ke klien, bagian Flutter dari aplikasi.</p>
 <p>Dengan cara ini, bagian Flutter dari aplikasi bersifat agnostik terhadap host yang memungkinkan Anda menulis kode yang akan berfungsi di semua platform.</p>
 <p>Memiliki pemahaman dasar tentang plugin ini akan memungkinkan Anda mendiagnosis masalah dengan lebih baik dan menilai kesesuaian plugin untuk aplikasi Anda.</p>
 <p>Mari kita jelajahi sedikit lebih jauh dengan menambahkan plugin ke proyek kita yang menggunakan kode asli. Contoh plugin tersebut adalah plugin <code>device_info_plus</code>. Ini mengambil informasi tentang perangkat Anda dari platform yang mendasarinya, seperti model dan nama perangkat.</p>
-<p class="image-container"><img style="width: 624.00px" src="img\\f667bf75586ec3a5.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/f667bf75586ec3a5.png"></p>
 <p>Jadi, tambahkan <code>device_info</code> terbaru ke file <code>pubspec.yaml</code> Anda menggunakan perintah berikut:</p>
 <pre><code>flutter pub add device_info_plus</code></pre>
 <p>Jika Anda ingin informasi lebih lanjut tentang plugin, kunjungi situs <code>pub.dev</code> dan cari <code>device_info_plus</code>.</p>
@@ -263,12 +263,12 @@ compatible.</code></pre>
 <li>Perubahan yang diperlukan dalam konfigurasi proyek Anda. Ini bisa jadi kurang jelas dan memeriksa plugin readme di pub.dev seringkali merupakan cara terbaik untuk menilai apakah Anda perlu mengubah konfigurasi proyek Anda.</li>
 </ul>
 <p>Di halaman <code>pub.dev</code>, ada bagian khusus yang didedikasikan untuk menjelaskan mengapa perubahan versi terjadi yang disebut <strong>Changelog</strong>:</p>
-<p class="image-container"><img style="width: 624.00px" src="img\\ff429a70a61aa41b.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/ff429a70a61aa41b.png"></p>
 <p>Di bagian ini, pengembang plugin akan sering menampilkan berbagai jenis pembaruan yang terjadi pada setiap kenaikan versi, termasuk perubahan yang signifikan, sehingga pengembang aplikasi dapat dengan mudah melihat perubahan apa yang perlu mereka buat.</p>
 <p>Selain itu, pengembang plugin terkadang membuat kesalahan ketika merilis update. Pengembang plugin sering meluangkan waktu mereka secara sukarela untuk mengembangkan plugin, sehingga dapat membuat kesalahan karena kurangnya waktu atau pengalaman. Sekali lagi, ada baiknya memeriksa readme dan changelog di pub.dev jika Anda mengalami masalah, hanya untuk memeriksa tidak ada perubahan yang merusak aplikasi.</p>
 <h2 is-upgraded><strong>Plugin not working</strong></h2>
 <p>Akan ada saat-saat ketika Anda yakin bahwa sebuah plugin tidak berfungsi seperti yang Anda harapkan. Ada cara mudah untuk melaporkan masalah melalui tautan <strong>View/report issues</strong> di halaman <code>pub.dev</code> untuk plugin. Umumnya, tautan ini akan membawa Anda ke tab Issues dari repositori GitHub plugin tempat Anda dapat memeriksa apakah masalah telah disampaikan dan apakah perbaikan sedang berlangsung:</p>
-<p class="image-container"><img style="width: 595.00px" src="img\\c6e1ede2a132ab14.png"></p>
+<p class="image-container"><img style="width: 595.00px" src="img/c6e1ede2a132ab14.png"></p>
 <p>Perlu dicatat bahwa karena plugin umumnya dibuat oleh komunitas, sering kali ada pengembang lain yang mencoba memperbaiki plugin dan membagikan pull request (PR) dengan pengembang plugin untuk membantu mereka. Saat Anda yakin dengan Flutter, jangan ragu untuk mencoba membantu pengembang plugin jika Anda mengidentifikasi masalah dan merasa tahu solusinya.</p>
 <h2 is-upgraded><strong>PR not merged</strong></h2>
 <p>Terkadang Anda akan melihat masalah dengan plugin yang telah diperbaiki oleh seseorang di komunitas dan mereka telah mengeluarkan PR yang belum digabungkan ke dalam cabang kode master plugin. Ini sering terjadi dengan plugin yang kurang populer di mana jumlah kontributornya rendah, dan kontributor utama mungkin telah pindah dari plugin.</p>
@@ -357,7 +357,7 @@ Container(
           ),
 ),</code></pre>
 <p><strong>Run</strong> aplikasi tersebut dengan tekan <strong>F5</strong>, maka hasilnya akan seperti berikut.</p>
-<p class="image-container"><img style="width: 336.14px" src="img\\6a414bef06d7db92.png"></p>
+<p class="image-container"><img style="width: 336.14px" src="img/6a414bef06d7db92.png"></p>
 
 
       </google-codelab-step>
@@ -377,9 +377,11 @@ Container(
     
       <google-codelab-step label="Tugas Kelompok PBL" duration="90">
         <ol type="1" start="1">
-<li>Tambahkan plugin untuk fungsi kamera pada aplikasi kelompok Anda. Misalnya menggunakan plugin ini <a href="https://pub.dev/packages/camera" target="_blank">https://pub.dev/packages/camera</a> (silakan boleh gunakan plugin lain)</li>
-<li>Tambahkan plugin animasi loading dan transisi pada aplikasi OCR kelompok Anda.</li>
-<li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL.</li>
+<li>Buatlah kelompok minimal 4 mahasiswa dan maksimal 6 mahasiswa!</li>
+<li>Buatlah versi aplikasi mobile dari aplikasi web ini: <a href="http://jawara.sytes.net/" target="_blank">http://jawara.sytes.net/</a> (pastikan akses dengan HTTP bukan HTTPS di browser).</li>
+<li>Buatlah hanya berupa UI/tampilan tanpa fungsional/backend, namun tetap bisa berpindah-pindah screen di flutter/mobile.</li>
+<li>Buatlah repository kelompok secara private, invite teman sekelompoknya dan dosen pengampu. Jangan lupa di README tambahkan capture GIF hasil UI dan nama-nama anggota kelompoknya.</li>
+<li>Presentasikan hasil UI aplikasi mobile tersebut pada pertemuan/minggu ke-9 sebagai nilai UTS.</li>
 </ol>
 
 
