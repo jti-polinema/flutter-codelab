@@ -1,0 +1,536 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#13 | Persistensi Data</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="13-data-persistence"
+                  title="#13 | Persistensi Data"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="Persistensi Data" duration="0">
+        <p><strong>Terakhir diperbarui:</strong> 17 November 2025</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada codelab ini, Anda akan mempelajari tentang persistensi data di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara mengelola data JSON lebih lanjut.</p>
+<p>Video berikut menjelaskan tentang persistensi data menggunakan <em>Shared Preferences</em>. Silakan simak dan pahami!</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/sa_U0jffQII?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>Mengonversi model Dart ke JSON</li>
+<li>Menangani skema JSON yang tidak kompatibel dengan model</li>
+<li>Menangani error JSON</li>
+<li>Menyimpan data sederhana dengan SharedPreferences</li>
+<li>Mengakses filesystem dengan plugin <code>path_provider</code></li>
+<li>Mengakses filesystem dengan direktori</li>
+<li>Menggunakan secure storage untuk menyimpan data</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023).</p>
+</aside>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 8GB Processor Core i3</li>
+<li>Koneksi internet minimal kecepatan 5 Mbps</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart Dasar</li>
+<li>Teknik Dasar Pemrograman Asynchronous</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Pendahuluan Persistensi Data" duration="50">
+        <iframe class="youtube-video" src="https://www.youtube.com/embed/uCbHxLA9t9E?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p>Kebanyakan aplikasi, terutama yang berbasis bisnis, pasti membutuhkan operasi <strong>CRUD: Create, Read, Update, dan Delete</strong> data. Data dapat disimpan secara local atau remote. Tanpa peduli data itu akan disimpan di mana, pada beberapa kasus kita tetap membutuhkan data itu berbentuk JSON sebelum itu disimpan secara permanen. Sehingga kita perlu tau metode apa saja yang diperlukan untuk mengolah JSON di Dart dan Flutter. Hal ini akan sangat membantu pada beberapa teknologi yang mungkin Anda akan gunakan, seperti <a href="https://pub.dev/packages/sqflite" target="_blank">SQLite</a>, <a href="https://pub.dev/packages/sembast" target="_blank">Sembast</a>, dan <a href="https://pub.dev/packages/firebase_database" target="_blank">database Firebase</a>. Semua itu membutuhkan proses pengiriman dan unduh data berupa JSON.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Konversi Dart model ke JSON" duration="20">
+        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda (ketik di <strong>README.md</strong>) pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
+<p>Buatlah sebuah project flutter baru dengan nama <strong>store_data_nama</strong> (beri nama panggilan Anda) di folder <strong>week-13/src/ </strong>repository GitHub Anda. </p>
+<h2 is-upgraded>Langkah 2: Buka file <strong><code>main.dart</code></strong></h2>
+<p>Ketiklah kode seperti berikut ini.</p>
+<p class="image-container"><img style="width: 419.00px" src="img/ae024b32245016ee.png"></p>
+<p class="image-container"><img style="width: 470.00px" src="img/1cc597518b6aedc7.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 1</strong></h3>
+<ul>
+<li>Tambahkan <strong>nama panggilan Anda</strong> pada <code>title</code> app sebagai identitas hasil pekerjaan Anda.</li>
+<li>Gantilah warna tema aplikasi sesuai kesukaan Anda.</li>
+<li>Lakukan commit hasil jawaban Soal 1 dengan pesan <strong>&#34;W13: Jawaban Soal 1&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded>Langkah 3: Buat folder baru <strong><code>assets</code></strong></h2>
+<p>Buat folder baru <code>assets</code> di root project Anda</p>
+<h2 is-upgraded>Langkah 4: Buat file baru <strong><code>pizzalist.json</code></strong></h2>
+<p>Letakkan file ini di dalam folder <code>assets</code>, lalu salin data JSON berikut ke file tersebut.</p>
+<pre><code>[ 
+    { 
+      &#34;id&#34;: 1, 
+      &#34;pizzaName&#34;: &#34;Margherita&#34;, 
+      &#34;description&#34;: &#34;Pizza with tomato, fresh mozzarella and basil&#34;,
+      &#34;price&#34;: 8.75, 
+      &#34;imageUrl&#34;: &#34;images/margherita.png&#34; 
+    }, 
+    { 
+      &#34;id&#34;: 2, 
+      &#34;pizzaName&#34;: &#34;Marinara&#34;, 
+      &#34;description&#34;: &#34;Pizza with tomato, garlic and oregano&#34;,
+      &#34;price&#34;: 7.50, 
+      &#34;imageUrl&#34;: &#34;images/marinara.png&#34;  
+    }, 
+    { 
+      &#34;id&#34;: 3, 
+      &#34;pizzaName&#34;: &#34;Napoli&#34;, 
+      &#34;description&#34;: &#34;Pizza with tomato, garlic and anchovies&#34;,
+      &#34;price&#34;: 9.50, 
+      &#34;imageUrl&#34;: &#34;images/marinara.png&#34;  
+    }, 
+    { 
+      &#34;id&#34;: 4, 
+      &#34;pizzaName&#34;: &#34;Carciofi&#34;, 
+      &#34;description&#34;: &#34;Pizza with tomato, fresh mozzarella and artichokes&#34;,
+      &#34;price&#34;: 8.80, 
+      &#34;imageUrl&#34;: &#34;images/marinara.png&#34;  
+    }, 
+    { 
+      &#34;id&#34;: 5, 
+      &#34;pizzaName&#34;: &#34;Bufala&#34;, 
+      &#34;description&#34;: &#34;Pizza with tomato, buffalo mozzarella and basil&#34;,
+      &#34;price&#34;: 12.50, 
+      &#34;imageUrl&#34;: &#34;images/marinara.png&#34;  
+    }
+]</code></pre>
+<p>Jika Anda ingin menggunakan data JSON yang lain, Anda dapat mengakses salah satu dari daftar API di tautan ini: <a href="https://github.com/public-apis/public-apis" target="_blank">https://github.com/public-apis/public-apis</a> </p>
+<h2 is-upgraded>Langkah 5: Edit <strong><code>pubspec.yaml</code></strong></h2>
+<p>Tambahkan referensi folder <code>assets</code> ke file pubspec.yaml seperti berikut ini.</p>
+<p class="image-container"><img style="width: 134.00px" src="img/b2aa1a70138ec2d7.png"></p>
+<h2 is-upgraded>Langkah 6: Edit <strong><code>maint.dart</code></strong></h2>
+<p>Buatlah variabel seperti berikut ini class <code>_MyHomePageState</code>.</p>
+<p class="image-container"><img style="width: 192.00px" src="img/a3bb3863c9409a04.png"></p>
+<h2 is-upgraded>Langkah 7: Tetap di <strong><code>main.dart</code></strong></h2>
+<p>Untuk membaca isi dari file <code>pizzalist.json</code> di dalam class _MyHomePageState, tambahkan method <code>readJsonFile</code> seperti kode berikut untuk membaca file json.</p>
+<p class="image-container"><img style="width: 413.00px" src="img/3eb478fc1682c753.png"></p>
+<h2 is-upgraded><strong>Langkah 8: Panggil method readJsonFile</strong></h2>
+<p>Panggil method <code>readJsonFile</code> di initState </p>
+<p class="image-container"><img style="width: 184.00px" src="img/3f3229196ab5c9cc.png"></p>
+<h2 is-upgraded>Langkah 9: Tampilkan hasil JSON</h2>
+<p>Kemudian tampilkan hasil JSON di body scaffold.</p>
+<p class="image-container"><img style="width: 198.00px" src="img/139437de21250a50.png"></p>
+<h2 is-upgraded><strong>Langkah</strong> 10: Run</h2>
+<p>Jika kode sudah benar, seharusnya tampil seperti gambar berikut ini.</p>
+<p class="image-container"><img style="width: 310.00px" src="img/6b4caa090da621dc.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 2</strong></h3>
+<ul>
+<li>Masukkan hasil capture layar ke laporan praktikum Anda.</li>
+<li>Lakukan commit hasil jawaban Soal 2 dengan pesan <strong>&#34;W13: Jawaban Soal 2&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded><strong>Langkah</strong> 11: Buat file baru <strong><code>pizza.dart</code></strong></h2>
+<p>Kita ingin mengubah data json tersebut dari String menjadi objek List. Maka perlu membuat file class baru di folder <code>lib/model</code> dengan nama file <code>pizza.dart</code>.</p>
+<h2 is-upgraded><strong>Langkah 12: Model pizza.dart</strong></h2>
+<p>Ketik kode berikut pada file <code>pizza.dart</code></p>
+<p class="image-container"><img style="width: 228.00px" src="img/5490b270bd65362f.png"></p>
+<h2 is-upgraded>Langkah 13: Buat <code>constructor()</code></h2>
+<p>Di dalam class <code>Pizza</code> definisikan constructor <code>fromJson</code>, yang mana akan mengambil data berupa Map sebagai parameter dan mengubah Map ke objek Pizza seperti kode berikut:</p>
+<p class="image-container"><img style="width: 316.00px" src="img/17a271428216b0ef.png"></p>
+<h2 is-upgraded>Langkah 14: Pindah ke <strong><code>class _MyHomePageState</code></strong></h2>
+<p>Tambahkan kode jsonDecode seperti berikut.</p>
+<p class="image-container"><img style="width: 405.00px" src="img/b1af945ce13c69e3.png"></p>
+<h2 is-upgraded><strong>Langkah 15: Pastikan impor class</strong></h2>
+<p>Perhatikan pada bagian atas file bahwa telah berhasil impor kedua file berikut.</p>
+<p class="image-container"><img style="width: 176.00px" src="img/a0d4abe9a5133a46.png"></p>
+<p>Anda telah berhasil mengimpor pustaka yang diperlukan dan melakukan <em>decoding</em> string JSON menjadi List pizzaMapList pada Langkah ini. Selanjutnya, kita akan mengonversi List Map tersebut menjadi List objek Dart (List&lt;Pizza&gt;).</p>
+<h2 is-upgraded>Langkah <strong>16: Konversi List Map ke List Objek Dart</strong></h2>
+<p>Di dalam method readJsonFile(), setelah baris List pizzaMapList = jsonDecode(myString);, tambahkan kode berikut untuk mengonversi setiap Map di pizzaMapList menjadi objek Pizza dan menyimpannya ke myPizzas.</p>
+<p class="image-container"><img style="width: 291.00px" src="img/5cd6849a4ee46178.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 17: return myPizzas</strong></h2>
+<p>Hapus atau komentari <code>setState</code> yang menampilkan <code>pizzaString</code> dari Langkah 7. Kemudian, kembalikan <code>myPizzas</code>.</p>
+<p class="image-container"><img style="width: 138.00px" src="img/d7e919f6c9df0a5.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 18: Perbarui Signature Method</strong></h2>
+<p>Perbarui signature method <code>readJsonFile()</code> untuk secara eksplisit menunjukkan bahwa ia mengembalikan <code>Future</code> yang berisi <code>List<Pizza></code>.</p>
+<p class="image-container"><img style="width: 308.00px" src="img/6d11b57b4fa659fa.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 19: Deklarasikan Variabel State</strong></h2>
+<p>Di dalam <code>class _MyHomePageState</code>, deklarasikan variabel state baru untuk menampung List objek Pizza.</p>
+<p class="image-container"><img style="width: 246.00px" src="img/8b0bd522bb765484.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 20: Panggil di initState dan Perbarui State</strong></h2>
+<p>Perbarui method <code>initState()</code> di <code>_MyHomePageState</code> untuk memanggil <code>readJsonFile()</code>. Karena <code>readJsonFile()</code> mengembalikan <code>Future</code>, gunakan <code>.then()</code> untuk mendapatkan hasilnya, dan perbarui state <code>myPizzas</code>.</p>
+<p class="image-container"><img style="width: 254.00px" src="img/e91e14987e37b7.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 21: Tampilkan Data di ListView</strong></h2>
+<p>Perbarui body dari Scaffold untuk menggunakan ListView.builder yang menampilkan pizzaName sebagai judul dan description sebagai subjudul dari setiap objek Pizza.</p>
+<pre><code>body: ListView.builder(
+  itemCount: myPizzas.length,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text(myPizzas[index].pizzaName),
+      subtitle: Text(myPizzas[index].description),
+    );
+  },
+ ));
+}</code></pre>
+<h2 is-upgraded><strong>Langkah</strong><strong> 22: Run</strong></h2>
+<p>Jalankan aplikasi. Sekarang, Anda akan melihat data pizza ditampilkan dalam daftar yang lebih terstruktur sebagai objek List Dart.</p>
+<p class="image-container"><img style="width: 277.00px" src="img/ed963275d2f0e31c.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 3</strong></h3>
+<ul>
+<li>Masukkan hasil capture layar ke laporan praktikum Anda.</li>
+<li>Lakukan commit hasil jawaban Soal 2 dengan pesan <strong>&#34;W13: Jawaban Soal 3&#34;</strong></li>
+</ul>
+</aside>
+<h2 is-upgraded><strong>Langkah</strong><strong> 23: Tambahkan Method toJson() (Serialization)</strong></h2>
+<p>Di file pizza.dart, tambahkan method toJson() ke class Pizza. Method ini berfungsi untuk mengonversi objek Dart kembali menjadi Map (langkah pertama menuju JSON String).</p>
+<p class="image-container"><img style="width: 252.00px" src="img/3ae0a5b1e4c1938c.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 24: Buat Fungsi Konversi JSON String</strong></h2>
+<p>Di main.dart, tambahkan fungsi convertToJSON di dalam _MyHomePageState untuk menggunakan jsonEncode (dari dart:convert) yang mengubah List objek Dart menjadi JSON String.</p>
+<p class="image-container"><img style="width: 451.00px" src="img/5ba19bd73ca27811.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 25: Tampilkan Output JSON di Konsol</strong></h2>
+<p>Di method readJsonFile(), tambahkan kode untuk memanggil convertToJSON dan mencetak hasilnya ke Debug Console sebelum mengembalikan myPizzas.</p>
+<pre><code>String json = convertToJSON(myPizzas);
+print(json);
+return myPizzas;</code></pre>
+<h2 is-upgraded><strong>Langkah</strong><strong> 26: Cek Output Konsol</strong></h2>
+<p>Jalankan aplikasi. Periksa Debug Console untuk melihat List objek Pizza telah berhasil dikonversi kembali menjadi JSON String.</p>
+<p class="image-container"><img style="width: 538.00px" src="img/668c9915601a551f.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Handle kompatibilitas data JSON" duration="20">
+        <p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1.</p>
+</aside>
+<p>Pada codelab ini, kita akan berfokus pada skema JSON yang tidak kompatibel dengan model yang telah kita buat sebelumnya. Kita akan membuat kode lebih tangguh dengan menangani <em>type casting</em> dan nilai <em>null</em>.</p>
+<aside class="special"><p><strong>Catatan:</strong> Langkah-langkah ini mensimulasikan penggunaan data JSON yang tidak konsisten atau &#34;rusak&#34; (<code>pizzalist_broken.json</code>).</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Simulasikan Error</h2>
+<p>Anggaplah Anda telah mengganti file <code>pizzalist.json</code> dengan data yang tidak konsisten.</p>
+<h2 is-upgraded>Langkah 2: Lihat Error Tipe Data String ke Int</h2>
+<p>Jika ID pizza di JSON dikirim sebagai String (misalnya <code>"id": "1"</code> di JSON) sementara model Dart mengharapkan int, Anda akan melihat runtime error.</p>
+<p class="image-container"><img style="width: 370.00px" src="img/fad63fa240295de4.png"></p>
+<h2 is-upgraded>Langkah 3: Terapkan tryParse dan Null Coalescing pada ID</h2>
+<p>Di Pizza.fromJson (file pizza.dart), ganti cara mendapatkan nilai id menggunakan int.tryParse dan null coalescing operator (??) untuk memberikan nilai default 0 jika parsing gagal atau nilainya null. Tujuannya adalah memastikan nilai id selalu integer.</p>
+<p class="image-container"><img style="width: 300.00px" src="img/6dc8f2e57e14448.png"></p>
+<h2 is-upgraded>Langkah 4: Simulasikan Error Null pada String</h2>
+<p>Jika Anda menjalankan ulang dan ada bidang yang hilang (misalnya imageUrl hilang), Anda mungkin mendapatkan error Null.</p>
+<p class="image-container"><img style="width: 356.00px" src="img/e446c6d7cd99c411.png"></p>
+<h2 is-upgraded>Langkah 5: Terapkan Null Coalescing pada String</h2>
+<p>Tambahkan null coalescing operator (??) pada imageUrl untuk memberikan string kosong (&#39;&#39;) jika nilai yang diterima adalah null. Lakukan hal yang sama untuk bidang String lainnya seperti pizzaName dan description jika perlu.</p>
+<p class="image-container"><img style="width: 264.00px" src="img/6726c4b12202189f.png"></p>
+<p class="image-container"><img style="width: 403.00px" src="img/bb0ed177aadd52be.png"></p>
+<h2 is-upgraded><strong>Langkah</strong> 6: Gunakan toString() untuk Field String</h2>
+<p>Untuk memastikan semua nilai yang digunakan sebagai String benar-benar String (bahkan jika mereka mungkin dikirim sebagai int atau tipe lain), gunakan toString().</p>
+<p class="image-container"><img style="width: 383.00px" src="img/7e02a4fd5f814946.png"></p>
+<h2 is-upgraded><strong>Langkah</strong><strong> 7: Simulasikan Error Tipe Data String ke Double</strong></h2>
+<p>Jika Anda menjalankan ulang, Anda mungkin menemukan error saat mengonversi String ke Double untuk bidang price.</p>
+<p class="image-container"><img style="width: 406.00px" src="img/139d554a7a4c3653.png"></p>
+<h2 is-upgraded>Langkah 8: Terapkan double.tryParse</h2>
+<p>Terapkan double.tryParse dengan null coalescing (?? 0) untuk bidang price, sama seperti yang Anda lakukan pada id.</p>
+<p class="image-container"><img style="width: 420.00px" src="img/25ceda9506c7e13e.png"></p>
+<h2 is-upgraded><strong>Langkah 9: Run dan Perhatikan Output Null</strong></h2>
+<p>Setelah mengimplementasikan semua perbaikan tipe data, aplikasi akan berjalan, tetapi mungkin menampilkan &#34;null&#34; di UI jika ada bidang yang hilang atau gagal diparsing (seperti pizzaName atau description).</p>
+<p class="image-container"><img style="width: 325.00px" src="img/6d528afd9d6f4309.png"></p>
+<h2 is-upgraded>Langkah 10: Tambahkan Operator Ternary untuk Output User-Friendly</h2>
+<p>Perbaiki masalah tampilan &#34;null&#34; dengan menambahkan operator ternary yang memeriksa apakah nilai null sebelum mengubahnya menjadi String. Jika null, berikan nilai pengganti yang ramah pengguna seperti &#39;No name&#39; atau string kosong (&#39;&#39;).</p>
+<p class="image-container"><img style="width: 449.00px" src="img/bfb804b128b191b3.png"></p>
+<h2 is-upgraded>Langkah 11: Run</h2>
+<p>Jalankan aplikasi. Sekarang data yang tidak konsisten telah ditangani dengan baik, dan UI tidak menampilkan nilai null.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 4</strong></h3>
+<ul>
+<li>Capture hasil running aplikasi Anda, kemudian impor ke laporan praktikum Anda!</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 4</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Menangani error JSON" duration="15">
+        <p>Pada praktikum 3 ini, Anda akan berfokus pada Catching common JSON errors, yaitu dengan mengganti string literals (nama kunci JSON) dengan konstanta untuk menghindari error yang sulit di-debug (kesalahan pengetikan).</p>
+<p>Setelah Anda menyelesaikan praktikum 2, Anda dapat melanjutkan praktikum 3 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 2.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Buka <code>pizza.dart </code><strong>dan Buat Konstanta</strong></h2>
+<p>Di bagian atas file pizza.dart, di luar class Pizza, deklarasikan konstanta untuk setiap kunci JSON.</p>
+<p class="image-container"><img style="width: 277.00px" src="img/415355f4860d7118.png"></p>
+<h2 is-upgraded>Langkah 2: Perbarui fromJson() menggunakan Konstanta</h2>
+<p>Di constructor Pizza.fromJson, ganti semua string literal kunci JSON (misalnya &#39;id&#39;) dengan konstanta yang sesuai (keyId).</p>
+<p class="image-container"><img style="width: 447.00px" src="img/8511fe16703dd8c7.png"></p>
+<aside class="special"><p><strong>Catatan:</strong> Konstruktor ini menggunakan sintaks inisialisasi, tetapi untuk kesederhanaan, kita menggunakan sintaks body.</p>
+</aside>
+<h2 is-upgraded>Langkah 3: Perbarui toJson() menggunakan Konstanta</h2>
+<p>Perbarui juga method toJson() agar menggunakan konstanta yang sama.</p>
+<p class="image-container"><img style="width: 282.00px" src="img/eaa05f47707258c2.png"></p>
+<h2 is-upgraded><strong>Langkah 4: Run</strong></h2>
+<p>Jalankan aplikasi. Tidak akan ada perubahan visual, tetapi kode Anda kini lebih safe dan maintainable.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 5</strong></h3>
+<ul>
+<li>Jelaskan maksud kode lebih safe dan maintainable!</li>
+<li>Capture hasil praktikum Anda dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 5</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 4: SharedPreferences" duration="30">
+        <p>Praktikum ini membahas menyimpan data sederhana dengan SharedPreferences. Kita akan menggunakan shared_preferences untuk menyimpan hitungan sederhana.</p>
+<p>Setelah Anda menyelesaikan praktikum 3, Anda dapat melanjutkan praktikum 4 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 3.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Tambahkan Dependensi</h2>
+<p>Di Terminal, tambahkan package shared_preferences.</p>
+<p class="image-container"><img style="width: 263.00px" src="img/1d257b05a84629ed.png"></p>
+<h2 is-upgraded>Langkah 2: Install Dependensi</h2>
+<p>Jalankan flutter pub get jika editor Anda tidak melakukannya secara otomatis.</p>
+<h2 is-upgraded>Langkah 3: Lakukan Import</h2>
+<p>Di file main.dart, tambahkan import untuk shared_preferences.</p>
+<p class="image-container"><img style="width: 424.00px" src="img/6a1606cd25500dfb.png"></p>
+<h2 is-upgraded>Langkah 4: Tambahkan Variabel appCounter</h2>
+<p>Di dalam class _MyHomePageState (atau State class yang Anda gunakan), deklarasikan variabel appCounter.</p>
+<p class="image-container"><img style="width: 171.00px" src="img/d8ccfe80282a3025.png"></p>
+<h2 is-upgraded><strong>Langkah 5: Buat Method readAndWritePreference</strong></h2>
+<p>Buat method asinkron <code>readAndWritePreference().</code></p>
+<p class="image-container"><img style="width: 298.00px" src="img/13620f133697c64a.png"></p>
+<h2 is-upgraded>Langkah 6: Dapatkan Instance SharedPreferences</h2>
+<p>Di dalam method tersebut, dapatkan instance SharedPreferences. Perlu diingat bahwa ini adalah operasi asinkron, jadi gunakan await.</p>
+<p class="image-container"><img style="width: 450.00px" src="img/3369973f059b5546.png"></p>
+<h2 is-upgraded>Langkah 7: Baca, Cek Null, dan Increment Counter</h2>
+<p>Baca nilai appCounter dari storage. Gunakan null coalescing (?? 0) untuk memastikan nilai default 0 jika data belum ada. Kemudian increment nilai tersebut.</p>
+<p class="image-container"><img style="width: 359.00px" src="img/febb587bd876e4db.png"></p>
+<h2 is-upgraded>Langkah 8: Simpan Nilai Baru</h2>
+<p>Simpan nilai appCounter yang sudah di-increment kembali ke storage menggunakan prefs.setInt().</p>
+<p class="image-container"><img style="width: 346.00px" src="img/5f34a80f61ffc8bf.png"></p>
+<h2 is-upgraded><strong>Langkah 9: Perbarui State</strong></h2>
+<p>Panggil setState() untuk memperbarui UI dengan nilai baru appCounter.</p>
+<p class="image-container"><img style="width: 255.00px" src="img/c7e42a23ab6e9bc8.png"></p>
+<h2 is-upgraded>Langkah 10: Panggil di initState()</h2>
+<p>Panggil readAndWritePreference() di initState() agar penghitung dibaca saat aplikasi pertama kali dibuka.</p>
+<p class="image-container"><img style="width: 220.00px" src="img/a7d667748623c49b.png"></p>
+<h2 is-upgraded><strong>Langkah 11: Perbarui Tampilan (body)</strong></h2>
+<p>Ganti body Scaffold Anda dengan tata letak yang menampilkan hitungan dan tombol &#39;Reset counter&#39;.</p>
+<p class="image-container"><img style="width: 391.00px" src="img/3c45f90d602e3f8a.png"></p>
+<h2 is-upgraded><strong>Langkah 12: Run</strong></h2>
+<p>Aplikasi sekarang akan menampilkan &#34;You have opened the app 1 times&#34; (jika ini pembukaan pertama).</p>
+<p class="image-container"><img style="width: 306.00px" src="img/1543b620dc5d1a5b.png"></p>
+<h2 is-upgraded><strong>Langkah 13: Buat Method deletePreference()</strong></h2>
+<p>Tambahkan method asinkron deletePreference() yang berfungsi untuk menghapus data menggunakan prefs.clear().</p>
+<p class="image-container"><img style="width: 475.00px" src="img/f64ac4d4cc6fa3a5.png"></p>
+<h2 is-upgraded><strong>Langkah 14: Panggil deletePreference()</strong></h2>
+<p>Hubungkan deletePreference() ke tombol &#39;Reset counter&#39;.</p>
+<p class="image-container"><img style="width: 284.00px" src="img/4aeaa77360b2e62d.png"></p>
+<h2 is-upgraded><strong>Langkah 15: Run</strong></h2>
+<p>Jalankan aplikasi. Tombol reset sekarang akan berfungsi, menghapus semua pasangan kunci-nilai dan mereset hitungan.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 6</strong></h3>
+<ul>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 6</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 5: Akses filesystem dengan path_provider" duration="15">
+        <p>Praktikum ini berfokus untuk mengakses <em>file system</em> menggunakan path_provider untuk menemukan direktori umum (documents dan temp) pada perangkat.</p>
+<p>Setelah Anda menyelesaikan praktikum 4, Anda dapat melanjutkan praktikum 5 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 4.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Tambahkan Dependensi</h2>
+<p>Tambahkan <code>package path_provider</code> melalui Terminal.</p>
+<p class="image-container"><img style="width: 227.00px" src="img/21a5c7d9cad85bab.png"></p>
+<h2 is-upgraded>Langkah 2: Lakukan Import</h2>
+<p>Di file main.dart, tambahkan import untuk path_provider.</p>
+<p class="image-container"><img style="width: 366.00px" src="img/dff47304510c9b60.png"></p>
+<h2 is-upgraded><strong>Langkah 3: Tambahkan Variabel Path State</strong></h2>
+<p>Di State class Anda, tambahkan variabel untuk menyimpan jalur direktori dokumen dan temporer.</p>
+<p class="image-container"><img style="width: 191.00px" src="img/e1379a36dcfd5305.png"></p>
+<h2 is-upgraded>Langkah 4: Buat Method getPaths()</h2>
+<p>Buat method asinkron getPaths() yang menggunakan getApplicationDocumentsDirectory() dan getTemporaryDirectory() untuk mengambil jalur sistem file yang tepat, lalu perbarui state.</p>
+<p class="image-container"><img style="width: 423.00px" src="img/bbdb7174d941095.png"></p>
+<h2 is-upgraded>Langkah 5: Panggil getPaths() di initState()</h2>
+<p>Panggil getPaths() di initState().</p>
+<pre><code>@override
+void initState() {
+  super.initState();
+  getPaths();
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 6: Perbarui Tampilan</strong></h2>
+<p>Perbarui body Scaffold untuk menampilkan kedua jalur yang telah diambil.</p>
+<p class="image-container"><img style="width: 411.00px" src="img/91c1225c3d27847.png"></p>
+<h2 is-upgraded><strong>Langkah 7: Run</strong></h2>
+<p>Jalankan aplikasi. Anda akan melihat path absolut ke direktori dokumen dan cache aplikasi di perangkat Anda.</p>
+<p class="image-container"><img style="width: 323.00px" src="img/9739d3684ac57906.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 7</strong></h3>
+<ul>
+<li>Capture hasil praktikum Anda dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 7</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 6: Akses filesystem dengan direktori" duration="15">
+        <p>Praktikum ini melanjutkan dari Praktikum 5, berfokus pada akses <em>file system</em> untuk mengakses directories, menggunakan library <code>dart:io</code> untuk operasi file.</p>
+<p>Setelah Anda menyelesaikan praktikum 5, Anda dapat melanjutkan praktikum 6 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 5.</p>
+</aside>
+<h2 is-upgraded><strong>Langkah 1: Lakukan Import dart:io</strong></h2>
+<p>Di file main.dart, tambahkan import untuk pustaka dart:io.<br></p>
+<p class="image-container"><img style="width: 151.00px" src="img/699057afbcf9a84.png"></p>
+<h2 is-upgraded>Langkah 2: Tambahkan Variabel File dan Text</h2>
+<p>Di State class, tambahkan variabel myFile (dengan modifier late) dan fileText untuk menyimpan konten yang akan dibaca.</p>
+<p class="image-container"><img style="width: 186.00px" src="img/aad294cedc19f504.png"></p>
+<h2 is-upgraded>Langkah 3: Buat Method writeFile()</h2>
+<p>Buat method asinkron writeFile() yang menggunakan myFile.writeAsString() untuk menulis konten ke file. Kata ‘Margherita, Capricciosa, Napoli&#39; silakan Anda ganti dengan Nama Lengkap dan NIM Anda.</p>
+<pre><code>Future&lt;bool&gt; writeFile() async {
+  try {
+    await myFile.writeAsString(&#39;Margherita, Capricciosa, Napoli&#39;);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}</code></pre>
+<h2 is-upgraded><strong>Langkah 4: Inisialisasi File dan Panggil writeFile() di initState()</strong></h2>
+<p>Perbarui initState(): setelah getPaths() selesai, inisialisasi myFile dengan jalur lengkap di direktori dokumen, dan panggil writeFile().</p>
+<p class="image-container"><img style="width: 408.00px" src="img/5ef3c19d39fabeca.png"></p>
+<h2 is-upgraded>Langkah 5: Buat Method readFile()</h2>
+<p>Buat method asinkron readFile() yang menggunakan myFile.readAsString() untuk membaca konten file dan memperbarui fileText melalui setState(). </p>
+<p class="image-container"><img style="width: 403.00px" src="img/17633cde5f393663.png"></p>
+<h2 is-upgraded>Langkah 6: Edit build() dan Tambahkan Tombol Baca</h2>
+<p>Di method build(), tambahkan ElevatedButton yang memanggil readFile() dan Text yang menampilkan fileText di bawahnya.</p>
+<p class="image-container"><img style="width: 306.00px" src="img/8093a69f3dc5f0eb.png"></p>
+<p class="image-container"><img style="width: 306.00px" src="img/dab7cd1fac3b07c0.png"></p>
+<h2 is-upgraded>Langkah 7: Run</h2>
+<p>Jalankan aplikasi. Setelah menekan tombol &#39;Read File&#39;, konten yang ditulis (Margherita, Capricciosa, Napoli) akan ditampilkan atau sesuai nama dan NIM Anda.</p>
+<p class="image-container"><img style="width: 289.00px" src="img/99519a1eae07ade7.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 8</strong></h3>
+<ul>
+<li>Jelaskan maksud kode pada langkah 3 dan 7 !</li>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 8</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 7: Menyimpan data dengan enkripsi/dekripsi" duration="20">
+        <p>Pada praktikum ini Anda akan praktik menggunakan secure storage untuk menyimpan data menggunakan package <code>flutter_secure_storage</code> untuk menyimpan data sensitif (seperti kata sandi) dengan aman.</p>
+<p>Setelah Anda menyelesaikan praktikum 6, Anda dapat melanjutkan praktikum 7 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Jawablah di laporan praktikum Anda pada setiap soal yang ada di beberapa langkah praktikum ini.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 6.</p>
+</aside>
+<h2 is-upgraded>Langkah 1: Tambahkan Dependensi</h2>
+<p>Tambahkan package flutter_secure_storage melalui Terminal.</p>
+<p class="image-container"><img style="width: 287.00px" src="img/40e7b442ec83d5da.png"></p>
+<h2 is-upgraded>Langkah 2: Lakukan Import</h2>
+<p>Di main.dart, impor package yang diperlukan.</p>
+<pre><code>import &#39;package:flutter_secure_storage/flutter_secure_storage.dart&#39;;</code></pre>
+<h2 is-upgraded>Langkah 3: Tambahkan Variabel dan Controller</h2>
+<p>Di State class (_MyHomePageState), tambahkan TextEditingController dan variabel untuk menyimpan kata sandi yang dibaca.</p>
+<pre><code>final pwdController = TextEditingController();
+String myPass = &#39;&#39;;</code></pre>
+<h2 is-upgraded>Langkah 4: Inisialisasi Secure Storage</h2>
+<p>Di State class, inisialisasi FlutterSecureStorage dan tentukan kuncinya.</p>
+<p class="image-container"><img style="width: 330.00px" src="img/4dcf8c3d64fe2364.png"></p>
+<h2 is-upgraded><strong>Langkah 5: Buat Method writeToSecureStorage()</strong></h2>
+<p>Buat method asinkron untuk menulis data dari pwdController ke secure storage.</p>
+<p class="image-container"><img style="width: 441.00px" src="img/5cd845bf10fdfb25.png"></p>
+<h2 is-upgraded>Langkah 6: Buat Method readFromSecureStorage()</h2>
+<p>Buat method asinkron untuk membaca data dari secure storage.</p>
+<p class="image-container"><img style="width: 406.00px" src="img/f4d9afb771a3e205.png"></p>
+<h2 is-upgraded>Langkah 7: Edit build() untuk UI dan Logic</h2>
+<p>Perbarui method build() untuk menyertakan TextField dan dua ElevatedButton (Save Value dan Read Value). Hubungkan method save ke tombol Save Value.</p>
+<pre><code>// Di dalam body: Column children:
+TextField(
+  controller: pwdController,
+),
+ElevatedButton(child: const Text(&#39;Save Value&#39;), onPressed: () {
+  writeToSecureStorage();
+}),
+// ...</code></pre>
+<h2 is-upgraded>Langkah 8: Hubungkan Read ke Tombol</h2>
+<p>Hubungkan method read ke tombol Read Value, perbarui myPass dan UI melalui setState().</p>
+<p class="image-container"><img style="width: 341.00px" src="img/527694e2de111906.png"></p>
+<h2 is-upgraded>Langkah 9: Run</h2>
+<p>Jalankan aplikasi. Masukkan teks, simpan, lalu baca kembali. Teks tersebut seharusnya ditampilkan, menandakan data telah disimpan dan diambil dengan aman.</p>
+<p class="image-container"><img style="width: 274.00px" src="img/cb4574c8757aefe3.png"></p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 9</strong></h3>
+<ul>
+<li>Capture hasil praktikum Anda berupa GIF dan lampirkan di README.</li>
+<li>Lalu lakukan commit dengan pesan &#34;<strong>W13: Jawaban Soal 9</strong>&#34;.</li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait Persistensi Data dan contoh penggunaannya.</p>
+<p>Pada codelab berikutnya, Anda akan mempelajari tentang Restful API.</p>
+<p>Jangan sungkan jika Anda menemukan kesalahan pada codelab ini untuk merevisi atau sekedar melaporkan issue melalui tautan di pojok kiri bawah (<a href="https://github.com/jti-polinema/flutter-codelab/issues" target="_blank">Report a mistake</a>).</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://pub.dev/packages/sembast" target="_blank">https://pub.dev/packages/sembast</a> </li>
+<li><a href="https://www.youtube.com/watch?v=Oqhrxk_f1RE" target="_blank">Flutter Tutorial - Secure Storage &amp; Data Persistence</a></li>
+<li><a href="https://pub.dev/packages/sqflite" target="_blank">https://pub.dev/packages/sqflite</a> </li>
+<li><a href="https://pub.dev/packages/firebase_database" target="_blank">https://pub.dev/packages/firebase_database</a> </li>
+<li><a href="https://pub.dev/packages/json_serializable" target="_blank">https://pub.dev/packages/json_serializable</a> </li>
+<li><a href="https://pub.dev/packages/built_value" target="_blank">https://pub.dev/packages/built_value</a> </li>
+<li><a href="https://docs.flutter.dev/cookbook/persistence/reading-writing-files" target="_blank">https://docs.flutter.dev/cookbook/persistence/reading-writing-files</a> </li>
+<li><a href="https://api.flutter.dev/flutter/dart-io/File-class.html" target="_blank">https://api.flutter.dev/flutter/dart-io/File-class.html</a> </li>
+<li><a href="https://pub.dev/packages/encrypt" target="_blank">https://pub.dev/packages/encrypt</a> </li>
+<li><a href="https://pub.dev/packages/crypto" target="_blank">https://pub.dev/packages/crypto</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1W9uSLC9wlf9fFudmCWFHTx9dan5SXII0/view?usp=sharing" target="_blank">Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023)</a></li>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
