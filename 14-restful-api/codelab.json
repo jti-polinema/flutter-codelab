@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-11-24T13:56:26Z",
+  "id": "14-restful-api",
+  "duration": 215,
+  "title": "#14 | RESTful API",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mampu mendesain klien HTTP dan melakukan operasi CRUD (Create, Read, Update, Delete) data dengan web service",
+  "source": "1dfDxTdBfL-q0CsbcbSXNFuawDypMz5Jt-3YS3ZizJD8",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "14-restful-api"
+}

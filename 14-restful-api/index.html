@@ -1,0 +1,604 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>#14 | RESTful API</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB"
+                  id="14-restful-api"
+                  title="#14 | RESTful API"
+                  environment="web"
+                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    
+      <google-codelab-step label="RESTful API di Flutter" duration="0">
+        <p><strong>Terakhir diperbarui:</strong> 24 November 2025</p>
+<p><strong>Penulis:</strong> Habibie Ed Dien</p>
+<p>Pada codelab ini, Anda akan mempelajari tentang RESTful API di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara menggunakan RESTful API ke dalam project flutter.</p>
+<p>Video singkat berikut menjelaskan tentang <em>fetching</em> data di Flutter. Silakan simak dan pahami!</p>
+<iframe class="youtube-video" src="https://www.youtube.com/embed/0zuYCE3-3Y0?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
+<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
+<ul>
+<li>Mendesain klien HTTP untuk mengambil data dari layanan web (verb GET).</li>
+<li>Mengirim data ke server menggunakan operasi POST.</li>
+<li>Memperbarui data yang ada di server menggunakan operasi PUT.</li>
+<li>Menghapus data dari server menggunakan operasi DELETE.</li>
+<li>Menggunakan http library untuk membuat permintaan ke layanan web.</li>
+</ul>
+<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023) dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
+</aside>
+<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
+<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
+<ul>
+<li>PC atau Laptop dengan spesifikasi minimum RAM 6GB Processor Core i3</li>
+<li>Koneksi internet</li>
+<li>Chrome Browser</li>
+<li>Perangkat mobile (Android/iOS)</li>
+</ul>
+<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
+<ul>
+<li>Algoritma dan Pemrograman Dasar</li>
+<li>Pemrograman Berorientasi Objek</li>
+<li>Bahasa Pemrograman Dart</li>
+<li>Pemrograman Asynchronous</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Apa itu RESTful API ?" duration="10">
+        <p>API RESTful (atau layanan web RESTful) adalah layanan <em>backend</em> yang menyediakan data untuk aplikasi Anda (<em>frontend</em> atau <em>client</em>), dengan tujuan memungkinkan operasi <strong>CRUD</strong> (<em>Create, Read, Update, dan Delete</em>) pada data.</p>
+<p>Komunikasi ini dilakukan menggunakan protokol HTTP dan serangkaian aksi standar yang disebut <em>verbs</em>. Data yang ditransfer biasanya dalam format JSON.</p>
+<p>Empat <em>verb</em> utama yang digunakan adalah:</p>
+<ol type="1" start="1">
+<li><strong>GET:</strong> Untuk mengambil data dari server.</li>
+<li><strong>POST:</strong> Untuk mengirim atau memasukkan data baru.</li>
+<li><strong>PUT:</strong> Untuk memperbarui data yang sudah ada.</li>
+<li><strong>DELETE:</strong> Untuk menghapus data.</li>
+</ol>
+<p>Materi Anda selanjutnya berfokus pada cara mendesain klien HTTP untuk melakukan operasi CRUD ini di Flutter.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Mendesain Klien HTTP dan Mengambil Data" duration="10">
+        <p>Sebagian besar aplikasi seluler bergantung pada data yang berasal dari sumber eksternal. Bayangkan aplikasi untuk membaca buku, menonton film, berbagi foto dengan teman, membaca berita, atau menulis email: semua aplikasi ini menggunakan data yang diambil dari sumber eksternal. Saat aplikasi mengonsumsi data eksternal, biasanya ada layanan backend yang menyediakan data tersebut untuk aplikasi: layanan web atau API web.</p>
+<p>Yang terjadi adalah aplikasi Anda (frontend atau klien) terhubung ke layanan web melalui HTTP dan meminta beberapa data. Layanan backend kemudian merespons dengan mengirimkan data ke aplikasi, biasanya dalam format JSON atau XML.</p>
+<p>Untuk codelab ini, kita akan membuat aplikasi yang membaca dan menulis data dari layanan web. Karena membuat API web berada di luar ruang lingkup codelab ini, kita akan menggunakan layanan mock, yang disebut Wire Mock Cloud, yang akan mensimulasikan perilaku layanan web nyata, tetapi akan sangat mudah untuk disiapkan dan digunakan.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 1: Membuat layanan Mock API" duration="30">
+        <p>Untuk mengikuti codelab ini, perangkat Anda memerlukan koneksi internet untuk mengambil data dari layanan web.</p>
+<p>Dalam codelab ini, kita akan mensimulasikan layanan web menggunakan Wire Mock Cloud dan membuat aplikasi yang membaca data dari layanan mock. Kita akan mulai dengan menyiapkan layanan baru:</p>
+<ol type="1" start="1">
+<li>Daftar untuk layanan Mock Lab di<a href="https://app.wiremock.cloud/" target="_blank">https://app.wiremock.cloud/</a> dan daftar ke situs tersebut, buat nama pengguna dan kata sandi Anda.</li>
+<li>Masuk ke layanan tersebut, buka &#34;Example Mock API&#34;, dan klik pada bagian Stubs dari API contoh. Kemudian, klik pada entri pertama—yaitu, Get a JSON resource. Anda harus melihat layar yang mirip dengan berikut ini:<br><img style="width: 589.00px" src="img/3cf97640f6c91fe9.png"></li>
+<li>Klik pada tombol New. Untuk Namanya, ketik Pizza List, biarkan GET sebagai verb, dan di kotak teks di dekat verb GET, ketik /pizzalist. Kemudian, di bagian Response, untuk status 200, pilih JSON sebagai format dan tempel konten JSON yang tersedia di<a href="https://bit.ly/pizzalist" target="_blank">https://bit.ly/pizzalist</a>. </li>
+</ol>
+<p class="image-container"><img style="width: 380.00px" src="img/e2b2daba90db4453.png"></p>
+<ol type="1" start="4">
+<li>Tekan tombol Save di bagian bawah halaman untuk menyimpan stub. Ini menyelesaikan pengaturan untuk layanan mock backend.</li>
+<li>Kembali ke proyek Flutter Anda, tambahkan dependensi http dengan mengetik di Terminal Anda:</li>
+</ol>
+<pre><code>flutter pub add http</code></pre>
+<ol type="1" start="6">
+<li>Di folder lib dalam proyek Anda, tambahkan file baru bernama httphelper.dart.</li>
+<li>Di file httphelper.dart, tambahkan kode berikut:</li>
+</ol>
+<pre><code>import &#39;dart:io&#39;; 
+import &#39;package:http/http.dart&#39; as http; 
+import &#39;dart:convert&#39;; 
+import &#39;pizza.dart&#39;; 
+
+class HttpHelper {
+  final String authority = &#39;02z2g.mocklab.io&#39;;
+  final String path = &#39;pizzalist&#39;;
+  Future&lt;List&lt;Pizza&gt;&gt; getPizzaList() async {
+    final Uri url = Uri.https(authority, path);
+    final http.Response result = await http.get(url);
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      //provide a type argument to the map method to avoid type 
+      //error
+      List&lt;Pizza&gt; pizzas =
+          jsonResponse.map&lt;Pizza&gt;((i) =&gt; 
+            Pizza.fromJson(i)).toList();
+      return pizzas;
+    } else {
+      return [];
+    }
+  }
+}</code></pre>
+<ol type="1" start="8">
+<li>Di file main.dart, di kelas _MyHomePageState, tambahkan metode bernama callPizzas. Ini mengembalikan Future dari List objek Pizza dengan memanggil metode getPizzaList dari kelas HttpHelper, sebagai berikut:</li>
+</ol>
+<pre><code>Future&lt;List&lt;Pizza&gt;&gt; callPizzas() async {
+  HttpHelper helper = HttpHelper(); 
+  List&lt;Pizza&gt; pizzas = await helper.getPizzaList(); 
+  return pizzas; 
+} </code></pre>
+<ol type="1" start="9">
+<li>Di metode build dari kelas _MyHomePageState, di body Scaffold, tambahkan FutureBuilder yang membangun ListView dari widget ListTile yang berisi objek Pizza:</li>
+</ol>
+<pre><code>Widget build(BuildContext context) { 
+    return Scaffold(
+      appBar: AppBar(title: const Text(&#39;JSON&#39;)),
+      body: FutureBuilder(
+          future: callPizzas(),
+          builder: (BuildContext context, AsyncSnapshot&lt;List&lt;Pizza&gt;&gt; 
+snapshot) {
+          if (snapshot.hasError) {
+            return const Text(&#39;Something went wrong&#39;);
+          }
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          }
+            return ListView.builder(
+                itemCount: (snapshot.data == null) ? 0 : snapshot.
+data!.length,
+                itemBuilder: (BuildContext context, int position) {
+                  return ListTile(
+                    title: Text(snapshot.data![position].pizzaName),
+                    subtitle: Text(snapshot.data![position].
+description +
+                        &#39; - € &#39; +
+                        snapshot.data![position].price.toString()),
+                  );
+                });
+          }),
+    );  
+}</code></pre>
+<ol type="1" start="10">
+<li>Jalankan aplikasi. Anda harus melihat layar yang mirip dengan berikut ini:</li>
+</ol>
+<p class="image-container"><img style="width: 327.00px" src="img/44d3a7d9b9e646bb.png"></p>
+<p>Gambar tersebut merupakan tangkapan layar dari daftar item yang diambil melalui HTTP, menampilkan ListView dengan nama pizza dan deskripsinya.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 1</strong></h3>
+<ul>
+<li>Tambahkan <strong>nama panggilan Anda</strong> pada <code>title</code> app sebagai identitas hasil pekerjaan Anda.</li>
+<li>Gantilah warna tema aplikasi sesuai kesukaan Anda.</li>
+<li>Capture hasil aplikasi Anda, lalu masukkan ke laporan di README dan lakukan commit hasil jawaban Soal 1 dengan pesan <strong>&#34;W14: Jawaban Soal 1&#34;</strong></li>
+</ul>
+</aside>
+<p>Kita sekarang hanya memiliki satu metode yang menggunakan kelas HttpHelper. Seiring bertumbuhnya aplikasi, kita mungkin perlu memanggil HttpHelper beberapa kali di bagian berbeda dari aplikasi, dan akan menjadi pemborosan sumber daya untuk membuat banyak instance kelas setiap kali perlu menggunakan metode dari kelas tersebut.</p>
+<p>Salah satu cara untuk menghindari ini adalah dengan menggunakan konstruktor factory dan pola singleton: ini memastikan Anda hanya menginstansiasi kelas sekali. Ini berguna setiap kali hanya satu objek yang diperlukan di aplikasi Anda dan ketika Anda perlu mengakses sumber daya yang ingin Anda bagikan di seluruh aplikasi.</p>
+<p>Di file <code>httphelper.dart</code>, tambahkan kode berikut ke kelas <code>HttpHelper</code>, tepat di bawah deklarasi:</p>
+<pre><code>static final HttpHelper _httpHelper = HttpHelper._internal();
+HttpHelper._internal();
+factory HttpHelper() {
+    return _httpHelper;
+}</code></pre>
+<p>Ada beberapa pola di Dart dan Flutter yang memungkinkan Anda berbagi layanan dan logika bisnis di aplikasi Anda, dan pola singleton hanya salah satunya. Pilihan lain termasuk Dependency injection, Inherited Widgets, dan Provider serta Service Locators. Ada artikel menarik tentang pilihan berbeda yang tersedia di Flutter di <a href="http://bit.ly/flutter_DI" target="_blank">http://bit.ly/flutter_DI</a> </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 2: Mengirim Data ke Web Service (POST)" duration="30">
+        <p>Pada praktikum ini, Anda akan belajar bagaimana melakukan aksi POST pada layanan web. Ini berguna setiap kali Anda terhubung ke layanan web yang tidak hanya menyediakan data tetapi juga memungkinkan Anda untuk mengubah informasi yang disimpan di sisi server. Biasanya, Anda harus memberikan beberapa bentuk otentikasi ke layanan, tetapi untuk codelab ini, karena kita menggunakan layanan mock, ini tidak diperlukan.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah menyelesaikan Praktikum 1 dan telah menyiapkan stub POST di layanan mock API Anda.</p>
+</aside>
+<p>Untuk melakukan aksi POST pada layanan web, ikuti langkah-langkah berikut:</p>
+<ol type="1" start="1">
+<li>Masuk ke layanan Mock Lab di<a href="https://app.wiremock.cloud/" target="_blank">https://app.wiremock.cloud/</a> dan klik pada bagian Stubs dari API contoh. Kemudian, buat stub baru.</li>
+<li>Lengkapi permintaan sebagai berikut:</li>
+</ol>
+<ul>
+<li>Nama: Post Pizza</li>
+<li>Verb: POST</li>
+<li>Alamat: /pizza</li>
+<li>Status: 201</li>
+<li>Tipe Body: json</li>
+<li>Body: {&#34;message&#34;: &#34;The pizza was posted&#34;}</li>
+</ul>
+<p class="image-container"><img style="width: 391.00px" src="img/cb71a534bac6d454.png"></p>
+<p>Tangkapan layar dari WireMock Post Pizza stub, menampilkan konfigurasi stub dengan nama, verb POST, path, status 201, dan body respons JSON.</p>
+<ol type="1" start="3">
+<li>Tekan tombol Save.</li>
+<li>Di proyek Flutter, di file httphelper.dart, di kelas HttpHelper, buat metode baru bernama postPizza, sebagai berikut:</li>
+</ol>
+<pre><code>Future&lt;String&gt; postPizza(Pizza pizza) async {
+  const postPath = &#39;/pizza&#39;;
+  String post = json.encode(pizza.toJson());
+  Uri url = Uri.https(authority, postPath);
+  http.Response r = await http.post(
+    url,
+    body: post,
+  );
+  return r.body;
+}</code></pre>
+<ol type="1" start="5">
+<li>Di proyek, buat file baru bernama pizza_detail.dart.</li>
+<li>Di bagian atas file baru, tambahkan impor yang diperlukan:</li>
+</ol>
+<p>import &#39;package:flutter/material.dart&#39;;</p>
+<p>import &#39;pizza.dart&#39;;</p>
+<p>import &#39;httphelper.dart&#39;;</p>
+<ol type="1" start="7">
+<li>Buat StatefulWidget bernama PizzaDetailScreen:</li>
+</ol>
+<pre><code>class PizzaDetailScreen extends StatefulWidget {
+  const PizzaDetailScreen({super.key});
+  @override
+  State&lt;PizzaDetailScreen&gt; createState() =&gt; _PizzaDetailScreenState();
+}
+
+class _PizzaDetailScreenState extends State&lt;PizzaDetailScreen&gt; {
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder();
+  }
+}</code></pre>
+<ol type="1" start="8">
+<li>Di bagian atas kelas _PizzaDetailScreenState, tambahkan lima TextEditingController. Ini akan berisi data untuk objek Pizza yang akan diposting nanti. Juga, tambahkan String yang akan berisi hasil dari permintaan POST:</li>
+</ol>
+<pre><code>final TextEditingController txtId = TextEditingController();
+final TextEditingController txtName = TextEditingController();
+final TextEditingController txtDescription = TextEditingController();
+final TextEditingController txtPrice = TextEditingController();
+final TextEditingController txtImageUrl = TextEditingController();
+String operationResult = &#39;&#39;;</code></pre>
+<ol type="1" start="9">
+<li>Override metode dispose() untuk membuang controller:</li>
+</ol>
+<pre><code>@override
+void dispose() {
+  txtId.dispose();
+  txtName.dispose();
+  txtDescription.dispose();
+  txtPrice.dispose();
+  txtImageUrl.dispose();
+  super.dispose();
+}</code></pre>
+<ol type="1" start="10">
+<li>Di metode build() dari kelas, kembalikan Scaffold, yang AppBar-nya berisi Text &#34;Pizza Detail&#34; dan body-nya berisi Padding dan SingleChildScrollView yang berisi Column:</li>
+</ol>
+<pre><code>return Scaffold(
+  appBar: AppBar(
+    title: const Text(&#39;Pizza Detail&#39;),
+  ),
+  body: Padding(
+      padding: const EdgeInsets.all(12),
+      child: SingleChildScrollView(
+        child: Column(children: []),
+      )));</code></pre>
+<ol type="1" start="11">
+<li>Untuk properti children dari Column, tambahkan beberapa Text yang akan berisi hasil dari post, lima TextField, masing-masing terikat ke TextEditingController mereka sendiri, dan ElevatedButton untuk menyelesaikan aksi POST (metode postPizza akan dibuat selanjutnya). Juga, tambahkan SizedBox untuk menjauhkan widget di layar:</li>
+</ol>
+<pre><code>Text(
+  operationResult,
+  style: TextStyle(
+      backgroundColor: Colors.green[200],
+      color: Colors.black),
+),
+const SizedBox(
+  height: 24,
+),
+TextField(
+  controller: txtId,
+  decoration: const InputDecoration(hintText: &#39;Insert ID&#39;),
+),
+const SizedBox(
+  height: 24,
+),
+TextField(
+  controller: txtName,
+  decoration: const InputDecoration(hintText: &#39;Insert Pizza Name&#39;),
+),
+const SizedBox(
+  height: 24,
+),
+TextField(
+  controller: txtDescription,
+  decoration: const InputDecoration(hintText: &#39;Insert Description&#39;),
+),
+const SizedBox(
+  height: 24,
+),
+TextField(
+  controller: txtPrice,
+  decoration: const InputDecoration(hintText: &#39;Insert Price&#39;),
+),
+const SizedBox(
+  height: 24,
+),
+TextField(
+  controller: txtImageUrl,
+  decoration: const InputDecoration(hintText: &#39;Insert Image Url&#39;),
+),
+const SizedBox(
+  height: 48,
+),
+ElevatedButton(
+    child: const Text(&#39;Send Post&#39;),
+    onPressed: () {
+      postPizza();
+    })           </code></pre>
+<ol type="1" start="12">
+<li>Di bagian bawah kelas _PizzaDetailScreenState, tambahkan metode postPizza:</li>
+</ol>
+<pre><code>Future postPizza() async {
+  HttpHelper helper = HttpHelper();
+  Pizza pizza = Pizza();
+  pizza.id = int.tryParse(txtId.text);
+  pizza.pizzaName = txtName.text;
+  pizza.description = txtDescription.text;
+  pizza.price = double.tryParse(txtPrice.text);
+  pizza.imageUrl = txtImageUrl.text;
+  String result = await helper.postPizza(pizza);
+  setState(() {
+    operationResult = result;
+  });
+}</code></pre>
+<ol type="1" start="13">
+<li>Di file main.dart, impor file pizza_detail.dart</li>
+<li>Di Scaffold dari metode build() kelas _MyHomePageState, tambahkan FloatingActionButton yang akan navigasi ke rute PizzaDetail:</li>
+</ol>
+<pre><code>floatingActionButton: FloatingActionButton(
+  child: const Icon(Icons.add),
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =&gt; const PizzaDetailScreen()),
+    );
+  }),</code></pre>
+<ol type="1" start="15">
+<li>Jalankan aplikasi. Di layar utama, tekan FloatingActionButton untuk navigasi ke rute PizzaDetail.</li>
+<li>Tambahkan detail pizza di field teks dan tekan tombol Send Post. Anda seharusnya melihat hasil yang sukses, seperti yang ditunjukkan pada Gambar berikut ini:</li>
+</ol>
+<p class="image-container"><img style="width: 267.00px" src="img/6d1e46c50d6e7874.png"></p>
+<p>Tangkapan layar dari layar Pizza Detail dengan pesan sukses &#34;The pizza was posted&#34; setelah menekan tombol Send Post.</p>
+<p>Layanan web (khususnya, layanan web RESTful) bekerja dengan verb. Ada empat aksi utama (atau verb) yang umumnya Anda gunakan ketika data terlibat: GET, POST, PUT, dan DELETE.</p>
+<p>Dalam praktikum 2 ini, kita menggunakan POST, yang merupakan verb yang secara konvensional digunakan ketika aplikasi meminta server web untuk menyisipkan potongan data baru.</p>
+<p>Inilah sebabnya kita harus menginstruksikan layanan web mock untuk menerima POST di alamat /pizza terlebih dahulu, sehingga dapat mencoba mengirim beberapa data ke sana dan membuatnya merespons dengan pesan sukses.</p>
+<p>Setelah membuat stub POST di Wiremock, kita membuat metode postPizza, untuk benar-benar melakukan panggilan ke server. Karena ini mengambil string JSON, kita menggunakan metode json.encode untuk mengubah Map menjadi JSON.</p>
+<aside class="warning"><h3 is-upgraded><strong>Soal 2</strong></h3>
+<ul>
+<li>Tambahkan <strong>field baru </strong>dalam JSON maupun POST ke Wiremock!</li>
+<li>Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 2 dengan pesan <strong>&#34;W14: Jawaban Soal 2&#34;</strong></li>
+</ul>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 3: Memperbarui Data di Web Service (PUT)" duration="30">
+        <p>Dalam praktikum ini, Anda akan belajar cara melakukan aksi PUT pada layanan web. Ini berguna ketika aplikasi Anda perlu mengedit data yang ada di layanan web.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah menyelesaikan Praktikum 2 dan telah menyiapkan stub PUT di layanan mock API Anda.</p>
+</aside>
+<p>Untuk melakukan aksi PUT pada layanan web, ikuti langkah-langkah berikut:</p>
+<ol type="1" start="1">
+<li>Masuk ke layanan Wiremock di<a href="https://app.wiremock.cloud" target="_blank">https://app.wiremock.cloud</a> dan klik pada bagian Stubs dari API contoh. Kemudian, buat stub baru.</li>
+<li>Lengkapi permintaan sebagai berikut:</li>
+</ol>
+<ul>
+<li>Nama: Put Pizza</li>
+<li>Verb: PUT</li>
+<li>Alamat: /pizza</li>
+<li>Status: 200</li>
+<li>Tipe Body: json</li>
+<li>Body: {&#34;message&#34;: &#34;Pizza was updated&#34;}</li>
+</ul>
+<p class="image-container"><img style="width: 317.00px" src="img/7c8814b596f8f422.png"></p>
+<p>Tangkapan layar dari WireMock Put Pizza stub, menampilkan konfigurasi stub dengan nama, verb PUT, path, status 200, dan body respons JSON.</p>
+<ol type="1" start="3">
+<li>Klik tombol Save.</li>
+<li>Di proyek Flutter, tambahkan metode putPizza ke kelas HttpHelper di file http_helper.dart:</li>
+</ol>
+<pre><code>Future&lt;String&gt; putPizza(Pizza pizza) async {
+  const putPath = &#39;/pizza&#39;;
+  String put = json.encode(pizza.toJson());
+  Uri url = Uri.https(authority, putPath);
+  http.Response r = await http.put(
+    url,
+    body: put,
+  );
+  return r.body;
+}</code></pre>
+<ol type="1" start="5">
+<li>Di kelas PizzaDetailScreen di file pizza_detail.dart, tambahkan dua properti, sebuah Pizza dan sebuah boolean, dan di konstruktor, atur kedua properti tersebut:</li>
+</ol>
+<pre><code>final Pizza pizza;
+final bool isNew;
+const PizzaDetailScreen(
+    {super.key, required this.pizza, required this.isNew});</code></pre>
+<ol type="1" start="6">
+<li>Di kelas PizzaDetailScreenState, override metode initState. Ketika properti isNew dari kelas PizzaDetail bukan baru, itu mengatur konten TextField dengan nilai-nilai objek Pizza yang diteruskan:</li>
+</ol>
+<pre><code>@override
+void initState() {
+  if (!widget.isNew) {
+    txtId.text = widget.pizza.id.toString();
+    txtName.text = widget.pizza.pizzaName;
+    txtDescription.text = widget.pizza.description;
+    txtPrice.text = widget.pizza.price.toString();
+    txtImageUrl.text = widget.pizza.imageUrl;
+  }
+  super.initState();
+}</code></pre>
+<ol type="1" start="7">
+<li>Edit metode savePizza sehingga memanggil metode helper.postPizza ketika isNew benar, dan helper.putPizza ketika salah:</li>
+</ol>
+<pre><code>Future savePizza() async {
+...
+    final result = await (widget.isNew
+  ? helper.postPizza(pizza)
+  : helper.putPizza(pizza));    
+  setState(() {
+      operationResult = result;
+    });
+  }</code></pre>
+<ol type="1" start="8">
+<li>Di file main.dart, di metode build dari _MyHomePageState, tambahkan properti onTap ke ListTile sehingga ketika pengguna mengetuknya, aplikasi akan mengubah rute dan menampilkan layar PizzaDetail, meneruskan pizza saat ini dan false untuk parameter isNew:</li>
+</ol>
+<pre><code>return ListTile(
+    title: Text(pizzas.data![position].pizzaName),
+    subtitle: Text(pizzas.data![position].description +
+                  &#39; - € &#39; +
+                  pizzas.data![position].price.toString()),
+    onTap: () {
+       Navigator.push(
+          context,
+          MaterialPageRoute(
+             builder: (context) =&gt; PizzaDetailScreen(
+                pizza: pizzas.data![position], isNew: false)),
+    );</code></pre>
+<ol type="1" start="9">
+<li>Di floatingActionButton, teruskan Pizza baru dan true untuk parameter isNew ke rute PizzaDetail:</li>
+</ol>
+<pre><code>floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =&gt; PizzaDetailScreen(
+                        pizza: Pizza(),
+                        isNew: true,
+                      )),            
+           );
+      }),
+);</code></pre>
+<ol type="1" start="10">
+<li>Jalankan aplikasi. Di layar utama, ketuk Pizza apa pun untuk navigasi ke rute PizzaDetail.</li>
+<li>Edit detail pizza di field teks dan tekan tombol Save. Anda seharusnya melihat pesan yang menunjukkan bahwa detail pizza telah diperbarui.</li>
+</ol>
+<aside class="warning"><h3 is-upgraded><strong>Soal 3</strong></h3>
+<ul>
+<li>Ubah salah satu data dengan Nama dan NIM Anda, lalu perhatikan hasilnya di Wiremock.</li>
+<li>Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 3 dengan pesan <strong>&#34;W14: Jawaban Soal 3&#34;</strong></li>
+</ul>
+</aside>
+<p>Praktikum ini cukup mirip dengan yang sebelumnya, tetapi di sini menggunakan PUT, verb yang secara konvensional digunakan ketika aplikasi meminta server web untuk memperbarui potongan data yang ada.</p>
+<p>Inilah sebabnya harus menginstruksikan layanan web mock untuk menerima PUT di alamat /pizza, sehingga dapat mencoba mengirim beberapa data ke sana.</p>
+<p>Perhatikan bahwa alamat /pizza persis sama dengan yang diatur untuk POST, satu-satunya yang berubah adalah verb. Dengan kata lain, Anda dapat melakukan aksi berbeda di URL yang sama, tergantung pada verb yang Anda gunakan.</p>
+<p>Setelah membuat stub PUT di Wiremock, kita membuat metode putPizza, yang bekerja seperti metode postPizza, kecuali untuk verb-nya.</p>
+<p>Untuk membuat pengguna memperbarui Pizza yang ada, kita menggunakan layar yang sama, PizzaDetail, tetapi juga meneruskan objek Pizza yang ingin diperbarui dan nilai Boolean yang memberi tahu apakah objek Pizza adalah objek baru (sehingga harus menggunakan POST) atau yang ada (sehingga harus menggunakan PUT).</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Praktikum 4: Menghapus Data dari Web Service (DELETE)" duration="15">
+        <p>Dalam praktikum ini, Anda akan belajar cara melakukan aksi DELETE pada layanan web. Ini berguna ketika aplikasi Anda perlu menghapus data yang ada di layanan web.</p>
+<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah menyelesaikan Praktikum 3 dan telah menyiapkan stub DELETE di layanan mock API Anda.</p>
+</aside>
+<p>Untuk melakukan aksi DELETE pada layanan web, ikuti langkah-langkah berikut:</p>
+<ol type="1" start="1">
+<li>Masuk ke layanan Wiremock di<a href="https://app.wiremock.cloud" target="_blank">https://app.wiremock.cloud</a> dan klik pada bagian Stubs dari API contoh. Kemudian, buat stub baru.</li>
+<li>Lengkapi permintaan dengan data berikut:</li>
+</ol>
+<ul>
+<li>Nama: Delete Pizza</li>
+<li>Verb: DELETE</li>
+<li>Alamat: /pizza</li>
+<li>Status: 200</li>
+<li>Tipe Body: json</li>
+<li>Body: {&#34;message&#34;: &#34;Pizza was deleted&#34;}</li>
+</ul>
+<ol type="1" start="3">
+<li>Simpan stub baru.</li>
+<li>Di proyek Flutter, tambahkan metode deletePizza ke kelas HttpHelper di file http_helper.dart:</li>
+</ol>
+<pre><code>Future&lt;String&gt; deletePizza(int id) async {
+  const deletePath = &#39;/pizza&#39;;
+  Uri url = Uri.https(authority, deletePath);
+  http.Response r = await http.delete(
+    url,
+  );
+  return r.body;
+}</code></pre>
+<ol type="1" start="5">
+<li>Di file main.dart, di metode build dari kelas _MyHomePageState, refactor itemBuilder dari ListView.builder sehingga ListTile terkandung dalam widget Dismissible, sebagai berikut:</li>
+</ol>
+<pre><code>return ListView.builder(
+    itemCount: (pizzas.data == null) ? 0 : pizzas.data.length,
+    itemBuilder: (BuildContext context, int position) {
+        return Dismissible(
+                    key: Key(position.toString()),
+                    onDismissed: (item) {
+                      HttpHelper helper = HttpHelper();
+                      pizzas.data!.removeWhere(
+                          (element) =&gt; element.id == pizzas.data![position].id);
+                      helper.deletePizza(pizzas.data![position].id!);
+                    },
+                    child: ListTile(...</code></pre>
+<ol type="1" start="6">
+<li>Jalankan aplikasi. Ketika Anda swipe elemen apa pun dari daftar pizza, ListTile akan menghilang.</li>
+</ol>
+<aside class="warning"><h3 is-upgraded><strong>Soal 4</strong></h3>
+<ul>
+<li>Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 4 dengan pesan <strong>&#34;W14: Jawaban Soal 4&#34;</strong></li>
+</ul>
+</aside>
+<p>Praktikum ini cukup mirip dengan dua praktikum sebelumnya, tetapi di sini, menggunakan DELETE, verb yang secara konvensional digunakan ketika aplikasi meminta server web untuk menghapus potongan data yang ada.</p>
+<p>Inilah sebabnya harus menginstruksikan layanan web mock untuk menerima DELETE di alamat /pizza, sehingga dapat mencoba mengirim beberapa data ke sana dan itu akan merespons dengan pesan sukses.</p>
+<p>Setelah membuat stub DELETE di Wiremock, kita membuat metode deletePizza, yang bekerja seperti metode postPizza dan putPizza; itu hanya memerlukan ID pizza untuk menghapusnya.</p>
+<p>Untuk membuat pengguna menghapus Pizza yang ada, kita menggunakan widget Dismissible, yang digunakan ketika Anda ingin swipe elemen (kiri atau kanan) untuk menghapusnya dari layar.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tugas Kelompok PBL" duration="90">
+        <ol type="1" start="1">
+<li>Selesaikan semua fitur di aplikasi PBL kelompok Anda mulai dari materi Codelab 9: Camera hingga Codelab 14: Restful API.</li>
+<li>Push progress pekerjaan PBL kelompok Anda ke repository git, lalu presentasikan progress pada pertemuan berikutnya kepada dosen Anda!</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Selamat!" duration="0">
+        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait Restful API di Flutter dan contoh penggunaannya.</p>
+<p>Dalam codelab terakhir ini, Anda telah melihat beberapa cara untuk mengelola data di aplikasi Flutter dan membaca serta menulis data ke layanan web.</p>
+<p>Pertama, Anda telah melihat proses mengonversi model Dart menjadi format JSON, format data yang ringan dan diterima secara universal.</p>
+<p>Anda juga telah melihat cara menserialisasi dan mendeserialisasi objek Dart ke dan dari JSON serta belajar cara menangani data JSON yang tidak kompatibel dengan model aplikasi Anda, dengan beberapa strategi untuk menyesuaikan dan mengatasinya.</p>
+<p>Anda telah menggunakan SharedPreferences dari pekan lalu, sistem penyimpanan key-value sederhana yang memungkinkan menyimpan jumlah data kecil. Anda kemudian telah melihat cara menggunakan SecureStorage sebagai metode untuk menyimpan data sensitif seperti kata sandi.</p>
+<p>Anda belajar cara mengakses filesystem dengan memanfaatkan paket path_provider, yang memungkinkan pengembang untuk mengambil lokasi di filesystem perangkat. Anda telah melihat cara membuat, membaca, dan menulis file di perangkat Anda.</p>
+<p>Mengalihkan fokus ke komunikasi dengan layanan web, Anda telah belajar tentang desain klien HTTP dan melihat cara mengambil data dari layanan web serta mengirim data ke server menggunakan verb POST, PUT, dan DELETE.</p>
+<p>Singkatnya, dalam codelab ini, Anda mendapatkan pandangan mendalam tentang penanganan JSON, persistensi data, penyimpanan aman, dan komunikasi dengan internet. Anda sekarang telah dilengkapi dengan pengetahuan dan keterampilan yang diperlukan untuk mengelola data secara efektif dan berkomunikasi dengan server remote di aplikasi Flutter Anda.</p>
+<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
+<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<ul>
+<li><a href="https://medium.com/flutter-community/in-this-tutorial-we-will-cover-the-three-forms-of-the-accepted-dependency-injection-in-flutter-8154aa147982" target="_blank">https://medium.com/flutter-community/in-this-tutorial-we-will-cover-the-three-forms-of-the-accepted-dependency-injection-in-flutter-8154aa147982</a> </li>
+<li><a href="https://wiremock.org/docs/getting-started/" target="_blank">https://wiremock.org/docs/getting-started/</a> </li>
+<li><a href="https://blog.postman.com/using-postman-proxy-to-capture-and-inspect-api-calls-from-ios-or-android-devices/" target="_blank">https://blog.postman.com/using-postman-proxy-to-capture-and-inspect-api-calls-from-ios-or-android-devices/</a> </li>
+</ul>
+<h2 is-upgraded><strong>Referensi</strong></h2>
+<ul>
+<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
+<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
+<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
