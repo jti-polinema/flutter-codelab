@@ -65,6 +65,145 @@
 
       </google-codelab-step>
     
+      <google-codelab-step label="Minggu 1 — Mobile Development Ecosystem &amp; Flutter Refresh" duration="20">
+        <h2 is-upgraded><strong>Tujuan pembelajaran</strong></h2>
+<p>Di minggu pertama ini, mahasiswa akan memahami:</p>
+<ul>
+<li>evolusi pengembangan aplikasi mobile</li>
+<li>perbedaan native, hybrid, dan cross-platform</li>
+<li>arsitektur dasar Flutter</li>
+<li>bahasa Dart sebagai fondasi pengembangan Flutter</li>
+<li>cara menyiapkan environment kerja untuk praktikum</li>
+</ul>
+
+<h2 is-upgraded><strong>1. Evolusi Mobile Development</strong></h2>
+<p>Perkembangan aplikasi mobile dimulai dari pendekatan native, yaitu aplikasi yang dibuat khusus untuk satu platform tertentu seperti Android menggunakan Java/Kotlin atau iOS menggunakan Swift/Objective-C. Metode ini memberikan performa yang sangat baik, tetapi biaya pengembangan menjadi lebih tinggi karena satu fitur harus dikembangkan berulang untuk dua platform.</p>
+<p>Seiring kebutuhan pasar global, muncul pendekatan hybrid dan cross-platform. Framework seperti Flutter memungkinkan satu source code dapat dijalankan di Android dan iOS. Ini membuat proses pengembangan lebih efisien, cepat, dan konsisten.</p>
+
+<h2 is-upgraded><strong>2. Native vs Cross-Platform</strong></h2>
+<ul>
+<li><strong>Native</strong>: aplikasi dibuat khusus untuk Android atau iOS, performa optimal, akses fitur device sangat kuat.</li>
+<li><strong>Hybrid</strong>: aplikasi dibangun menggunakan teknologi web yang dikemas dalam native container.</li>
+<li><strong>Cross-platform</strong>: satu basis kode untuk beberapa platform, contoh: Flutter, React Native, Kotlin Multiplatform.</li>
+</ul>
+<p>Flutter masuk dalam kategori cross-platform modern dengan pendekatan UI declarative dan render engine yang kuat. Karena itu, Flutter sangat cocok untuk pengembangan aplikasi produktif, dashboard, e-commerce, layanan publik, dan startup prototype.</p>
+
+<h2 is-upgraded><strong>3. Apa itu Flutter?</strong></h2>
+<p>Flutter adalah framework open source yang dikembangkan oleh Google. Flutter memungkinkan pengembang membangun aplikasi mobile, web, desktop, dan embedded device dengan satu codebase. Flutter menggunakan bahasa Dart dan memanfaatkan engine rendering Skia untuk menghasilkan tampilan yang konsisten di platform berbeda.</p>
+<p>Flutter memiliki beberapa keunggulan utama:</p>
+<ul>
+<li>UI yang konsisten di Android dan iOS</li>
+<li>hot reload untuk melihat perubahan kode secara cepat</li>
+<li>rendering yang cepat dan dekat dengan performa native</li>
+<li>komunitas yang besar dan materi pembelajaran yang luas</li>
+</ul>
+
+<h2 is-upgraded><strong>4. Arsitektur Dasar Flutter</strong></h2>
+<p>Secara umum, aplikasi Flutter terdiri dari beberapa komponen penting:</p>
+<ul>
+<li><strong>Framework Flutter</strong>: menyediakan widget, layout, rendering, animation, dan API aplikasi.</li>
+<li><strong>Dart language</strong>: bahasa utama yang digunakan untuk menulis logika program dan UI.</li>
+<li><strong>Engine</strong>: komponen rendering dan runtime yang menghubungkan aplikasi dengan platform.</li>
+<li><strong>Platform embedder</strong>: antarmuka yang menghubungkan Flutter dengan Android/iOS.</li>
+</ul>
+<p>Ketika aplikasi Flutter berjalan, UI dibuat dalam bentuk <strong>widget tree</strong>. Widget adalah unit dasar penyusun interface. Widget dapat disusun, dikombinasikan, dan dibangun ulang saat state berubah.</p>
+
+<h2 is upgraded><strong>5. Dart Refresh</strong></h2>
+<p>Flutter menggunakan Dart sebagai bahasa utama. Dart adalah bahasa modern yang memadukan beberapa konsep pemrograman berorientasi objek dan fungsional. Beberapa konsep dasar yang perlu dikuasai di awal adalah:</p>
+<ul>
+<li>variabel dan tipe data</li>
+<li>fungsi</li>
+<li>class dan object</li>
+<li>constructor</li>
+<li>null safety</li>
+<li>kontrol alur if/else dan loop</li>
+</ul>
+<p>Contoh dasar:</p>
+<pre><code>void main() {
+  String nama = 'Mahasiswa';
+  int umur = 20;
+  print('Halo $nama, umur Anda $umur tahun');
+}</code></pre>
+<p>Dalam Dart, fungsi dan kelas sangat penting. Struktur aplikasi Flutter bahkan dibuat berbasis class dan widget.</p>
+<p><strong>Catatan penting:</strong> materi dasar Dart tidak diperkenankan menggunakan Gen AI. Mahasiswa harus memahami sintaks dasar secara mandiri dan didukung dengan ujian tertutup untuk menilai pemahaman fundamental.</p>
+
+<h2 is-upgraded><strong>6. Referensi Dart Dasar</strong></h2>
+<p>Untuk mempelajari Dart dasar secara mandiri, gunakan referensi berikut:</p>
+<ul>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">Official Dart Language Tour</a></li>
+</ul>
+
+<h2 is-upgraded><strong>7. Widget dan Element pada Flutter</strong></h2>
+<p>Gaya pengembangan aplikasi menggunakan Flutter sedikit berbeda dengan aplikasi pada umumnya, di mana UI dibuat menggunakan widget. Widget dapat dianggap seperti balok LEGO: satu komponen kecil dapat digabungkan dengan komponen lainnya menjadi tampilan yang lebih kompleks.</p>
+<p>Flutter memiliki dua jenis widget utama:</p>
+<ul>
+<li><strong>StatelessWidget</strong>: widget yang tidak berubah setelah dibangun.</li>
+<li><strong>StatefulWidget</strong>: widget yang dapat berubah saat ada event atau state update.</li>
+</ul>
+<p>Widget disusun dalam bentuk tree, dimana satu widget menjadi parent dan widget lain menjadi child. Perubahan state akan memicu rebuild UI secara deklaratif.</p>
+
+<h2 is-upgraded><strong>8. Praktikum Minggu 1</strong></h2>
+<p>Tujuan praktikum minggu ini adalah memastikan masing-masing mahasiswa sudah siap mengembangkan aplikasi Flutter dari awal:</p>
+<ol>
+<li>Instalasi Git dan verifikasi versi Git</li>
+<li>Instalasi VS Code dan extension Flutter</li>
+<li>Instalasi Flutter SDK</li>
+<li>Instalasi Android Studio dan Android SDK</li>
+<li>Verifikasi dengan perintah <code>flutter doctor</code></li>
+<li>Membuat project Flutter pertama</li>
+<li>Menjalankan aplikasi pada emulator atau perangkat fisik</li>
+</ol>
+
+<h3 is-upgraded><strong>Langkah 1: Verifikasi Git</strong></h3>
+<pre><code>git --version</code></pre>
+<p>Jika perintah berhasil menampilkan versi Git, maka instalasi Git Anda sudah benar.</p>
+
+<h3 is-upgraded><strong>Langkah 2: Verifikasi Flutter</strong></h3>
+<pre><code>flutter --version</code></pre>
+<p>Jika ada masalah pada PATH, pastikan folder Flutter SDK sudah ditambahkan ke environment variable.</p>
+
+<h3 is-upgraded><strong>Langkah 3: Membuat project Flutter</strong></h3>
+<pre><code>flutter create nama_aplikasi</code></pre>
+<p>Contoh:</p>
+<pre><code>flutter create my_first_app</code></pre>
+<p>Setelah project berhasil dibuat, masuk ke folder project lalu jalankan:</p>
+<pre><code>cd my_first_app
+flutter run</code></pre>
+
+<h3 is-upgraded><strong>Langkah 4: Uji aplikasi</strong></h3>
+<p>Jika emulator atau perangkat sudah siap, aplikasi default Flutter akan muncul dengan tampilan counter sederhana. Ini menandakan setup environment Anda sudah berjalan dengan benar.</p>
+
+<h2 is-upgraded><strong>9. Kesalahan Umum dan Solusi</strong></h2>
+<ul>
+<li><strong>flutter: command not found</strong> → PATH Flutter belum ditambahkan ke system environment.</li>
+<li><strong>Android license not accepted</strong> → jalankan <code>flutter doctor --android-licenses</code>.</li>
+<li><strong>Emulator tidak muncul</strong> → pastikan Android SDK dan emulator telah terinstall dengan benar.</li>
+<li><strong>Git tidak dikenali</strong> → cek install Git dan environment variable.</li>
+</ul>
+
+<h2 is-upgraded><strong>10. Tugas Minggu 1</strong></h2>
+<ol>
+<li>Buat project Flutter baru.</li>
+<li>Jalankan aplikasi pada emulator atau perangkat fisik.</li>
+<li>Pastikan <code>flutter doctor</code> menunjukkan environment yang sehat.</li>
+<li>Upload project ke repository GitHub pribadi Anda.</li>
+<li>Catat hasil setup dan kendala yang Anda temui.</li>
+</ol>
+
+<h2 is-upgraded><strong>11. Refleksi</strong></h2>
+<p>Setelah mengikuti minggu pertama, refleksikan pertanyaan berikut:</p>
+<ul>
+<li>Kenapa mobile development perlu memahami arsitektur platform?</li>
+<li>Apa keuntungan cross-platform dibanding native?</li>
+<li>Kenapa Dart menjadi bahasa utama Flutter?</li>
+<li>Kenapa environment setup harus benar sebelum mulai membangun aplikasi?</li>
+</ul>
+
+<aside class="special"><p><strong>Catatan:</strong> Minggu 1 berfokus pada pemahaman dasar dan setup lingkungan. Untuk materi fundamental, penggunaan Gen AI tidak diperkenankan. Praktik dan ujian dilakukan untuk memastikan kompetensi mahasiswa benar-benar terbentuk.</p></aside>
+
+      </google-codelab-step>
+
       <google-codelab-step label="Pengenalan Flutter" duration="2">
         <h2 is-upgraded><strong>Apa itu Flutter?</strong></h2>
 <p>Flutter adalah sebuah framework open source yang dibuat oleh Google. Google membuat flutter dengan tujuan membangun sebuah framework untuk membuat UI yang modern, native dan reactive yang dapat berjalan di sistem operasi iOS maupun Android. Tidak hanya pada smartphone google juga membuat flutter untuk desktop, web dan embedded device.</p>

@@ -6,9 +6,9 @@
   "updated": "2023-10-08T14:09:36Z",
   "id": "01-pengenalan",
   "duration": 163,
-  "title": "#01 | Pengantar Pemrograman Mobile",
+  "title": "#01 | Minggu 1 - Mobile Development Ecosystem & Flutter Refresh",
   "authors": "Habibie Ed Dien",
-  "summary": "Modul pertama ini berisi pengantar tentang Flutter Framework dan persiapan perangkat lunak yang perlu dipasang pada komputer Anda.",
+  "summary": "Minggu 1 membahas ekosistem pengembangan mobile, perbandingan native vs cross-platform, arsitektur Flutter, refresh Dart dasar, dan persiapan perangkat lunak untuk praktikum.",
   "source": "1RVJ9ljT-n1LJx6xM74eMXM4onLUpxwrKNm7i525CLEk",
   "theme": "mobileflutter",
   "status": [
