@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#01 | Mobile Development Ecosystem &amp; Flutter Refresh</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="01-minggu-1-mobile-development-ecosystem-flutter-refresh" title="#01 | Mobile Development Ecosystem &amp; Flutter Refresh" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Selamat datang" duration="5">
+<p><strong>Terakhir diperbarui:</strong> 23 Agustus 2026<br><strong>Penulis:</strong> Habibie Ed Dien</p>
+<h2 is-upgraded>Tujuan pembelajaran</h2><p>Setelah menyelesaikan codelab ini, mahasiswa mampu:</p><ul>
+<li>menjelaskan evolusi pengembangan mobile serta perbedaan native, hybrid, dan cross-platform;</li><li>menjelaskan arsitektur Flutter, peran Dart, struktur proyek, dan widget tree;</li><li>mengulang dasar Dart: variabel, tipe data, fungsi, class, dan null safety;</li><li>menyiapkan Flutter, Android SDK, emulator atau perangkat fisik, lalu menjalankan aplikasi pertama;</li><li>mengubah UI awal Flutter dan menyimpan hasilnya pada repository Git pribadi.</li></ul>
+<h2 is-upgraded>Persiapan</h2><ul><li>Laptop/PC, koneksi internet, dan akun GitHub atau GitLab.</li><li>Git, VS Code (ekstensi Flutter dan Dart), Flutter SDK, Android Studio, dan Android SDK.</li><li>Emulator Android aktif atau perangkat Android fisik dengan <em>USB debugging</em>.</li></ul>
+<aside class="warning"><p><strong>Kebijakan AI.</strong> Minggu 1 adalah materi fundamental. Jangan gunakan Gen AI untuk menyelesaikan latihan Dart, layout, atau tugas inti. Pemahaman diuji melalui praktik dan asesmen daring tertutup.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Ekosistem mobile dan Flutter" duration="15">
+<h2 is-upgraded>Evolusi pengembangan mobile</h2><p>Aplikasi mobile mula-mula umum dibangun secara <strong>native</strong>: Kotlin/Java untuk Android dan Swift/Objective-C untuk iOS. Kebutuhan merilis fitur yang sama di lebih dari satu platform mendorong pendekatan hybrid dan cross-platform.</p>
+<table><tr><th>Pendekatan</th><th>Ciri utama</th><th>Contoh</th></tr><tr><td>Native</td><td>Kode dan UI khusus setiap platform; akses API perangkat paling langsung.</td><td>Kotlin, Swift</td></tr><tr><td>Hybrid</td><td>Aplikasi web berjalan dalam pembungkus native.</td><td>Ionic, Cordova</td></tr><tr><td>Cross-platform</td><td>Satu basis kode menghasilkan aplikasi di beberapa platform.</td><td>Flutter, React Native</td></tr></table>
+<p>Pilihan teknologi bergantung pada performa, akses fitur perangkat, keahlian tim, biaya, dan target platform. Cross-platform tidak selalu menggantikan native; keduanya memiliki trade-off.</p>
+<h2 is-upgraded>Arsitektur Flutter dan peran Dart</h2><p>Flutter menggunakan Dart untuk UI dan logika aplikasi. Arsitekturnya terdiri dari <strong>framework</strong> (widget dan API), <strong>engine</strong> (rendering, teks, grafis), serta <strong>embedder</strong> yang menghubungkan aplikasi dengan Android, iOS, web, atau desktop. Dart mendukung <em>just-in-time</em> (JIT) saat pengembangan dan <em>ahead-of-time</em> (AOT) saat build rilis.</p>
+<h2 is-upgraded>Widget tree dan struktur proyek</h2><p>UI Flutter bersifat deklaratif: UI menggambarkan state saat ini. Semua bagian UI adalah widget yang disusun sebagai pohon, misalnya <code>MaterialApp</code> → <code>Scaffold</code> → <code>Column</code> → <code>Text</code>.</p><ul><li><code>lib/</code>: kode aplikasi; titik awal standar adalah <code>lib/main.dart</code>.</li><li><code>test/</code>: unit dan widget test.</li><li><code>android/</code>, <code>ios/</code>, <code>web/</code>: konfigurasi target platform.</li><li><code>pubspec.yaml</code>: metadata, dependency, aset, dan versi SDK.</li></ul>
+<h2 is-upgraded>Hot reload dan hot restart</h2><ul><li><strong>Hot reload</strong> memasukkan perubahan kode tanpa biasanya menghapus state; gunakan untuk iterasi UI.</li><li><strong>Hot restart</strong> menjalankan ulang aplikasi dari awal sehingga state hilang; gunakan ketika perubahan tidak dapat diterapkan melalui hot reload, misalnya inisialisasi aplikasi.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Dart refresh" duration="20">
+<h2 is-upgraded>Dasar Dart yang perlu diingat</h2><p>Dart adalah bahasa bertipe statis dengan inferensi tipe. Gunakan tipe eksplisit ketika membantu keterbacaan dan <code>final</code> untuk nilai yang hanya diinisialisasi sekali.</p>
+<pre><code>void main() {
+  String nama = 'Alya';
+  int semester = 3;
+  final bool aktif = true;
+  print(sapa(nama, semester));
+  final mahasiswa = Mahasiswa(nama: nama, aktif: aktif);
+  print(mahasiswa.status());
+}
+
+String sapa(String nama, int semester) =&gt; 'Halo $nama, semester $semester';
+
+class Mahasiswa {
+  Mahasiswa({required this.nama, required this.aktif});
+  final String nama;
+  final bool aktif;
+  String status() =&gt; aktif ? '$nama aktif' : '$nama tidak aktif';
+}</code></pre>
+<h2 is-upgraded>Null safety</h2><p>Nilai tidak boleh <code>null</code> secara default. Tambahkan <code>?</code> hanya jika nilai memang boleh kosong. Periksa sebelum memakai nilainya; jangan gunakan <code>!</code> kecuali Anda dapat membuktikan nilainya tidak null.</p><pre><code>String? namaPanggilan;
+print(namaPanggilan?.toUpperCase() ?? 'BELUM DIISI');</code></pre>
+<h2 is-upgraded>Latihan mandiri</h2><ol><li>Buat fungsi <code>hitungLuasPersegiPanjang</code> yang menerima panjang dan lebar bertipe <code>double</code>.</li><li>Buat class <code>Profil</code> dengan properti <code>nama</code>, <code>nim</code>, dan <code>email</code> yang boleh kosong.</li><li>Panggil keduanya dari <code>main()</code>, lalu tangani email kosong dengan aman.</li></ol>
+<aside class="special"><p>Gunakan referensi resmi Dart ketika mengalami kesulitan. Kerjakan latihan ini sendiri; jangan meminta AI menulis jawabannya.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Menyiapkan environment" duration="35">
+<h2 is-upgraded>Instalasi dan verifikasi</h2><ol><li>Instal Git dari <a href="https://git-scm.com/" target="_blank">git-scm.com</a>, lalu jalankan <code>git --version</code>.</li><li>Instal <a href="https://code.visualstudio.com/" target="_blank">VS Code</a> dan ekstensi <strong>Flutter</strong> (Dart ikut terpasang).</li><li>Instal Flutter SDK mengikuti <a href="https://docs.flutter.dev/get-started/install" target="_blank">panduan resmi</a>; tambahkan <code>flutter/bin</code> ke <code>PATH</code>.</li><li>Instal Android Studio beserta Android SDK, Command-line Tools, dan emulator melalui SDK Manager serta Device Manager.</li><li>Buka terminal baru dan jalankan perintah berikut.</li></ol>
+<pre><code>flutter --version
+flutter doctor
+flutter doctor --android-licenses</code></pre><p>Selesaikan setiap masalah yang menghambat target Android, lalu jalankan kembali <code>flutter doctor</code>.</p>
+<h2 is-upgraded>Target perangkat</h2><p><strong>Emulator:</strong> buat dan jalankan virtual device dari Android Studio Device Manager. <strong>Perangkat fisik:</strong> aktifkan Developer options dan USB debugging, hubungkan kabel data, lalu izinkan komputer saat diminta.</p><pre><code>flutter devices</code></pre><p>Perintah ini harus menampilkan minimal satu target. Jika perangkat fisik tidak muncul, cek kabel, driver USB, USB debugging, serta dialog otorisasi pada perangkat.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum: aplikasi Flutter pertama" duration="35">
+<h2 is-upgraded>Membuat dan menjalankan proyek</h2><p>Buka terminal pada folder kerja, lalu jalankan:</p><pre><code>flutter create my_first_app
+cd my_first_app
+flutter run</code></pre><p>Pilih emulator atau perangkat fisik bila diminta. Setelah aplikasi contoh tampil, tekan <code>r</code> di terminal untuk hot reload atau <code>R</code> untuk hot restart.</p>
+<h2 is-upgraded>Mengubah UI default</h2><p>Buka <code>lib/main.dart</code>, ganti isinya dengan kode berikut, simpan, dan amati hot reload.</p>
+<pre><code>import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Profil Mahasiswa')),
+        body: const Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.school, size: 72),
+            SizedBox(height: 16),
+            Text('Nama Anda', style: TextStyle(fontSize: 24)),
+            Text('Pemrograman Mobile — Minggu 1'),
+          ]),
+        ),
+      ),
+    );
+  }
+}</code></pre><p>Ganti <code>Nama Anda</code> dengan nama sendiri. Ubah ikon atau teks sekali, lalu bandingkan hasil hot reload dan hot restart.</p>
+<aside class="warning"><p>Jika build gagal, baca pesan error pertama yang relevan. Pastikan kurung, koma, dan nama widget sesuai; jangan menyalin solusi tanpa memahami penyebabnya.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Git dan portfolio" duration="20">
+<h2 is-upgraded>Inisialisasi repository</h2><p>Di dalam folder <code>my_first_app</code>, konfigurasikan identitas Git bila belum pernah dilakukan dan buat commit awal:</p><pre><code>git config --global user.name "Nama Anda"
+git config --global user.email "email@contoh.com"
+git init
+git add .
+git commit -m "feat: create week 1 Flutter profile app"</code></pre><p>Buat repository kosong di GitHub atau GitLab (tanpa README awal jika sudah ada lokal), lalu hubungkan dan unggah commit:</p><pre><code>git branch -M main
+git remote add origin https://github.com/USERNAME/my_first_app.git
+git push -u origin main</code></pre>
+<h2 is-upgraded>Struktur repository portfolio 16 minggu</h2><p>Gunakan satu repository pribadi untuk mendokumentasikan progres selama satu semester. Buat folder tugas mingguan dan artefaknya sejak awal dengan struktur berikut.</p>
+<pre><code>student-name-mobile-course/
+├── README.md
+├── 01-week-1-mobile-development-ecosystem-flutter-refresh/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 02-week-2-declarative-ui-responsive-design/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 03-week-3-navigation-state-management/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 04-week-4-networking-rest-api/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 05-week-5-local-storage-offline-first/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 06-week-6-authentication-security-fcm/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 07-week-7-clean-architecture/
+│   ├── README.md
+│   ├── lib/
+│   ├── test/
+│   └── screenshots/
+├── 08-week-8-mid-project-review/
+│   ├── README.md
+│   ├── docs/
+│   └── screenshots/
+├── 09-week-9-ai-assisted-development/
+│   ├── README.md
+│   ├── lib/
+│   ├── docs/
+│   └── screenshots/
+├── 10-week-10-ai-feature-integration/
+│   ├── README.md
+│   ├── lib/
+│   ├── docs/
+│   └── screenshots/
+├── 11-week-11-performance-optimization/
+│   ├── README.md
+│   ├── lib/
+│   ├── docs/
+│   └── screenshots/
+├── 12-week-12-testing-quality-assurance/
+│   ├── README.md
+│   ├── test/
+│   ├── coverage/
+│   └── screenshots/
+├── 13-week-13-ci-cd-automation/
+│   ├── README.md
+│   ├── .github/
+│   ├── workflows/
+│   └── screenshots/
+├── 14-week-14-deployment-monitoring/
+│   ├── README.md
+│   ├── docs/
+│   └── screenshots/
+├── 15-week-15-secure-mobile-development/
+│   ├── README.md
+│   ├── docs/
+│   └── screenshots/
+├── 16-week-16-final-project-expo/
+│   ├── README.md
+│   ├── lib/
+│   ├── docs/
+│   ├── screenshots/
+│   └── demo-video/
+├── notes/
+│   ├── reflections/
+│   ├── learning-journal/
+│   └── resources/
+└── portfolio-summary.md</code></pre>
+<p>Untuk Minggu 1, simpan aplikasi pada folder <code>01-week-1-mobile-development-ecosystem-flutter-refresh/</code>. Setiap folder tugas berisi README yang menjelaskan tujuan, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai. Gunakan <code>screenshots/</code> atau <code>docs/</code> sebagai bukti visual dan dokumentasi; simpan hasil test dan coverage pada folder yang sesuai.</p><aside class="special"><p>Jangan mengunggah token atau kredensial. Periksa <code>git status</code> sebelum commit.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Verifikasi, tugas, dan refleksi" duration="10">
+<h2 is-upgraded>Checklist verifikasi</h2><ul><li><code>flutter doctor</code> tidak memiliki masalah yang menghambat target Android.</li><li><code>flutter devices</code> mendeteksi emulator/perangkat fisik.</li><li>Aplikasi berjalan dan UI default telah diganti dengan profil sederhana.</li><li>Anda dapat menjelaskan perbedaan hot reload dan hot restart.</li><li>Repository remote berisi source code, README, screenshot, dan riwayat commit.</li></ul>
+<h2 is-upgraded>Mini assignment</h2><p>Buat aplikasi Profil Mahasiswa berdasarkan praktikum. Tambahkan NIM dan satu informasi tambahan menggunakan widget dasar. Push hasil ke repository portfolio sesuai struktur yang ditentukan. Sertakan screenshot dan penjelasan singkat atas satu kendala setup yang Anda temui.</p>
+<h2 is-upgraded>Refleksi</h2><ul><li>Kapan native lebih tepat dipilih daripada cross-platform?</li><li>Bagaimana perubahan state berhubungan dengan widget tree dan UI deklaratif?</li><li>Mengapa commit kecil dengan pesan jelas bermanfaat bagi pekerjaan tim dan portfolio?</li></ul>
+<h2 is-upgraded>Referensi pendukung</h2><ul><li><a href="https://docs.flutter.dev/get-started/install" target="_blank">Flutter installation guide</a></li><li><a href="https://docs.flutter.dev/get-started/flutter-for/declarative" target="_blank">Flutter: declarative UI</a></li><li><a href="https://dart.dev/language" target="_blank">Official Dart language documentation</a></li><li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li></ul>
+</google-codelab-step>
+</google-codelab>
+<script src="https://storage.googleapis.com/claat-public/native-shim.js"></script><script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script><script src="https://storage.googleapis.com/claat-public/prettify.js"></script><script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>

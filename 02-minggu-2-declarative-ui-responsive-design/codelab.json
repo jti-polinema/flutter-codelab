@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2024-09-26T01:43:08Z",
+  "id": "05-first-app-widget-dasar-flutter",
+  "duration": 275,
+  "title": "#05 | Aplikasi Pertama dan Widget Dasar Flutter",
+  "authors": "Habibie Ed Dien",
+  "summary": "- Mahasiswa mampu membuat aplikasi pertama dengan flutter\n- Mahasiswa mampu mengonfigurasi emulator/device dengan flutter\n- Mahasiswa mampu menjelaskan bagian-bagian dari project file flutter\n- Mahasiswa mampu menggunakan fitur hot reload dan restart\n- Mahasiswa mampu menjelaskan perbedaan stateful dan stateless widget\n- Mahasiswa mampu menerapkan widget-widget dasar flutter dan tema",
+  "source": "1OiFTlbQ_zwYrNDNDuDgmSNhOteZ_N7fN6nZbMabg1MI",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "05-first-app-widget-dasar-flutter"
+}

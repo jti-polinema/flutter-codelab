@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-11-17T01:53:01Z",
+  "id": "13-data-persistence",
+  "duration": 185,
+  "title": "#13 | Persistensi Data",
+  "authors": "Habibie Ed Dien",
+  "summary": "Mampu mengelola data JSON dan persistensi data di Flutter",
+  "source": "1Hq4lMnPH-tCH3ETo3G4PaeHR6l8b7cLVHcEOAutHtxk",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "13-data-persistence"
+}

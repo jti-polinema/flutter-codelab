@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2026-08-23T00:00:00Z",
+  "id": "01-minggu-1-mobile-development-ecosystem-flutter-refresh",
+  "duration": 163,
+  "title": "#01 | Minggu 1 - Mobile Development Ecosystem & Flutter Refresh",
+  "authors": "Habibie Ed Dien",
+  "summary": "Minggu 1 membahas ekosistem pengembangan mobile, perbandingan native vs cross-platform, arsitektur Flutter, refresh Dart dasar, dan persiapan perangkat lunak untuk praktikum.",
+  "source": "1RVJ9ljT-n1LJx6xM74eMXM4onLUpxwrKNm7i525CLEk",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "01-minggu-1-mobile-development-ecosystem-flutter-refresh"
+}
