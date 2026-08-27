@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4F7DC9">
+  <title>#01 | Mobile Development Ecosystem &amp; Flutter Refresh</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB" id="01-minggu-1-mobile-development-ecosystem-flutter-refresh" title="#01 | Mobile Development Ecosystem &amp; Flutter Refresh" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+    <google-codelab-step label="Welcome" duration="5">
+      <p><strong>Last updated:</strong> August 23, 2026</p>
+      <p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html">English</a></p>
+      <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTyrZYsrJgI_UgCVnYdiWTz0aAukd_R6nYj1ovAnkvT0BlqnwYrS5i15l80fOPn1g/pubembed?start=false&loop=false&delayms=5000" frameborder="0" width="720" height="480" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+      <h2 is-upgraded>Learning Objectives</h2>
+      <p>After completing this codelab, students will be able to:</p>
+      <ul>
+        <li>Explain the evolution of mobile development and the differences between native, hybrid, and cross-platform approaches.</li>
+        <li>Explain Flutter architecture, the role of Dart, project structure, and the widget tree.</li>
+        <li>Review Dart fundamentals: variables, data types, functions, classes, and null safety.</li>
+        <li>Prepare Flutter, Android SDK, an emulator or physical device, and run a first application.</li>
+        <li>Modify the default Flutter UI and save the result in a personal Git repository.</li>
+      </ul>
+      <h2 is-upgraded>Prerequisites</h2>
+      <ul>
+        <li>A laptop or PC, internet connection, and a GitHub or GitLab account.</li>
+        <li>Git, VS Code with the Flutter and Dart extensions, Flutter SDK, Android Studio, and Android SDK.</li>
+        <li>An active Android emulator or Android device with USB debugging enabled.</li>
+      </ul>
+      <aside class="warning"><p><strong>AI policy.</strong> Week 1 is a fundamental module. Do not use generative AI to complete Dart exercises, layout exercises, or the core assignment. Understanding is assessed through practice and a closed-book online assessment.</p></aside>
+    </google-codelab-step>
+
+    <google-codelab-step label="Mobile ecosystem and Flutter" duration="15">
+      <h2 is-upgraded>Mobile development evolution</h2>
+      <p>Mobile applications were traditionally built as <strong>native</strong> applications: Kotlin or Java for Android and Swift or Objective-C for iOS. The need to release the same features on multiple platforms led to hybrid and cross-platform approaches.</p>
+      <table><tr><th>Approach</th><th>Main characteristic</th><th>Examples</th></tr><tr><td>Native</td><td>Platform-specific code and UI with direct device API access.</td><td>Kotlin, Swift</td></tr><tr><td>Hybrid</td><td>Web technology running inside a native container.</td><td>Ionic, Cordova</td></tr><tr><td>Cross-platform</td><td>One codebase targeting multiple platforms.</td><td>Flutter, React Native</td></tr></table>
+      <p>The choice depends on performance, device access, team skills, cost, and target platforms. Cross-platform does not always replace native development; both approaches have trade-offs.</p>
+      <h2 is-upgraded>Flutter architecture and the role of Dart</h2>
+      <p>Flutter uses Dart for application UI and logic. Its architecture includes the <strong>framework</strong> (widgets and APIs), the <strong>engine</strong> (rendering, text, and graphics), and the <strong>embedder</strong> that connects the application to Android, iOS, web, or desktop. Dart uses just-in-time (JIT) compilation during development and ahead-of-time (AOT) compilation for release builds.</p>
+      <h2 is-upgraded>Widget tree and project structure</h2>
+      <p>Flutter UI is declarative: the UI describes the current state. Every UI element is a widget arranged as a tree, for example <code>MaterialApp</code> → <code>Scaffold</code> → <code>Column</code> → <code>Text</code>.</p>
+      <ul><li><code>lib/</code>: application code; the standard entry point is <code>lib/main.dart</code>.</li><li><code>test/</code>: unit and widget tests.</li><li><code>android/</code>, <code>ios/</code>, <code>web/</code>: target-platform configuration.</li><li><code>pubspec.yaml</code>: metadata, dependencies, assets, and SDK versions.</li></ul>
+      <h2 is-upgraded>Hot reload and hot restart</h2>
+      <ul><li><strong>Hot reload</strong> applies code changes without normally removing state; use it for fast UI iteration.</li><li><strong>Hot restart</strong> restarts the application from the beginning and clears state; use it when changes affect initialization.</li></ul>
+    </google-codelab-step>
+
+    <google-codelab-step label="Dart refresh" duration="20">
+      <h2 is-upgraded>Dart fundamentals to review</h2>
+      <p>Dart is a statically typed language with type inference. Use explicit types when they improve readability and use <code>final</code> for values initialized only once.</p>
+      <pre><code>void main() {
+  String name = 'Student';
+  int semester = 3;
+  final bool active = true;
+  print(greet(name, semester));
+  final student = Student(name: name, active: active);
+  print(student.status());
+}
+
+String greet(String name, int semester) =&gt; 'Hello $name, semester $semester';
+
+class Student {
+  Student({required this.name, required this.active});
+  final String name;
+  final bool active;
+  String status() =&gt; active ? '$name is active' : '$name is inactive';
+}</code></pre>
+      <h2 is-upgraded>Null safety</h2>
+      <p>Values cannot be <code>null</code> by default. Add <code>?</code> only when a value may be empty. Check before using it, and avoid <code>!</code> unless you can prove that the value is not null.</p>
+      <pre><code>String? nickname;
+print(nickname?.toUpperCase() ?? 'NOT PROVIDED');</code></pre>
+      <h2 is-upgraded>Self-practice</h2>
+      <ol><li>Create a <code>calculateRectangleArea</code> function that accepts <code>double</code> length and width parameters.</li><li>Create a <code>Profile</code> class with <code>name</code>, <code>studentId</code>, and an optional <code>email</code>.</li><li>Call both from <code>main()</code> and handle an empty email safely.</li></ol>
+      <aside class="special"><p>Use the official Dart references when you need help. Complete this exercise independently; do not ask AI to write the answer.</p></aside>
+    </google-codelab-step>
+
+    <google-codelab-step label="Set up the development environment" duration="35">
+      <h2 is-upgraded>Installation and verification</h2>
+      <ol><li>Install Git from <a href="https://git-scm.com/" target="_blank">git-scm.com</a>, then run <code>git --version</code>.</li><li>Install <a href="https://code.visualstudio.com/" target="_blank">VS Code</a> and the <strong>Flutter</strong> extension (Dart is installed with it).</li><li>Install the Flutter SDK using the <a href="https://docs.flutter.dev/get-started/install" target="_blank">official guide</a>; add <code>flutter/bin</code> to <code>PATH</code>.</li><li>Install Android Studio with Android SDK, Command-line Tools, and an emulator through SDK Manager and Device Manager.</li><li>Open a new terminal and run:</li></ol>
+      <pre><code>flutter --version
+flutter doctor
+flutter doctor --android-licenses</code></pre>
+      <p>Resolve issues that block the Android target, then run <code>flutter doctor</code> again.</p>
+      <h2 is-upgraded>Device target</h2>
+      <p><strong>Emulator:</strong> create and start a virtual device in Android Studio Device Manager. <strong>Physical device:</strong> enable Developer options and USB debugging, connect a data cable, and authorize the computer when prompted.</p>
+      <pre><code>flutter devices</code></pre>
+      <p>This command should show at least one target. If a physical device is not detected, check the cable, USB driver, USB debugging, and the authorization dialog on the device.</p>
+    </google-codelab-step>
+
+    <google-codelab-step label="Practical lab: first Flutter application" duration="35">
+      <h2 is-upgraded>Create and run a project</h2>
+      <p>Open a terminal in your work folder and run:</p>
+      <pre><code>flutter create my_first_app
+cd my_first_app
+flutter run</code></pre>
+      <p>Select an emulator or physical device when prompted. After the sample application appears, press <code>r</code> in the terminal for hot reload or <code>R</code> for hot restart.</p>
+      <h2 is-upgraded>Modify the default UI</h2>
+      <p>Open <code>lib/main.dart</code>, replace its contents with the following code, save it, and observe hot reload.</p>
+      <pre><code>import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Student Profile')),
+        body: const Center(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.school, size: 72),
+            SizedBox(height: 16),
+            Text('Your Name', style: TextStyle(fontSize: 24)),
+            Text('Mobile Programming - Week 1'),
+          ]),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+      <p>Replace <code>Your Name</code> with your own name. Change the icon or text once, then compare hot reload and hot restart.</p>
+      <aside class="warning"><p>If the build fails, read the first relevant error message. Check parentheses, commas, and widget names; do not copy a solution without understanding the cause.</p></aside>
+    </google-codelab-step>
+
+    <google-codelab-step label="Git and portfolio" duration="20">
+      <h2 is-upgraded>Initialize the repository</h2>
+      <p>Inside the <code>my_first_app</code> folder, configure your Git identity if needed and create the initial commit:</p>
+      <pre><code>git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git init
+git add .
+git commit -m "feat: create week 1 Flutter profile app"</code></pre>
+      <p>Create an empty repository on GitHub or GitLab, then connect and push the commit (replace nim with your actual NIM):</p>
+      <pre><code>git branch -M main
+git remote add origin https://github.com/USERNAME/nim-mobile-course.git
+git push -u origin main</code></pre>
+      <h2 is-upgraded>Portfolio repository structure</h2>
+      <p>Use one personal repository to document your progress throughout the semester. Create the weekly folders and supporting folders from the beginning using this structure:</p>
+      <pre><code>nim-mobile-course/
+    ├── README.md
+    ├── 01-week-1-mobile-development-ecosystem-flutter-refresh/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 02-week-2-declarative-ui-responsive-design/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 03-week-3-navigation-state-management/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 04-week-4-networking-rest-api/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 05-week-5-local-storage-offline-first/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 06-week-6-authentication-security-fcm/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 07-week-7-clean-architecture/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── test/
+    │   └── screenshots/
+    ├── 08-week-8-mid-project-review/
+    │   ├── README.md
+    │   ├── docs/
+    │   └── screenshots/
+    ├── 09-week-9-ai-assisted-development/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── docs/
+    │   └── screenshots/
+    ├── 10-week-10-ai-feature-integration/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── docs/
+    │   └── screenshots/
+    ├── 11-week-11-performance-optimization/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── docs/
+    │   └── screenshots/
+    ├── 12-week-12-testing-quality-assurance/
+    │   ├── README.md
+    │   ├── test/
+    │   ├── coverage/
+    │   └── screenshots/
+    ├── 13-week-13-ci-cd-automation/
+    │   ├── README.md
+    │   ├── .github/
+    │   ├── workflows/
+    │   └── screenshots/
+    ├── 14-week-14-deployment-monitoring/
+    │   ├── README.md
+    │   ├── docs/
+    │   └── screenshots/
+    ├── 15-week-15-secure-mobile-development/
+    │   ├── README.md
+    │   ├── docs/
+    │   └── screenshots/
+    ├── 16-week-16-final-project-expo/
+    │   ├── README.md
+    │   ├── lib/
+    │   ├── docs/
+    │   ├── screenshots/
+    │   └── demo-video/
+    ├── notes/
+    │   ├── reflections/
+    │   ├── learning-journal/
+    │   └── resources/
+    └── portfolio-summary.md</code></pre>
+      <p>For Week 1, store the application in <code>01-week-1-mobile-development-ecosystem-flutter-refresh/</code>. Each weekly folder must contain a README describing its objective, main features, technology stack, run instructions, and result. Use <code>screenshots/</code> or <code>docs/</code> for visual evidence and documentation, and store test results and coverage in the appropriate folders.</p>
+      <aside class="special"><p>Run <code>git status</code> before each commit and check that no secrets are included.</p></aside>
+    </google-codelab-step>
+
+    <google-codelab-step label="Verification, assignment, and reflection" duration="10">
+      <h2 is-upgraded>Verification checklist</h2>
+      <ul><li><code>flutter doctor</code> has no issue blocking the Android target.</li><li><code>flutter devices</code> detects an emulator or physical device.</li><li>The application runs and its default UI has been replaced with a simple profile.</li><li>You can explain the difference between hot reload and hot restart.</li><li>The remote repository contains source code, README, screenshots, and commit history.</li></ul>
+      <h2 is-upgraded>Mini assignment</h2>
+      <p>Create a Student Profile application based on the practical lab. Add a student ID and one additional piece of information using basic widgets. Push the result to your portfolio repository. Include a screenshot and a short explanation of one setup problem you encountered and solved.</p>
+      <h2 is-upgraded>Reflection</h2>
+      <ul><li>When is native development more appropriate than cross-platform development?</li><li>How does a state change relate to the widget tree and declarative UI?</li><li>Why are small commits with clear messages useful for teamwork and a portfolio?</li></ul>
+      <h2 is-upgraded>References</h2>
+      <ul><li><a href="https://docs.flutter.dev/get-started/install" target="_blank">Flutter installation guide</a></li><li><a href="https://docs.flutter.dev/get-started/flutter-for/declarative" target="_blank">Flutter: declarative UI</a></li><li><a href="https://dart.dev/language" target="_blank">Official Dart language documentation</a></li><li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li></ul>
+    </google-codelab-step>
+
+  </google-codelab>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+</body>
+</html>
