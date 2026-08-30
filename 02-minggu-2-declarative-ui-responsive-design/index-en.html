@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4F7DC9">
+  <title>#02 | Declarative UI &amp; Responsive Design</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB" id="02-minggu-2-declarative-ui-responsive-design" title="#02 | Declarative UI &amp; Responsive Design" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+    <google-codelab-step label="Welcome" duration="5">
+      <p><strong>Last updated:</strong> August 27, 2026</p>
+      <p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html">English</a></p>
+      <h2 is-upgraded>Learning Objectives</h2>
+      <p>After completing this codelab, students will be able to:</p>
+      <ul><li>Explain declarative UI and the relationship between widgets, configuration, and state.</li><li>Use <code>StatelessWidget</code>, <code>StatefulWidget</code>, <code>Container</code>, <code>Row</code>, <code>Column</code>, and <code>Expanded</code>.</li><li>Choose Material 3 or Cupertino components for different platform experiences.</li><li>Build responsive layouts for mobile and tablet screen sizes.</li><li>Apply themes, dark mode, styling, and basic accessibility.</li></ul>
+      <aside class="warning"><p><strong>AI policy.</strong> This week focuses on understanding widgets and layouts. Complete the core exercises independently before using AI to explore design alternatives.</p></aside>
+    </google-codelab-step>
+
+    <google-codelab-step label="Concepts and theory" duration="25">
+      <h2 is-upgraded>Declarative UI</h2>
+      <p>In a declarative approach, code describes the interface based on the current state. When state changes, Flutter rebuilds the relevant UI. Developers focus on the relationship between data and presentation instead of manually changing each UI element.</p>
+      <pre><code>Widget build(BuildContext context) {
+  return Text('Hello, $name');
+}</code></pre>
+      <h2 is-upgraded>Basic widgets</h2>
+      <ul><li><code>StatelessWidget</code> is suitable when output is determined by parent configuration.</li><li><code>StatefulWidget</code> has a <code>State</code> object for data that changes during its lifecycle.</li><li><code>Container</code> combines size, padding, margin, decoration, and a child.</li><li><code>Row</code> arranges children horizontally, while <code>Column</code> arranges them vertically.</li><li><code>Expanded</code> shares available space inside a <code>Row</code> or <code>Column</code>.</li></ul>
+      <h2 is-upgraded>Material 3 and Cupertino</h2>
+      <p><code>MaterialApp</code> and Material 3 widgets support Android and cross-platform design patterns. <code>CupertinoApp</code> and Cupertino widgets provide iOS-style experiences. Choose components based on user experience requirements, not only platform names.</p>
+      <h2 is-upgraded>Responsive layout</h2>
+      <p>Responsive layouts adapt their structure to the available space. Use <code>LayoutBuilder</code> or <code>MediaQuery</code> to read dimensions and change the number of columns or layout direction. Avoid fixed pixel sizes for elements that must adapt.</p>
+      <h2 is-upgraded>Theme, dark mode, and accessibility</h2>
+      <p>A theme centralizes colors, typography, and component shapes. Provide <code>theme</code> and <code>darkTheme</code> on <code>MaterialApp</code>. For accessibility, use sufficient contrast, meaningful labels, readable text sizes, and do not communicate information through color alone.</p>
+    </google-codelab-step>
+
+    <google-codelab-step label="Demo" duration="5">
+      <h2 is-upgraded>What you will build</h2>
+      <p>Before starting, observe the target of this codelab: a student dashboard that shows <strong>one column</strong> on narrow screens and <strong>two columns</strong> on wide screens, with consistent light and dark themes.</p>
+      <ol>
+        <li>Run the finished app on a phone-sized emulator (e.g. 5"), then a tablet (e.g. 10"); compare the column counts.</li>
+        <li>Enable dark mode on the emulator/device and observe the automatic theme change.</li>
+        <li>Notice the declarative pattern: the UI is not updated element by element; only state changes and Flutter rebuilds the view.</li>
+      </ol>
+      <aside class="note"><p>You do not need to copy the code yet — build it yourself through the labs below. This demo is only an overview of the final goal.</p></aside>
+    </google-codelab-step>
+
+    <google-codelab-step label="Lab: simple layout (warm-up)" duration="20">
+      <p>Before the responsive dashboard, practice the basic widgets by building a simple profile card. Create a new project or temporarily replace <code>lib/main.dart</code>:</p>
+      <pre><code>import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(const ProfileApp());
+
+class ProfileApp extends StatelessWidget {
+  const ProfileApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(child: ProfileCard()),
+      ),
+    );
+  }
+}
+
+class ProfileCard extends StatelessWidget {
+  const ProfileCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 320,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.indigo.shade50,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              const CircleAvatar(child: Icon(Icons.person)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Student Name',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('...type your name here...'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Row(children: [
+            Expanded(child: Text('Student ID')),
+            Text('...type your student ID here...'),
+          ]),
+          const Row(children: [
+            Expanded(child: Text('Class')),
+            Text('...type your class here...'),
+          ]),
+        ],
+      ),
+    );
+  }
+}</code></pre>
+      <h2 is-upgraded>Warm-up experiments</h2>
+      <ol>
+        <li>Remove <code>Expanded</code> from the name row, observe the overflow warning or layout behavior, then restore it.</li>
+        <li>Replace <code>mainAxisSize: MainAxisSize.min</code> with the default value and observe the card height change.</li>
+        <li>Add one more data row (e.g. <code>Email</code>) using the same <code>Row</code> + <code>Expanded</code> pattern.</li>
+      </ol>
+    </google-codelab-step>
+
+    <google-codelab-step label="Practical lab: responsive dashboard" duration="40">
+      <h2 is-upgraded>Set up the project</h2>
+      <pre><code>flutter create responsive_dashboard
+cd responsive_dashboard
+flutter run</code></pre>
+      <p>Open <code>lib/main.dart</code>. Create the following simple profile dashboard and run it on an emulator or physical device.</p>
+      <pre><code>import 'package:flutter/material.dart';
+
+void main() =&gt; runApp(const DashboardApp());
+
+class DashboardApp extends StatelessWidget {
+  const DashboardApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
+      darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark, colorSchemeSeed: Colors.indigo),
+      themeMode: ThemeMode.system,
+      home: const DashboardPage(),
+    );
+  }
+}
+
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Dashboard')),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final columns = constraints.maxWidth &gt;= 700 ? 2 : 1;
+          return GridView.count(
+            padding: const EdgeInsets.all(16),
+            crossAxisCount: columns,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 2.6,
+            children: const [
+              DashboardCard(title: 'Assignments', value: '8'),
+              DashboardCard(title: 'Attendance', value: '92%'),
+              DashboardCard(title: 'Portfolio', value: 'Ready'),
+              DashboardCard(title: 'Current week', value: '02'),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class DashboardCard extends StatelessWidget {
+  const DashboardCard({required this.title, required this.value, super.key});
+  final String title;
+  final String value;
+  @override
+  Widget build(BuildContext context) {
+    return Card(child: Padding(padding: const EdgeInsets.all(20), child: Row(children: [Expanded(child: Text(title)), Text(value, style: Theme.of(context).textTheme.headlineSmall)])));
+  }
+}</code></pre>
+      <h2 is-upgraded>Adding interaction: StatefulWidget and Cupertino</h2>
+      <p>So far the dashboard is still a <code>StatelessWidget</code>. Convert <code>DashboardApp</code> into a <code>StatefulWidget</code> and add a <code>CupertinoSwitch</code> (a Cupertino widget) to the <code>AppBar</code> to toggle the theme manually — while directly comparing Material and Cupertino components:</p>
+      <pre><code>class DashboardApp extends StatefulWidget {
+  const DashboardApp({super.key});
+
+  @override
+  State&lt;DashboardApp&gt; createState() =&gt; _DashboardAppState();
+}
+
+class _DashboardAppState extends State&lt;DashboardApp&gt; {
+  bool isDark = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
+      darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark, colorSchemeSeed: Colors.indigo),
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      home: DashboardPage(
+        isDark: isDark,
+        onDarkChanged: (value) =&gt; setState(() =&gt; isDark = value),
+      ),
+    );
+  }
+}</code></pre>
+      <p>Adjust <code>DashboardPage</code> to receive the state and callback:</p>
+      <pre><code>class DashboardPage extends StatelessWidget {
+  const DashboardPage({
+    required this.isDark,
+    required this.onDarkChanged,
+    super.key,
+  });
+  final bool isDark;
+  final ValueChanged&lt;bool&gt; onDarkChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Student Dashboard'),
+        actions: [
+          Row(
+            children: [
+              Icon(isDark ? Icons.dark_mode : Icons.light_mode),
+              const SizedBox(width: 4),
+              CupertinoSwitch(
+                value: isDark,
+                onChanged: onDarkChanged,
+              ),
+              const SizedBox(width: 12),
+            ],
+          ),
+        ],
+      ),
+      body: LayoutBuilder(
+        // ... the previous GridView code, unchanged
+      ),
+    );
+  }
+}</code></pre>
+      <aside class="note"><p><code>CupertinoSwitch</code> comes from the Cupertino library — add <code>import 'package:flutter/cupertino.dart';</code> at the top of the file. Compare it with the Material <code>Switch.adaptive</code>, which automatically shows a Cupertino-style switch on iOS.</p></aside>
+      <h2 is-upgraded>Layout experiments</h2>
+      <ol><li>Change the <code>700</code> breakpoint and observe the column count.</li><li>Change <code>themeMode</code> to <code>ThemeMode.dark</code>, then restore <code>ThemeMode.system</code>.</li><li>Test the application at different emulator screen sizes.</li><li>Add <code>Semantics</code> or meaningful labels to important screen-reader elements.</li></ol>
+    </google-codelab-step>
+
+    <google-codelab-step label="Assignment and AI design exploration" duration="40">
+      <h2 is-upgraded>Main assignment</h2>
+      <p>Extend the dashboard into an <strong>Academic Overview</strong> page:</p>
+      <ul><li>Include a profile header and at least four information cards.</li><li>Use <code>Row</code>, <code>Column</code>, <code>Expanded</code>, and <code>Container</code>.</li><li>Show one column on narrow screens and two columns on wide screens.</li><li>Provide readable light and dark themes, with a theme toggle (e.g. a <code>CupertinoSwitch</code> or <code>Switch.adaptive</code>).</li><li>Add accessibility labels for important information or buttons.</li><li>Include narrow- and wide-screen screenshots in <code>screenshots/</code>.</li></ul>
+      <h2 is-upgraded>AI Prompt Challenge</h2>
+      <p>After completing the independent implementation, use AI only to compare two layout alternatives. Work through the following challenge:</p>
+      <ol>
+        <li><strong>Design prompt.</strong> Submit this prompt (or a variation): "Compare two Flutter academic dashboard layouts: a <code>GridView</code> version and a <code>LayoutBuilder</code> + <code>Column</code> version. Explain the responsive and accessibility trade-offs."</li>
+        <li><strong>Concept-reinforcement prompt.</strong> "Explain when using <code>Expanded</code> actually causes an overflow inside a <code>Row</code>; show failing example code and its fix."</li>
+        <li><strong>Verification prompt.</strong> Ask the AI to audit its own output: "Review the layout recommendation above: does it stay responsive below 600px, does it reduce accessibility, and are all widgets available in the current stable Flutter?"</li>
+        <li><strong>Document it.</strong> Store the prompt, relevant output, selected decision, technical reasoning, and verification evidence (tests/screenshots) in this week's assignment README.</li>
+      </ol>
+      <p>Passing criteria: the AI suggestion you adopt actually works, remains responsive, does not reduce accessibility, and you can explain every decision during code review, not merely copy the AI output.</p>
+      <h2 is-upgraded>Refactoring challenge</h2>
+      <p>Once the main assignment works, clean up your code:</p>
+      <ol>
+        <li>Extract the information card into a reusable widget (e.g. <code>InfoCard</code>) that receives <code>title</code> and <code>value</code>, removing widget duplication.</li>
+        <li>Replace hardcoded colors and sizes with <code>Theme.of(context)</code> so they follow the light/dark theme automatically.</li>
+        <li>Move the breakpoint into a single named constant (e.g. <code>const kWideBreakpoint = 700;</code>) so it is defined only once.</li>
+        <li>Run <code>flutter analyze</code> and ensure there are no new errors or warnings.</li>
+      </ol>
+      <h2 is-upgraded>Basic testing</h2>
+      <p>Add widget tests in the <code>test/</code> folder to verify the responsive behavior. Override the screen size using <code>tester.view</code>:</p>
+      <pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:responsive_dashboard/main.dart';
+
+void main() {
+  testWidgets('Dashboard shows one column on a narrow screen', (tester) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const DashboardApp());
+
+    final width = tester.getSize(find.byType(Card)).width;
+    expect(width, lessThan(700));
+  });
+
+  testWidgets('Dashboard shows two columns on a wide screen', (tester) async {
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const DashboardApp());
+
+    final width = tester.getSize(find.byType(Card)).width;
+    expect(width, greaterThan(500));
+  });
+}</code></pre>
+      <p>Run them with <code>flutter test</code>. Both tests must pass before submitting the assignment. Store the tests in the <code>test/</code> folder of this week's assignment.</p>
+      <h2 is-upgraded>Verification checklist</h2>
+      <ul><li><code>flutter analyze</code> produces no errors.</li><li><code>flutter test</code> passes all responsive widget tests.</li><li>The application runs at narrow and wide screen sizes.</li><li>Dark mode has sufficient contrast and readable text.</li><li>The widget structure can be explained during code review.</li><li>Screenshots, the <code>test/</code> folder, and README are stored in the Week 2 assignment folder.</li></ul>
+    </google-codelab-step>
+
+    <google-codelab-step label="Reflection and references" duration="10">
+      <h2 is-upgraded>Reflection</h2>
+      <ul><li>How does imperative thinking differ from declarative thinking when building UI?</li><li>When does <code>Expanded</code> help, and when can it cause a layout error?</li><li>How do breakpoints and themes affect user experience?</li><li>What did you verify after receiving an AI design recommendation?</li></ul>
+      <h2 is-upgraded>References</h2>
+      <ul><li><a href="https://docs.flutter.dev/ui" target="_blank">Flutter UI documentation</a></li><li><a href="https://docs.flutter.dev/ui/layout/responsive" target="_blank">Building responsive apps</a></li><li><a href="https://m3.material.io/" target="_blank">Material Design 3</a></li><li><a href="https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility" target="_blank">Flutter accessibility</a></li></ul>
+    </google-codelab-step>
+  </google-codelab>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script><script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script><script src="https://storage.googleapis.com/claat-public/prettify.js"></script><script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body>
+</html>
