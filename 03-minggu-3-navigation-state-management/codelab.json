@@ -3,12 +3,12 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2024-10-02T09:20:26Z",
-  "id": "06-layout-navigasi",
-  "duration": 390,
-  "title": "#06 | Layout dan Navigasi",
+  "updated": "2026-08-31T09:00:00Z",
+  "id": "03-minggu-3-navigation-state-management",
+  "duration": 115,
+  "title": "#03 | Navigation & State Management",
   "authors": "Habibie Ed Dien",
-  "summary": "Mampu melakukan penyusunan layout dan navigasi serta routing",
+  "summary": "Menerapkan navigasi dengan GoRouter serta state management dengan Riverpod dan AsyncValue (loading, error, success), termasuk AI Challenge dan testing.",
   "source": "1zCou4usd-DriL3tcXmLLP686aTiUulyyzygyfQmyio4",
   "theme": "mobileflutter",
   "status": [
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "06-layout-navigasi"
+  "url": "03-minggu-3-navigation-state-management"
 }

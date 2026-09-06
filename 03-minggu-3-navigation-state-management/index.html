@@ -1,396 +1,406 @@
-
 <!doctype html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#03 | Navigation &amp; State Management</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="03-minggu-3-navigation-state-management" title="#03 | Navigation &amp; State Management" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
 
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <meta name="theme-color" content="#4F7DC9">
-  <meta charset="UTF-8">
-  <title>#06 | Layout dan Navigasi</title>
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
-  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
-  <style>
-    .success {
-      color: #1e8e3e;
-    }
-    .error {
-      color: red;
-    }
-  </style>
-</head>
-<body>
-  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab codelab-gaid="G-H7507PFEJB"
-                  id="06-layout-navigasi"
-                  title="#06 | Layout dan Navigasi"
-                  environment="web"
-                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
-    
-      <google-codelab-step label="Layout dan Navigasi" duration="0">
-        <iframe class="embedded-iframe" src="https://docs.google.com/presentation/d/e/2PACX-1vSOXPO3ydimatPG1LNlxjOw8J-GIN-1fraSFentrguOyEgueh30gXyOjpWbxelyGW9bKnVsuN_tRPmg/embed?start=false&loop=false&delayms=3000"></iframe>
-<p><strong>Terakhir diperbarui:</strong> 03 Oktober 2024</p>
-<p><strong>Penulis:</strong> Habibie Ed Dien</p>
-<p>Pada codelab ini, Anda akan mempelajari konsep dan praktik untuk dasar-dasar framework Flutter dengan menerapkan layout dan navigasi.</p>
-<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
-<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
-<ul>
-<li>menerapkan jenis-jenis layout</li>
-<li>menerapkan navigasi</li>
-<li>menerapkan routing</li>
-</ul>
-<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
-</aside>
-<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
-<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
-<ul>
-<li>PC atau Laptop dengan spesifikasi minimum RAM 4GB Processor Core i3</li>
-<li>Koneksi internet</li>
-<li>Chrome Browser</li>
-<li>Perangkat mobile (Android/iOS)</li>
-</ul>
-<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
-<ul>
-<li>Algoritma dan Pemrograman Dasar</li>
-<li>Pemrograman Berorientasi Objek</li>
-<li>Bahasa Pemrograman Dart</li>
-</ul>
+<google-codelab-step label="Selamat datang" duration="5">
+<p><strong>Terakhir diperbarui:</strong> 31 Agustus 2026<br></p>
 
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Konsep Layout di Flutter" duration="10">
-        <p>Inti dari mekanisme tata letak Flutter adalah widget. Di Flutter, hampir semuanya adalah widget—bahkan model tata letak pun merupakan widget. Gambar, ikon, dan teks yang Anda lihat di aplikasi Flutter semuanya merupakan widget. Namun hal-hal yang tidak Anda lihat juga merupakan widget, seperti baris, kolom, dan kisi yang mengatur, membatasi, dan menyelaraskan widget yang terlihat.</p>
-<p>Anda membuat tata letak dengan menyusun widget untuk membuat widget yang lebih kompleks. Misalnya, tangkapan layar pertama di bawah ini menunjukkan 3 ikon dengan label di bawah masing-masing ikon:</p>
-<p class="image-container"><img style="width: 424.00px" src="img\\3bafeddffa06174b.png"></p>
-<p>Tangkapan layar kedua menampilkan tata letak visual, memperlihatkan deretan 3 kolom yang setiap kolomnya berisi ikon dan label.</p>
-<p>Berikut diagram pohon widget untuk UI ini:</p>
-<p class="image-container"><img style="width: 600.00px" src="img\\c2e2938d5fe911a9.png"></p>
-<p>Sebagian besar tampilannya akan terlihat seperti yang Anda harapkan, namun Anda mungkin bertanya-tanya tentang wadahnya (ditampilkan dalam warna merah muda). Kontainer adalah kelas widget yang memungkinkan Anda menyesuaikan widget turunannya. Gunakan Kontainer ketika Anda ingin menambahkan padding, margin, batas, atau warna latar belakang, untuk menyebutkan beberapa kemampuannya.</p>
-<p>Dalam contoh ini, setiap widget Teks ditempatkan dalam Wadah untuk menambahkan margin. Seluruh Baris juga ditempatkan dalam Wadah untuk menambahkan bantalan di sekitar baris.</p>
-<p>UI lainnya dalam contoh ini dikendalikan oleh properti. Atur warna Ikon menggunakan properti warnanya. Gunakan properti Text.style untuk mengatur font, warna, berat, dan sebagainya. Kolom dan baris memiliki properti yang memungkinkan Anda menentukan bagaimana turunannya disejajarkan secara vertikal atau horizontal, dan berapa banyak ruang yang harus ditempati oleh turunannya.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 1: Membangun Layout di Flutter" duration="15">
-        <aside class="special"><p><strong>Apa yang akan Anda pelajari</strong></p>
-<ul>
-<li>Cara kerja mekanisme tata letak Flutter.</li>
-<li>Cara menata widget secara vertikal dan horizontal.</li>
-<li>Cara membuat tata letak Flutter.</li>
-</ul>
-</aside>
-<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
-</aside>
-<p><strong>Tampilan akhir yang akan Anda buat</strong></p>
-<p class="image-container"><img style="width: 256.56px" src="img\\52e2825a0742c242.png"></p>
-<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
-<p>Buatlah sebuah project flutter baru dengan nama <strong>layout_flutter</strong>. Atau sesuaikan style laporan praktikum yang Anda buat.</p>
-<h2 is-upgraded>Langkah 2: Buka file <strong><code>lib/main.dart</code></strong></h2>
-<p>Buka file <code>main.dart</code> lalu ganti dengan kode berikut. Isi nama dan NIM Anda di <code>text title</code>.</p>
-<pre><code>import &#39;package:flutter/material.dart&#39;;
+<h2 is-upgraded>Tujuan pembelajaran</h2><p>Setelah menyelesaikan codelab ini, mahasiswa mampu:</p><ul>
+<li>menjelaskan konsep navigasi, route, dan perbedaan Navigator 1.0 dengan GoRouter;</li><li>menerapkan navigasi multi-page dengan GoRouter, termasuk passing argument dan deep link sederhana;</li><li>menjelaskan mengapa state management diperlukan dan cara kerja Riverpod (Provider, ConsumerWidget, Notifier);</li><li>menggunakan AsyncValue untuk menangani state loading, error, dan success pada UI;</li><li>membangun aplikasi ToDo dengan navigasi dan Riverpod, lalu memverifikasi hasilnya dengan widget test sederhana.</li></ul>
+<h2 is-upgraded>Persiapan</h2><ul><li>Laptop/PC, koneksi internet, dan repository portfolio (GitHub/GitLab) dari minggu sebelumnya.</li><li>Flutter SDK, VS Code (ekstensi Flutter/Dart), emulator Android atau perangkat fisik.</li><li>Pemahaman materi Minggu 1–2: Dart dasar, widget, StatelessWidget/StatefulWidget, layout, dan tema.</li></ul>
+<aside class="warning"><p><strong>Kebijakan AI.</strong> Pada minggu ini AI diperbolehkan terbatas pada bagian <strong>AI Challenge</strong>: membantu membuat boilerplate. Anda wajib membaca, menjelaskan, memverifikasi, dan memperbaiki setiap baris kode yang dihasilkan AI. Bagian guided implementation harus dikerjakan sendiri tanpa AI untuk memperkuat pemahaman konsep (materi ini termasuk bahan asesmen daring tertutup).</p></aside>
+</google-codelab-step>
+<google-codelab-step label="Konsep navigasi dan GoRouter" duration="20">
+<h2 is-upgraded>Navigation dasar di Flutter</h2><p>Navigasi adalah mekanisme berpindah antar layar. Di Flutter, setiap layar adalah <strong>route</strong> yang ditumpuk pada <code>Navigator</code> (stack). Cara lama (Navigator 1.0) menggunakan <code>Navigator.push</code> dan <code>Navigator.pop</code>:</p>
+<pre><code>Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) =&gt; const DetailPage()),
+);</code></pre>
+<p>Cara ini sederhana tetapi sulit dikelola pada aplikasi besar: route tidak terstruktur, deep link rumit, dan guard (misalnya redirect login) tersebar di banyak tempat.</p>
+<h2 is-upgraded>GoRouter</h2><p><a href="https://pub.dev/packages/go_router" target="_blank">GoRouter</a> adalah router deklaratif yang direkomendasikan Flutter. Konsep utamanya:</p>
+<table><tr><th>Konsep</th><th>Penjelasan</th></tr><tr><td><code>GoRoute</code></td><td>Definisi path dan widget tujuan, misal <code>/</code>, <code>/detail/:id</code>.</td></tr><tr><td><code>context.go()</code></td><td>Pindah route (mengganti stack, cocok untuk redirect login).</td></tr><tr><td><code>context.push()</code></td><td>Tumpuk route baru di atas stack (cocok untuk detail).</td></tr><tr><td><code>path parameter</code></td><td>Nilai dinamis pada path, diakses lewat <code>state.pathParameters</code>.</td></tr><tr><td><code>extra</code></td><td>Mengirim objek antar route (gunakan hati-hati, tidak tersimpan saat proses restart web).</td></tr><tr><td><code>redirect</code></td><td>Guard navigasi terpusat, misal cek status login.</td></tr></table>
+<h2 is-upgraded>Praktikum 1 — Aplikasi multi-page dengan GoRouter</h2>
+<p>Buat project baru:</p>
+<pre><code>flutter create week3_navigation
+cd week3_navigation
+flutter pub add go_router</code></pre>
+<p>Susun struktur folder:</p>
+<pre><code>lib/
+├── main.dart
+└── pages/
+    ├── home_page.dart
+    └── detail_page.dart</code></pre>
+<p><strong>1. Definisikan router</strong> di <code>lib/main.dart</code>:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'pages/detail_page.dart';
+import 'pages/home_page.dart';
 
 void main() =&gt; runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: &#39;Flutter layout: Nama dan NIM Anda&#39;,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(&#39;Flutter layout demo&#39;),
-        ),
-        body: const Center(
-          child: Text(&#39;Hello World&#39;),
-        ),
-      ),
-    );
-  }
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 3: Identifikasi layout diagram</strong></h2>
-<p>Langkah pertama adalah memecah tata letak menjadi elemen dasarnya:</p>
-<ul>
-<li>Identifikasi baris dan kolom.</li>
-<li>Apakah tata letaknya menyertakan kisi-kisi (grid)?</li>
-<li>Apakah ada elemen yang tumpang tindih?</li>
-<li>Apakah UI memerlukan tab?</li>
-<li>Perhatikan area yang memerlukan alignment, padding, atau borders.</li>
-</ul>
-<p>Pertama, identifikasi elemen yang lebih besar. Dalam contoh ini, empat elemen disusun menjadi sebuah kolom: sebuah gambar, dua baris, dan satu blok teks.</p>
-<p class="image-container"><img style="width: 264.51px" src="img\\f38a1b954df85972.png"></p>
-<p>Selanjutnya, buat diagram setiap baris. Baris pertama, disebut bagian Judul, memiliki 3 anak: kolom teks, ikon bintang, dan angka. Anak pertamanya, kolom, berisi 2 baris teks. Kolom pertama itu memakan banyak ruang, sehingga harus dibungkus dengan widget yang Diperluas.</p>
-<p class="image-container"><img style="width: 624.00px" src="img\\c39ec49e9db9ebb8.png"></p>
-<p>Baris kedua, disebut bagian Tombol, juga memiliki 3 anak: setiap anak merupakan kolom yang berisi ikon dan teks.</p>
-<p class="image-container"><img style="width: 593.00px" src="img\\43883262364c63da.png"></p>
-<p>Setelah tata letak telah dibuat diagramnya, cara termudah adalah dengan menerapkan pendekatan bottom-up. Untuk meminimalkan kebingungan visual dari kode tata letak yang banyak bertumpuk, tempatkan beberapa implementasi dalam variabel dan fungsi.</p>
-<h2 is-upgraded><strong>Langkah 4: Implementasi title row</strong></h2>
-<p>Pertama, Anda akan membuat kolom bagian kiri pada judul. Tambahkan kode berikut di bagian atas metode <code>build()</code> di dalam kelas <code>MyApp</code>:</p>
-<pre><code>Widget titleSection = Container(
-  padding: const EdgeInsets.all(...),
-  child: Row(
-    children: [
-      Expanded(
-        /* soal 1*/
-        child: Column(
-          crossAxisAlignment: ...,
-          children: [
-            /* soal 2*/
-            Container(
-              padding: const EdgeInsets.only(bottom: ...),
-              child: const Text(
-                &#39;Wisata Gunung di Batu&#39;,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Text(
-              &#39;Batu, Malang, Indonesia&#39;,
-              style: TextStyle(...),
-            ),
-          ],
-        ),
-      ),
-      /* soal 3*/
-      Icon(
-       ...,
-        color: ...,
-      ),
-      const Text(...),
-    ],
-  ),
-);</code></pre>
-<p><strong>/* soal 1 */</strong> Letakkan widget <code>Column</code> di dalam widget <code>Expanded</code> agar menyesuaikan ruang yang tersisa di dalam widget <code>Row</code>. Tambahkan properti <code>crossAxisAlignment</code> ke <code>CrossAxisAlignment.start</code> sehingga posisi kolom berada di awal baris.</p>
-<p><strong>/* soal 2 */</strong> Letakkan baris pertama teks di dalam <code>Container</code> sehingga memungkinkan Anda untuk menambahkan padding = 8. Teks ‘<code>Batu, Malang, Indonesia</code>&#39; di dalam <code>Column</code>, set warna menjadi abu-abu.</p>
-<p><strong>/* soal 3 */</strong> Dua item terakhir di baris judul adalah ikon bintang, set dengan warna merah, dan teks &#34;41&#34;. Seluruh baris ada di dalam <code>Container</code> dan beri padding di sepanjang setiap tepinya sebesar 32 piksel. Kemudian ganti isi <code>body text ‘Hello World'</code> dengan variabel <code>titleSection</code> seperti berikut:</p>
-<p class="image-container"><img style="width: 471.50px" src="img\\ec4cd5a8c9e993f4.png"></p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 2: Implementasi button row" duration="10">
-        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
-<h2 is-upgraded><strong>Langkah 1: Buat method Column _buildButtonColumn</strong></h2>
-<p>Bagian tombol berisi 3 kolom yang menggunakan tata letak yang sama—sebuah ikon di atas baris teks. Kolom pada baris ini diberi jarak yang sama, dan teks serta ikon diberi warna primer.</p>
-<p>Karena kode untuk membangun setiap kolom hampir sama, buatlah metode pembantu pribadi bernama <code>buildButtonColumn()</code>, yang mempunyai parameter warna, <code>Icon</code> dan <code>Text</code>, sehingga dapat mengembalikan kolom dengan widgetnya sesuai dengan warna tertentu.</p>
-<p><strong>lib/main.dart (_buildButtonColumn)</strong></p>
-<pre><code>class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // ···
-  }
-
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
+final _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) =&gt; const HomePage(),
+      routes: [
+        GoRoute(
+          path: 'detail/:id',
+          builder: (context, state) =&gt; DetailPage(
+            id: state.pathParameters['id']!,
           ),
         ),
       ],
+    ),
+  ],
+);
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Week 3 - Navigation',
+      routerConfig: _router,
+      theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
     );
   }
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 2: Buat widget buttonSection</strong></h2>
-<p>Buat Fungsi untuk menambahkan ikon langsung ke kolom. Teks berada di dalam <code>Container</code> dengan margin hanya di bagian atas, yang memisahkan teks dari ikon.</p>
-<p>Bangun baris yang berisi kolom-kolom ini dengan memanggil fungsi dan set warna, <code>Icon</code>, dan teks khusus melalui parameter ke kolom tersebut. Sejajarkan kolom di sepanjang sumbu utama menggunakan <code>MainAxisAlignment.spaceEvenly</code> untuk mengatur ruang kosong secara merata sebelum, di antara, dan setelah setiap kolom. Tambahkan kode berikut tepat di bawah deklarasi <code>titleSection</code> di dalam metode <code>build()</code>:</p>
-<p><strong>lib/main.dart (buttonSection)</strong></p>
-<pre><code>Color color = Theme.of(context).primaryColor;
+<aside class="special"><p><strong>Catatan:</strong> Perhatikan penggunaan <code>MaterialApp.router</code>, bukan <code>MaterialApp</code> biasa. Router dikonfigurasi lewat parameter <code>routerConfig</code>.</p></aside>
+<p><strong>2. Halaman Home</strong> (<code>lib/pages/home_page.dart</code>):</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-Widget buttonSection = Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-    _buildButtonColumn(color, Icons.call, &#39;CALL&#39;),
-    _buildButtonColumn(color, Icons.near_me, &#39;ROUTE&#39;),
-    _buildButtonColumn(color, Icons.share, &#39;SHARE&#39;),
-  ],
-);</code></pre>
-<h2 is-upgraded><strong>Langkah 3: Tambah button section ke body</strong></h2>
-<p>Tambahkan variabel <code>buttonSection</code> ke dalam <code>body</code> seperti berikut:</p>
-<p class="image-container"><img style="width: 579.00px" src="img\\d026c1bc3e8e1aa0.png"></p>
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home')),
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) =&gt; ListTile(
+          title: Text('Item ${index + 1}'),
+          onTap: () =&gt; context.go('/detail/${index + 1}'),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<p><strong>3. Halaman Detail</strong> (<code>lib/pages/detail_page.dart</code>):</p>
+<pre><code>import 'package:flutter/material.dart';
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 3: Implementasi text section" duration="10">
-        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
-<h2 is-upgraded><strong>Langkah 1: Buat widget textSection</strong></h2>
-<p>Tentukan bagian teks sebagai variabel. Masukkan teks ke dalam <code>Container</code> dan tambahkan padding di sepanjang setiap tepinya. Tambahkan kode berikut tepat di bawah deklarasi <code>buttonSection</code>:</p>
-<pre><code>Widget textSection = Container(
-  padding: const EdgeInsets.all(32),
-  child: const Text(
-    &#39;Carilah teks di internet yang sesuai &#39;
-    &#39;dengan foto atau tempat wisata yang ingin &#39;
-    &#39;Anda tampilkan. &#39;
-    &#39;Tambahkan nama dan NIM Anda sebagai &#39;
-    &#39;identitas hasil pekerjaan Anda. &#39;
-    &#39;Selamat mengerjakan 🙂.&#39;,
-    softWrap: true,
-  ),
-);</code></pre>
-<p>Dengan memberi nilai <code>softWrap</code> = true, baris teks akan memenuhi lebar kolom sebelum membungkusnya pada batas kata.</p>
-<h2 is-upgraded><strong>Langkah 2: Tambahkan variabel text section ke body</strong></h2>
-<p>Tambahkan widget variabel <code>textSection</code> ke dalam <code>body</code> seperti berikut:</p>
-<p class="image-container"><img style="width: 581.00px" src="img\\aa2c329d766be950.png"></p>
+class DetailPage extends StatelessWidget {
+  final String id;
+  const DetailPage({super.key, required this.id});
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Detail $id')),
+      body: Center(child: Text('Anda membuka item dengan id: $id')),
+    );
+  }
+}</code></pre>
+<p><strong>4. Jalankan dan amati.</strong> Buka item, lalu tekan tombol back sistem. Perhatikan bahwa path berubah mengikuti layar aktif, path yang sama juga dapat diakses langsung tanpa melewati Home. Inilah keunggulan router deklaratif dibanding Navigator 1.0.</p>
+</google-codelab-step>
+<google-codelab-step label="State management dengan Riverpod" duration="25">
+<h2 is-upgraded>Mengapa perlu state management?</h2><p><code>setState</code> cukup untuk state lokal satu widget. Namun ketika state harus dibagi antar banyak halaman (misal daftar ToDo yang ditampilkan di Home dan diubah di halaman lain), memindahkan state ke atas widget tree membuat kode rumit (prop drilling). State management memindahkan state keluar dari widget sehingga:</p>
+<ul><li>UI dapat dibangun ulang dari state yang sama secara konsisten (UI deklaratif = f(state));</li><li>logika bisa diuji tanpa membangun UI;</li><li>state tetap hidup meski widget sudah tidak tampil.</li></ul>
+<p>Pada mata kuliah ini kita menggunakan <a href="https://pub.dev/packages/riverpod" target="_blank">Riverpod</a> berbasis <code>Provider</code> yang bersifat <em>compile-safe</em>, tidak bergantung pada <code>BuildContext</code>, dan mudah diuji.</p>
+<h2 is-upgraded>Konsep inti Riverpod</h2>
+<table><tr><th>Konsep</th><th>Penjelasan</th></tr>
+<tr><td><code>ProviderScope</code></td><td>Wadah global yang menyimpan semua provider, membungkus root aplikasi.</td></tr>
+<tr><td><code>Provider</code></td><td>Nilai read-only/immutable (misal konfigurasi, service).</td></tr>
+<tr><td><code>Notifier</code> + <code>NotifierProvider</code></td><td>State yang bisa berubah melalui method; UI memanggil method, bukan mengubah state langsung.</td></tr>
+<tr><td><code>ConsumerWidget</code></td><td>Widget yang bisa membaca provider lewat <code>ref</code>.</td></tr>
+<tr><td><code>ref.watch</code> vs <code>ref.read</code></td><td><code>watch</code>: build ulang saat state berubah (di dalam <code>build</code>). <code>read</code>: sekali baca (di callback/event).</td></tr>
+</table>
+<h2 is-upgraded>Praktikum 2 — Aplikasi ToDo dengan Riverpod</h2>
+<pre><code>flutter create week3_todo
+cd week3_todo
+flutter pub add flutter_riverpod</code></pre>
+<p><strong>1. Bungkus aplikasi dengan ProviderScope</strong> di <code>lib/main.dart</code>:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'pages/todo_page.dart';
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 4: Implementasi image section" duration="10">
-        <p>Selesaikan langkah-langkah praktikum berikut ini dengan melanjutkan dari praktikum sebelumnya.</p>
-<h2 is-upgraded><strong>Langkah 1: Siapkan aset gambar</strong></h2>
-<p>Anda dapat mencari gambar di internet yang ingin ditampilkan. Buatlah folder <code>images</code> di root project <strong>layout_flutter</strong>. Masukkan file gambar tersebut ke folder <code>images</code>, lalu set nama file tersebut ke file <code>pubspec.yaml</code> seperti berikut:</p>
-<p class="image-container"><img style="width: 356.00px" src="img\\6b5a4bc2e1591c80.png"></p>
-<p>Contoh nama file gambar di atas adalah <code>lake.jpg</code></p>
-<aside class="special"><p><strong>Tips</strong></p>
-<ul>
-<li>Perhatikan bahwa <code>pubspec.yaml</code> sensitif terhadap huruf besar-kecil, jadi tulis <code>assets</code>: dan URL gambar seperti yang ditunjukkan di atas.</li>
-<li>File pubspec juga sensitif terhadap spasi, jadi gunakan indentasi yang tepat.</li>
-<li>Anda mungkin perlu memulai ulang program yang sedang berjalan (baik di simulator atau perangkat yang terhubung) agar perubahan pubspec dapat diterapkan.</li>
-</ul>
-</aside>
-<h2 is-upgraded><strong>Langkah 2: Tambahkan gambar ke body</strong></h2>
-<p>Tambahkan aset gambar ke dalam <code>body</code> seperti berikut:</p>
-<p class="image-container"><img style="width: 376.00px" src="img\\56a96f0d725017fd.png"></p>
-<p><code>BoxFit.cover</code> memberi tahu kerangka kerja bahwa gambar harus sekecil mungkin tetapi menutupi seluruh kotak rendernya.</p>
-<h2 is-upgraded><strong>Langkah 3: Terakhir, ubah menjadi ListView</strong></h2>
-<p>Pada langkah terakhir ini, atur semua elemen dalam <code>ListView</code>, bukan Column, karena <code>ListView</code> mendukung scroll yang dinamis saat aplikasi dijalankan pada perangkat yang resolusinya lebih kecil.</p>
-<p class="image-container"><img style="width: 497.00px" src="img\\d690c32e1656b4d0.png"></p>
+void main() =&gt; runApp(const ProviderScope(child: MyApp()));
 
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) =&gt; MaterialApp(
+        title: 'Week 3 - ToDo',
+        theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
+        home: const TodoPage(),
+      );
+}</code></pre>
+<p><strong>2. Buat state dan provider</strong> (<code>lib/providers/todo_provider.dart</code>):</p>
+<pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Praktikum 1" duration="120">
-        <ol type="1" start="1">
-<li>Selesaikan Praktikum 1 sampai 4, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>!</li>
-<li>Silakan implementasikan di project baru &#34;<strong>basic_layout_flutter</strong>&#34; dengan mengakses sumber ini: <a href="https://docs.flutter.dev/codelabs/layout-basics" target="_blank">https://docs.flutter.dev/codelabs/layout-basics</a> </li>
-<li>Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!</li>
+class Todo {
+  Todo(this.title, {this.done = false});
+  final String title;
+  final bool done;
+
+  Todo copyWith({String? title, bool? done}) =&gt;
+      Todo(title ?? this.title, done: done ?? this.done);
+}
+
+class TodoListNotifier extends Notifier&lt;List&lt;Todo&gt;&gt; {
+  @override
+  List&lt;Todo&gt; build() =&gt; const [];
+
+  void add(String title) =&gt; state = [...state, Todo(title)];
+
+  void toggle(int index) {
+    final todos = [...state];
+    todos[index] = todos[index].copyWith(done: !todos[index].done);
+    state = todos;
+  }
+
+  void remove(int index) =&gt; state = [...state]..removeAt(index);
+}
+
+final todoListProvider =
+    NotifierProvider&lt;TodoListNotifier, List&lt;Todo&gt;&gt;(TodoListNotifier.new);</code></pre>
+<aside class="special"><p><strong>Catatan:</strong> State tidak pernah diubah langsung (<code>state.add(...)</code> salah!). Selalu buat list baru (<em>immutability</em>) agar Riverpod mendeteksi perubahan dan UI ter-rebuild.</p></aside>
+<p><strong>3. Tampilkan dengan ConsumerWidget</strong> (<code>lib/pages/todo_page.dart</code>):</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/todo_provider.dart';
+
+class TodoPage extends ConsumerWidget {
+  const TodoPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todos = ref.watch(todoListProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('ToDo Riverpod')),
+      body: todos.isEmpty
+          ? const Center(child: Text('Belum ada tugas'))
+          : ListView.builder(
+              itemCount: todos.length,
+              itemBuilder: (context, index) =&gt; ListTile(
+                leading: Checkbox(
+                  value: todos[index].done,
+                  onChanged: (_) =&gt;
+                      ref.read(todoListProvider.notifier).toggle(index),
+                ),
+                title: Text(
+                  todos[index].title,
+                  style: TextStyle(
+                      decoration: todos[index].done
+                          ? TextDecoration.lineThrough
+                          : null),
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () =&gt;
+                      ref.read(todoListProvider.notifier).remove(index),
+                ),
+              ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =&gt; _showAddDialog(context, ref),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showAddDialog(BuildContext context, WidgetRef ref) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) =&gt; AlertDialog(
+        title: const Text('Tugas baru'),
+        content: TextField(controller: controller, autofocus: true),
+        actions: [
+          TextButton(
+            onPressed: () =&gt; Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                ref
+                    .read(todoListProvider.notifier)
+                    .add(controller.text.trim());
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Tambah'),
+          ),
+        ],
+      ),
+    );
+  }
+}</code></pre>
+<p><strong>4. Perhatikan pola penting:</strong> <code>ref.watch</code> di dalam <code>build</code> membuat halaman otomatis ter-rebuild saat daftar berubah; <code>ref.read(todoListProvider.notifier)</code> di dalam callback hanya memanggil method tanpa berlangganan.</p>
+</google-codelab-step>
+<google-codelab-step label="AsyncValue: loading, error, success" duration="20">
+<h2 is-upgraded>Masalah state asinkron</h2><p>Banyak state berasal dari proses asinkron (membaca database, memanggil API). UI harus menampilkan tiga kemungkinan: <strong>loading</strong> (proses berjalan), <strong>error</strong> (gagal), dan <strong>success</strong> (data siap). Mengelola tiga flag boolean secara manual rawan kesalahan (<code>isLoading</code> dan <code>hasError</code> bisa tidak konsisten).</p>
+<h2 is-upgraded>AsyncValue</h2><p>Riverpod menyediakan <code>AsyncValue&lt;T&gt;</code> yang memodelkan ketiga kondisi tersebut dalam satu tipe. Gunakan <code>AsyncNotifier</code> untuk state asinkron:</p>
+<pre><code>class ProductsNotifier extends AsyncNotifier&lt;List&lt;String&gt;&gt; {
+  @override
+  Future&lt;List&lt;String&gt;&gt; build() async {
+    await Future.delayed(const Duration(seconds: 2)); // simulasi network
+    return ['Keyboard', 'Mouse', 'Monitor'];
+  }
+
+  Future&lt;void&gt; refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() =&gt; _fetch());
+  }
+
+  Future&lt;List&lt;String&gt;&gt; _fetch() async {
+    await Future.delayed(const Duration(seconds: 1));
+    return ['Keyboard', 'Mouse', 'Monitor', 'Headset'];
+  }
+}
+
+final productsProvider =
+    AsyncNotifierProvider&lt;ProductsNotifier, List&lt;String&gt;&gt;(
+        ProductsNotifier.new);</code></pre>
+<aside class="special"><p><strong>Catatan:</strong> <code>AsyncValue.guard</code> otomatis menangkap exception dan mengubahnya menjadi <code>AsyncError</code>, hindari blok <code>try/catch</code> manual yang tersebar.</p></aside>
+<p>Di sisi UI, <code>AsyncValue</code> dapat dipola dengan <code>when</code> atau <code>if-case</code> matching:</p>
+<pre><code>class ProductPage extends ConsumerWidget {
+  const ProductPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsAsync = ref.watch(productsProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Produk')),
+      body: productsAsync.when(
+        loading: () =&gt; const Center(child: CircularProgressIndicator()),
+        error: (err, stack) =&gt; Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Gagal memuat: $err'),
+              FilledButton(
+                onPressed: () =&gt; ref.invalidate(productsProvider),
+                child: const Text('Coba lagi'),
+              ),
+            ],
+          ),
+        ),
+        data: (products) =&gt; ListView.builder(
+          itemCount: products.length,
+          itemBuilder: (context, index) =&gt;
+              ListTile(title: Text(products[index])),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded>Praktikum 3 — Uji ketiga state</h2>
+<ol type="1">
+<li>Salin kode di atas ke project ToDo Anda (atau project terpisah) dan jalankan. Amati tampilan loading selama 2 detik pertama.</li>
+<li>Ubah <code>build()</code> sementara untuk melempar error: <code>throw Exception('Gagal terhubung ke server');</code>. Jalankan dan amati UI error beserta tombol <em>Coba lagi</em>.</li>
+<li>Tekan tombol Coba lagi, <code>ref.invalidate</code> membuat provider dijalankan ulang. Pulihkan kode, pastikan state success tampil.</li>
+<li>Refleksikan: mengapa menampilkan ulang data lama (stale data) dengan indikator refresh kadang lebih baik daripada mengosongkan layar? Kapan pola itu penting?</li>
 </ol>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Konsep Navigasi dan Rute" duration="5">
-        <p>Perpindahan halaman di Flutter, ditangani oleh Navigator dengan melibatkan konsep sebagai berikut:</p>
+<aside class="warning"><p><strong>Pola yang sering keliru (bahan ujian):</strong> (1) memanggil <code>ref.watch</code> di dalam callback; (2) mengubah state langsung tanpa membuat objek baru; (3) melupakan UI error sehingga aplikasi layar putih saat API gagal; (4) menggunakan <code>setState</code> untuk state lintas halaman.</p></aside>
+</google-codelab-step>
+<google-codelab-step label="AI Challenge" duration="20">
+<h2 is-upgraded>Peran AI pada codelab ini</h2><p>Untuk materi navigasi dan state management, AI boleh digunakan sebagai <strong>co-developer</strong> untuk membantu membuat boilerplate, tetapi Anda tetap wajib membaca, menjelaskan, memverifikasi, memperbaiki, dan menguji hasilnya. Nilai bukan pada banyaknya kode yang dihasilkan AI, melainkan pada kualitas prompt, verifikasi, dan dokumentasi.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Minta AI coding assistant (Cursor, Copilot, Claude Code, atau tool setara) dengan prompt berikut:</p>
+<pre><code>Buatkan halaman Flutter bernama StatsPage menggunakan flutter_riverpod.
+Requirements:
+- ConsumerWidget dengan satu AsyncNotifierProvider yang mensimulasikan
+  pengambilan data statistik (delay 2 detik, kadang gagal 30%).
+- UI harus menangani loading (spinner), error (pesan + tombol retry),
+  dan success (ListView 3 item).
+- Berikan unit test untuk notifier-nya.
+Jelaskan setiap bagian kode dalam komentar.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Sebelum kode AI diterima, verifikasi hal berikut dan catat temuan Anda di README:</p>
 <ul>
-<li><strong>Navigator</strong>: sebuah widget yang mengatur tumpukan (struktur data <em>stack</em>) dari objek rute.</li>
-<li><strong>Route</strong>: sebuah objek yang merepresentasikan tampilan, umumnya diimplementasikan oleh class seperti <code>MaterialPageRoute</code>.</li>
+<li>Apakah state diubah secara immutable (tidak ada <code>state.add()</code> atau mutasi list langsung)?</li>
+<li>Apakah <code>ref.watch</code> hanya dipakai di dalam <code>build</code>, dan <code>ref.read</code> di callback?</li>
+<li>Apakah ketiga state AsyncValue benar-benar ditangani (bukan hanya success)?</li>
+<li>Apakah provider dideklarasikan dengan tipe eksplisit dan tidak duplikat dengan provider lain?</li>
+<li>Apakah kode AI memakai API Riverpod versi lama (<code>StateProvider</code> antipattern, <code>StateNotifierProvider</code> usang, atau <code>Consumer</code> bertingkat yang tidak perlu)? Perbaiki ke pola <code>Notifier</code>/<code>ConsumerWidget</code>.</li>
+<li>Jalankan <code>flutter analyze</code> dan <code>flutter test</code>, apakah hasil AI lolos tanpa warning?</li>
 </ul>
-<p>Sebuah <code>Route</code> umumnya dimasukkan (<em>push</em>) atau diambil (<em>pop</em>) dari dan ke tumpukan <code>Navigator</code>. Ketika sebuah halaman dilakukan operasi push, maka halaman tersebut akan diletakkan di atas halaman yang memanggilnya. Ilustrasi tersebut dapat anda lihat pada gambar berikut. Dan jika pop dipanggil (tombol back ditekan) maka aplikasi akan menampilkan halaman sebelumnya. Selain itu Flutter juga mendukung adanya penamaan Route yang didefinisikan di awal.</p>
-<p class="image-container"><img style="width: 429.00px" src="img\\fda302d91eadd10d.png"></p>
+<aside class="special"><p><strong>Tanggung jawab teknis:</strong> simpan prompt yang digunakan, output awal AI, perbaikan yang Anda lakukan, dan hasil testing pada folder <code>docs/</code> tugas minggu ini. Saat demo, Anda harus mampu menjelaskan setiap baris kode hasil AI.</p></aside>
+</google-codelab-step>
 
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 5: Membangun Navigasi di Flutter" duration="90">
-        <aside class="special"><p><strong>Apa yang akan Anda pelajari</strong></p>
-<ul>
-<li>Cara kerja mekanisme navigation dan route di Flutter.</li>
-<li>Cara membuat navigation dan route di Flutter.</li>
-</ul>
-</aside>
-<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda. Materi ini dapat dimasukkan ke Laporan Praktikum folder <strong>Week </strong>atau <strong>Pertemuan 06</strong>.</p>
-<p><strong>Tampilan akhir yang akan Anda buat</strong></p>
-<p class="image-container"><img style="width: 195.22px" src="img\\2133d50ed0212bf5.png"><img style="width: 197.00px" src="img\\7f764a7b7bd56df9.png"></p>
-<p>Pada praktikum 5 ini anda akan belajar mengenai pembangunan aplikasi bergerak multi halaman. Aplikasi yang dikembangkan berupa kasus daftar barang belanja. Pada aplikasi ini anda akan belajar untuk berpindah halaman dan mengirimkan data ke halaman lainnya. Gambaran mockup hasil akhir aplikasi dapat anda lihat pada gambar di atas (mockup dibuat sederhana, sehingga Anda mempunyai banyak ruang untuk berkreasi). Desain aplikasi menampilkan sebuah <code>ListView</code> widget yang datanya bersumber dari <code>List</code>. Ketika item ditekan, data akan dikirimkan ke halaman berikutnya.</p>
-<h2 is-upgraded><strong>Langkah 1: Siapkan project baru</strong></h2>
-<p>Sebelum melanjutkan praktikum, buatlah sebuah project baru Flutter dengan nama <strong>belanja </strong>dan susunan folder seperti pada gambar berikut. Penyusunan ini dimaksudkan untuk mengorganisasi kode dan widget yang lebih mudah.</p>
-<p class="image-container"><img style="width: 355.18px" src="img\\af4334a707ff50a2.png"></p>
-<h2 is-upgraded><strong>Langkah 2: Mendefinisikan Route</strong></h2>
-<p>Buatlah dua buah file dart dengan nama <code>home_page.dart</code> dan <code>item_page.dart</code> pada folder <strong>pages</strong>. Untuk masing-masing file, deklarasikan <code>class HomePage</code> pada file <code>home_page.dart</code> dan <code>ItemPage</code> pada <code>item_page.dart</code>. Turunkan class dari <code>StatelessWidget</code>. Gambaran potongan kode dapat anda lihat sebagai berikut.</p>
-<p class="image-container"><img style="width: 473.50px" src="img\\f8478f3c28c004c7.png"></p>
-<h2 is-upgraded>Langkah 3: Lengkapi Kode di <strong><code>main.dart</code></strong></h2>
-<p>Setelah kedua halaman telah dibuat dan didefinisikan, bukalah file <code>main.dart</code>. Pada langkah ini anda akan mendefinisikan <strong>Route </strong>untuk kedua halaman tersebut. Definisi penamaan <strong>route </strong>harus bersifat <strong>unique</strong>. Halaman <strong>HomePage </strong>didefinisikan sebagai <strong>/</strong>. Dan halaman <strong>ItemPage </strong>didefinisikan sebagai <strong>/item</strong>. Untuk mendefinisikan halaman awal, anda dapat menggunakan <code>named argument initialRoute</code>. Gambaran tahapan ini, dapat anda lihat pada potongan kode berikut.</p>
-<p class="image-container"><img style="width: 478.30px" src="img\\be86069fdd534874.png"></p>
-<h2 is-upgraded>Langkah 4: Membuat data model</h2>
-<p>Sebelum melakukan perpindahan halaman dari <code>HomePage</code> ke <code>ItemPage</code>, dibutuhkan proses pemodelan data. Pada desain mockup, dibutuhkan dua informasi yaitu nama dan harga. Untuk menangani hal ini, buatlah sebuah file dengan nama <code>item.dart</code> dan letakkan pada folder <strong>models</strong>. Pada file ini didefinisikan pemodelan data yang dibutuhkan. Ilustrasi kode yang dibutuhkan, dapat anda lihat pada potongan kode berikut.</p>
-<p class="image-container"><img style="width: 485.71px" src="img\\5d82c78163140d0c.png"></p>
-<h2 is-upgraded>Langkah 5: Lengkapi kode di class <strong><code>HomePage</code></strong></h2>
-<p>Pada halaman <code>HomePage</code> terdapat <code>ListView</code> widget. Sumber data <code>ListView</code> diambil dari model List dari object Item. Gambaran kode yang dibutuhkan untuk melakukan definisi model dapat anda lihat sebagai berikut.</p>
-<p class="image-container"><img style="width: 507.00px" src="img\\e22394a6f361eb06.png"></p>
-<h2 is-upgraded>Langkah 6: Membuat ListView dan itemBuilder</h2>
-<p>Untuk menampilkan <code>ListView</code> pada praktikum ini digunakan <code>itemBuilder</code>. Data diambil dari definisi model yang telah dibuat sebelumnya. Untuk menunjukkan batas data satu dan berikutnya digunakan widget <code>Card</code>. Kode yang telah umum pada bagian ini tidak ditampilkan. Gambaran kode yang dibutuhkan dapat anda lihat sebagai berikut.</p>
-<p class="image-container"><img style="width: 504.50px" src="img\\413ff356354734fc.png"></p>
-<p>Jalankan aplikasi pada emulator atau pada device anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Pastikan pada halaman awal telah berhasil menampilkan <code>ListView</code>. Jika ada kesalahan, segera perbaiki sebelum melanjutkan ke langkah berikutnya.</p>
-</aside>
-<h2 is-upgraded>Langkah 7: Menambahkan aksi pada <strong><code>ListView</code></strong></h2>
-<p>Item pada ListView saat ini ketika ditekan masih belum memberikan aksi tertentu. Untuk menambahkan aksi pada ListView dapat digunakan widget <code>InkWell</code> atau <code>GestureDetector</code>. Perbedaan utamanya <code>InkWell</code> merupakan material widget yang memberikan efek ketika ditekan. Sedangkan <code>GestureDetector</code> bersifat umum dan bisa juga digunakan untuk gesture lain selain sentuhan. Pada praktikum ini akan digunakan widget <code>InkWell</code>.</p>
-<p>Untuk menambahkan sentuhan, letakkan cursor pada widget pembuka <code>Card</code>. Kemudian gunakan shortcut quick fix dari VSCode (<strong>Ctrl + .</strong> pada Windows atau <strong>Cmd + .</strong> pada MacOS). Sorot menu <code>wrap with widget...</code> Ubah nilai widget menjadi <code>InkWell</code> serta tambahkan named argument <code>onTap</code> yang berisi fungsi untuk berpindah ke halaman <code>ItemPage</code>. Ilustrasi potongan kode dapat anda lihat pada potongan berikut.</p>
-<p class="image-container"><img style="width: 466.00px" src="img\\712e37fd6082bae9.png"></p>
-<p>Jalankan aplikasi kembali dan pastikan ListView dapat disentuh dan berpindah ke halaman berikutnya. Periksa kembali jika terdapat kesalahan.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Praktikum 2" duration="120">
-        <ol type="1" start="1">
-<li>Untuk melakukan pengiriman data ke halaman berikutnya, cukup menambahkan informasi arguments pada penggunaan <code>Navigator</code>. Perbarui kode pada bagian <code>Navigator</code> menjadi seperti berikut.</li>
+<google-codelab-step label="Refactoring dan testing" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<p>Lakukan refactoring berikut pada aplikasi ToDo Anda, lalu commit dengan pesan yang jelas:</p>
+<ol type="1">
+<li>Pisahkan widget bar ToDo menjadi <code>TodoTile</code> tersendiri agar <code>build</code> lebih pendek dan mudah diuji.</li>
+<li>Ekstrak logika filter (misal tampilkan hanya yang belum selesai) menjadi <code>Provider</code> turunan yang membaca <code>todoListProvider</code>.</li>
+<li>Integrasikan aplikasi ToDo dengan GoRouter: <code>/</code> untuk daftar dan <code>/stats</code> untuk halaman statistik, tambahkan <code>NavigationBar</code> untuk berpindah.</li>
 </ol>
-<pre><code>Navigator.pushNamed(context, &#39;/item&#39;, arguments: item);</code></pre>
-<ol type="1" start="2">
-<li>Pembacaan nilai yang dikirimkan pada halaman sebelumnya dapat dilakukan menggunakan <code>ModalRoute</code>. Tambahkan kode berikut pada blok fungsi build dalam halaman <code>ItemPage</code>. Setelah nilai didapatkan, anda dapat menggunakannya seperti penggunaan variabel pada umumnya. (<a href="https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments" target="_blank">https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments</a>)</li>
+<h2 is-upgraded>Testing</h2>
+<p>Widget test untuk memastikan UI bereaksi terhadap perubahan state provider:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:week3_todo/main.dart';
+
+void main() {
+  testWidgets('menambah tugas baru', (tester) async {
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    expect(find.text('Belum ada tugas'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'Kerjakan PR minggu 3');
+    await tester.tap(find.text('Tambah'));
+    await tester.pump();
+
+    expect(find.text('Kerjakan PR minggu 3'), findsOneWidget);
+  });
+}</code></pre>
+<p>Jalankan seluruh verifikasi:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<h2 is-upgraded>Checklist verifikasi mandiri</h2>
+<ul><li>Navigasi GoRouter bekerja: pindah halaman, back, dan akses path detail langsung.</li><li>ProviderScope membungkus root aplikasi; state ToDo bertahan saat berpindah halaman.</li><li>UI AsyncValue menangani loading, error, dan success, bukan hanya success.</li><li><code>flutter analyze</code> tanpa issue dan semua test lulus.</li><li>Hasil AI diverifikasi dan didokumentasikan pada folder <code>docs/</code>.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Tugas, refleksi, dan referensi" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Bangun <strong>aplikasi ToDo dengan navigasi dan Riverpod</strong> sebagai tugas minggu ini:</p>
+<ol type="1">
+<li>Minimal 2 halaman dengan GoRouter: daftar tugas, halaman detail/statistik.</li>
+<li>State dikelola Riverpod (<code>Notifier</code>), UI menggunakan <code>ConsumerWidget</code>.</li>
+<li>Tambahkan fitur simulasi asinkron dengan <code>AsyncValue</code>: state loading, error, dan success tampil dengan benar.</li>
+<li>Sertakan minimal 1 unit/widget test yang lulus.</li>
+<li>Kerjakan bagian AI Challenge dan dokumentasikan prompt, hasil AI, perbaikan, serta alasan keputusan teknis Anda.</li>
+<li>Push ke repository portfolio pada folder <code>03-week-3-navigation-state-management/</code> dengan struktur <code>lib/</code>, <code>test/</code>, <code>README.md</code>, dan <code>screenshots/</code>. README menjelaskan tujuan, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai.</li>
 </ol>
-<pre><code>final itemArgs = ModalRoute.of(context)!.settings.arguments as Item;</code></pre>
-<ol type="1" start="3">
-<li>Pada hasil akhir dari aplikasi <strong>belanja</strong> yang telah anda selesaikan, tambahkan atribut foto produk, stok, dan rating. Ubahlah tampilan menjadi <code>GridView</code> seperti di aplikasi marketplace pada umumnya.</li>
-<li>Silakan implementasikan <code>Hero widget</code> pada aplikasi <strong>belanja</strong> Anda dengan mempelajari dari sumber ini: <a href="https://docs.flutter.dev/cookbook/navigation/hero-animations" target="_blank">https://docs.flutter.dev/cookbook/navigation/hero-animations</a> </li>
-<li>Sesuaikan dan modifikasi tampilan sehingga menjadi aplikasi yang menarik. Selain itu, pecah widget menjadi kode yang lebih kecil. Tambahkan <strong>Nama </strong>dan <strong>NIM </strong>di footer aplikasi <strong>belanja</strong> Anda.</li>
-<li>Selesaikan Praktikum 5: Navigasi dan Rute tersebut. Cobalah modifikasi menggunakan plugin <a href="https://pub.dev/packages/go_router" target="_blank">go_router</a>, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md.</code> Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!</li>
-</ol>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Selamat!" duration="0">
-        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari Layout, Navigasi, dan rute di Flutter.</p>
-<p>Pada codelab berikutnya, Anda akan mempelajari tentang manajemen plugin di Flutter.</p>
-<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
-<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<h2 is-upgraded>Refleksi</h2>
+<ul><li>Kapan <code>setState</code> masih cukup, dan kapan state harus naik ke Riverpod?</li>
+<li>Apa perbedaan <code>context.go</code> dan <code>context.push</code>, dan kapan masing-masing tepat digunakan?</li>
+<li>Bagaimana <code>AsyncValue</code> mencegah bug dibanding tiga boolean terpisah?</li>
+<li>Bagian mana dari hasil AI yang Anda perbaiki, dan mengapa?</li></ul>
+<h2 is-upgraded>Referensi pendukung</h2>
 <ul>
-<li><a href="https://docs.flutter.dev/cookbook/navigation/passing-data" target="_blank">https://docs.flutter.dev/cookbook/navigation/passing-data</a> </li>
-<li><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.p" target="_blank">Flutter System Architecture</a></li>
-<li><a href="https://docs.flutter.dev/codelabs/layout-basics" target="_blank">https://docs.flutter.dev/codelabs/layout-basics</a></li>
-<li><a href="https://docs.flutter.dev/ui/interactivity" target="_blank">https://docs.flutter.dev/ui/interactivity</a> </li>
-<li><a href="https://gallery.flutter.dev/" target="_blank">https://gallery.flutter.dev/</a> </li>
+<li><a href="https://drive.google.com/file/d/1NB58_3HbR6pQhPTWG1Kbr4p4bHIcm45B/view" target="_blank">Slide: Navigation & State Management</a></li>
+  <li><a href="https://docs.flutter.dev/ui/navigation" target="_blank">Flutter: Navigation overview</a></li>
+<li><a href="https://pub.dev/packages/go_router" target="_blank">GoRouter package</a></li>
+<li><a href="https://riverpod.dev/docs/introduction/getting_started" target="_blank">Riverpod: Getting started</a></li>
+<li><a href="https://riverpod.dev/docs/concepts/async_notifiers" target="_blank">Riverpod: AsyncNotifier dan AsyncValue</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
 </ul>
-<h2 is-upgraded><strong>Referensi</strong></h2>
-<ul>
-<li><a href="https://docs.flutter.dev/ui/layout" target="_blank">https://docs.flutter.dev/ui/layout</a> </li>
-<li><a href="https://docs.flutter.dev/ui/layout/tutorial" target="_blank">https://docs.flutter.dev/ui/layout/tutorial</a> </li>
-<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
-<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
-<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">https://dart.dev/guides/language/language-tour</a> </li>
-<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a> </li>
-</ul>
-
-
-      </google-codelab-step>
-    
-  </google-codelab>
-
-  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
-  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
-  <script src="//support.google.com/inapp/api.js"></script>
-
-</body>
-</html>
+</google-codelab-step></google-codelab>
+<script src="https://storage.googleapis.com/claat-public/native-shim.js"></script><script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script><script src="https://storage.googleapis.com/claat-public/prettify.js"></script><script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
