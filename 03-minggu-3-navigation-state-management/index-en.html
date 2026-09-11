@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4F7DC9">
+  <title>#03 | Navigation &amp; State Management</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="G-H7507PFEJB" id="03-minggu-3-navigation-state-management" title="#03 | Navigation &amp; State Management" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+    <google-codelab-step label="Welcome" duration="5">
+      <p><strong>Last updated:</strong> August 31, 2026</p>
+      <p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html">English</a></p>
+      
+      <h2 is-upgraded>Learning Objectives</h2>
+      <p>After completing this codelab, students will be able to:</p>
+      <ul>
+        <li>Explain the concepts of navigation, routes, and the differences between Navigator 1.0 and GoRouter.</li>
+        <li>Implement multi-page navigation with GoRouter, including argument passing and a simple deep link.</li>
+        <li>Explain why state management is needed and how Riverpod works (Provider, ConsumerWidget, Notifier).</li>
+        <li>Use AsyncValue to handle loading, error, and success states in the UI.</li>
+        <li>Build a ToDo application with navigation and Riverpod, then verify it with simple widget tests.</li>
+      </ul>
+      <h2 is-upgraded>Prerequisites</h2>
+      <ul>
+        <li>A laptop or PC, internet connection, and the portfolio repository (GitHub/GitLab) from previous weeks.</li>
+        <li>Flutter SDK, VS Code with the Flutter/Dart extensions, and an Android emulator or physical device.</li>
+        <li>Understanding of Weeks 1–2: Dart fundamentals, widgets, StatelessWidget/StatefulWidget, layout, and theming.</li>
+      </ul>
+      <aside class="warning"><p><strong>AI policy.</strong> This week, AI is allowed only in the <strong>AI Challenge</strong> section to help create boilerplate. You must read, explain, verify, and fix every line of AI-generated code. The guided implementation must be done by yourself without AI to strengthen your conceptual understanding (this material is included in the closed-book online assessment).</p></aside>
+    </google-codelab-step>
+
+  <google-codelab-step label="Navigation concepts and GoRouter" duration="20">
+      <h2 is-upgraded>Basic navigation in Flutter</h2>
+      <p>Navigation is the mechanism for moving between screens. In Flutter, each screen is a <strong>route</strong> pushed onto the <code>Navigator</code> (a stack). The classic approach (Navigator 1.0) uses <code>Navigator.push</code> and <code>Navigator.pop</code>:</p>
+      <pre><code>Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) =&gt; const DetailPage()),
+);</code></pre>
+      <p>This approach is simple but hard to manage in larger applications: routes are not structured, deep links are complicated, and guards (for example login redirects) are scattered across many places.</p>
+      <h2 is-upgraded>GoRouter</h2>
+      <p><a href="https://pub.dev/packages/go_router" target="_blank">GoRouter</a> is the declarative router recommended by Flutter. Its core concepts are:</p>
+      <table><tr><th>Concept</th><th>Explanation</th></tr>
+        <tr><td><code>GoRoute</code></td><td>Defines a path and the target widget, e.g. <code>/</code>, <code>/detail/:id</code>.</td></tr>
+        <tr><td><code>context.go()</code></td><td>Navigates by replacing the stack (useful for login redirects).</td></tr>
+        <tr><td><code>context.push()</code></td><td>Pushes a new route on top of the stack (useful for detail screens).</td></tr>
+        <tr><td><code>path parameter</code></td><td>A dynamic value in the path, accessed through <code>state.pathParameters</code>.</td></tr>
+        <tr><td><code>extra</code></td><td>Sends an object between routes (use with care; it is not preserved across a web restart).</td></tr>
+        <tr><td><code>redirect</code></td><td>A centralized navigation guard, e.g. checking the login status.</td></tr>
+      </table>
+      <h2 is-upgraded>Lab 1 — Multi-page application with GoRouter</h2>
+      <p>Create a new project:</p>
+      <pre><code>flutter create week3_navigation
+cd week3_navigation
+flutter pub add go_router</code></pre>
+      <p>Organize the folder structure:</p>
+      <pre><code>lib/
+├── main.dart
+└── pages/
+    ├── home_page.dart
+    └── detail_page.dart</code></pre>
+      <p><strong>1. Define the router</strong> in <code>lib/main.dart</code>:</p>
+      <pre><code>import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'pages/detail_page.dart';
+import 'pages/home_page.dart';
+
+void main() =&gt; runApp(const MyApp());
+
+final _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) =&gt; const HomePage(),
+      routes: [
+        GoRoute(
+          path: 'detail/:id',
+          builder: (context, state) =&gt; DetailPage(
+            id: state.pathParameters['id']!,
+          ),
+        ),
+      ],
+    ),
+  ],
+);
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Week 3 - Navigation',
+      routerConfig: _router,
+      theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
+    );
+  }
+}</code></pre>
+      <aside class="special"><p><strong>Note:</strong> Use <code>MaterialApp.router</code>, not the regular <code>MaterialApp</code>. The router is configured through the <code>routerConfig</code> parameter.</p></aside>
+      <p><strong>2. Home page</strong> (<code>lib/pages/home_page.dart</code>):</p>
+      <pre><code>import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Home')),
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) =&gt; ListTile(
+          title: Text('Item ${index + 1}'),
+          onTap: () =&gt; context.go('/detail/${index + 1}'),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+      <p><strong>3. Detail page</strong> (<code>lib/pages/detail_page.dart</code>):</p>
+      <pre><code>import 'package:flutter/material.dart';
+
+class DetailPage extends StatelessWidget {
+  final String id;
+  const DetailPage({super.key, required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Detail $id')),
+      body: Center(child: Text('You opened item with id: $id')),
+    );
+  }
+}</code></pre>
+      <p><strong>4. Run and observe.</strong> Open an item, then press the system back button. Notice that the path changes with the active screen the same path can also be accessed directly without going through Home. This is the advantage of a declarative router over Navigator 1.0.</p>
+    </google-codelab-step>
+
+  <google-codelab-step label="State management with Riverpod" duration="25">
+      <h2 is-upgraded>Why do we need state management?</h2>
+      <p><code>setState</code> is enough for state local to a single widget. However, when state must be shared across many screens (for example a ToDo list shown in Home and modified in another screen), lifting state up the widget tree makes the code complex (prop drilling). State management moves state out of the widgets so that:</p>
+      <ul>
+        <li>The UI can be rebuilt consistently from the same state (declarative UI = f(state));</li>
+        <li>Logic can be tested without building the UI;</li>
+        <li>State survives even when a widget is no longer visible.</li>
+      </ul>
+      <p>In this course we use <a href="https://pub.dev/packages/riverpod" target="_blank">Riverpod</a> a <code>Provider</code>-based solution that is compile-safe, not tied to <code>BuildContext</code>, and easy to test.</p>
+      <h2 is-upgraded>Core Riverpod concepts</h2>
+      <table><tr><th>Concept</th><th>Explanation</th></tr>
+        <tr><td><code>ProviderScope</code></td><td>The global container that stores all providers; it wraps the application root.</td></tr>
+        <tr><td><code>Provider</code></td><td>A read-only/immutable value (e.g. configuration or a service).</td></tr>
+        <tr><td><code>Notifier</code> + <code>NotifierProvider</code></td><td>Mutable state changed through methods; the UI calls methods rather than mutating state directly.</td></tr>
+        <tr><td><code>ConsumerWidget</code></td><td>A widget that can read providers through <code>ref</code>.</td></tr>
+        <tr><td><code>ref.watch</code> vs <code>ref.read</code></td><td><code>watch</code>: rebuilds when state changes (inside <code>build</code>). <code>read</code>: reads once (inside callbacks/events).</td></tr>
+      </table>
+      <h2 is-upgraded>Lab 2 — ToDo application with Riverpod</h2>
+      <pre><code>flutter create week3_todo
+cd week3_todo
+flutter pub add flutter_riverpod</code></pre>
+      <p><strong>1. Wrap the application with ProviderScope</strong> in <code>lib/main.dart</code>:</p>
+      <pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'pages/todo_page.dart';
+
+void main() =&gt; runApp(const ProviderScope(child: MyApp()));
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) =&gt; MaterialApp(
+        title: 'Week 3 - ToDo',
+        theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
+        home: const TodoPage(),
+      );
+}</code></pre>
+      <p><strong>2. Create the state and provider</strong> (<code>lib/providers/todo_provider.dart</code>):</p>
+      <pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class Todo {
+  Todo(this.title, {this.done = false});
+  final String title;
+  final bool done;
+
+  Todo copyWith({String? title, bool? done}) =&gt;
+      Todo(title ?? this.title, done: done ?? this.done);
+}
+
+class TodoListNotifier extends Notifier&lt;List&lt;Todo&gt;&gt; {
+  @override
+  List&lt;Todo&gt; build() =&gt; const [];
+
+  void add(String title) =&gt; state = [...state, Todo(title)];
+
+  void toggle(int index) {
+    final todos = [...state];
+    todos[index] = todos[index].copyWith(done: !todos[index].done);
+    state = todos;
+  }
+
+  void remove(int index) =&gt; state = [...state]..removeAt(index);
+}
+
+final todoListProvider =
+    NotifierProvider&lt;TodoListNotifier, List&lt;Todo&gt;&gt;(TodoListNotifier.new);</code></pre>
+      <aside class="special"><p><strong>Note:</strong> State is never mutated in place (<code>state.add(...)</code> is wrong!). Always create a new list (<em>immutability</em>) so that Riverpod detects the change and rebuilds the UI.</p></aside>
+<p><strong>3. Build the UI with ConsumerWidget</strong> (<code>lib/pages/todo_page.dart</code>):</p>
+      <pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/todo_provider.dart';
+
+class TodoPage extends ConsumerWidget {
+  const TodoPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todos = ref.watch(todoListProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('ToDo Riverpod')),
+      body: todos.isEmpty
+          ? const Center(child: Text('No tasks yet'))
+          : ListView.builder(
+              itemCount: todos.length,
+              itemBuilder: (context, index) =&gt; ListTile(
+                leading: Checkbox(
+                  value: todos[index].done,
+                  onChanged: (_) =&gt;
+                      ref.read(todoListProvider.notifier).toggle(index),
+                ),
+                title: Text(
+                  todos[index].title,
+                  style: TextStyle(
+                      decoration: todos[index].done
+                          ? TextDecoration.lineThrough
+                          : null),
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () =&gt;
+                      ref.read(todoListProvider.notifier).remove(index),
+                ),
+              ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =&gt; _showAddDialog(context, ref),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showAddDialog(BuildContext context, WidgetRef ref) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) =&gt; AlertDialog(
+        title: const Text('New task'),
+        content: TextField(controller: controller, autofocus: true),
+        actions: [
+          TextButton(
+            onPressed: () =&gt; Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                ref
+                    .read(todoListProvider.notifier)
+                    .add(controller.text.trim());
+              }
+              Navigator.pop(context);
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+}</code></pre>
+      <p><strong>4. Note the important patterns:</strong> <code>ref.watch</code> inside <code>build</code> automatically rebuilds the page when the list changes; <code>ref.read(todoListProvider.notifier)</code> inside a callback only calls a method without subscribing.</p>
+    </google-codelab-step>
+<google-codelab-step label="AsyncValue: loading, error, success" duration="20">
+      <h2 is-upgraded>The problem with async state</h2>
+      <p>Much state comes from asynchronous processes (reading a database, calling an API). The UI must show three possibilities: <strong>loading</strong> (in progress), <strong>error</strong> (failed), and <strong>success</strong> (data ready). Managing three boolean flags manually is error-prone (<code>isLoading</code> and <code>hasError</code> can become inconsistent).</p>
+      <h2 is-upgraded>AsyncValue</h2>
+      <p>Riverpod provides <code>AsyncValue&lt;T&gt;</code>, which models all three conditions in a single type. Use <code>AsyncNotifier</code> for async state:</p>
+      <pre><code>class ProductsNotifier extends AsyncNotifier&lt;List&lt;String&gt;&gt; {
+  @override
+  Future&lt;List&lt;String&gt;&gt; build() async {
+    await Future.delayed(const Duration(seconds: 2)); // simulate network
+    return ['Keyboard', 'Mouse', 'Monitor'];
+  }
+
+  Future&lt;void&gt; refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() =&gt; _fetch());
+  }
+
+  Future&lt;List&lt;String&gt;&gt; _fetch() async {
+    await Future.delayed(const Duration(seconds: 1));
+    return ['Keyboard', 'Mouse', 'Monitor', 'Headset'];
+  }
+}
+
+final productsProvider =
+    AsyncNotifierProvider&lt;ProductsNotifier, List&lt;String&gt;&gt;(
+        ProductsNotifier.new);</code></pre>
+      <aside class="special"><p><strong>Note:</strong> <code>AsyncValue.guard</code> automatically captures exceptions and turns them into <code>AsyncError</code> avoid scattered manual <code>try/catch</code> blocks.</p></aside>
+      <p>On the UI side, an <code>AsyncValue</code> can be matched with <code>when</code> or <code>if-case</code>:</p>
+      <pre><code>class ProductPage extends ConsumerWidget {
+  const ProductPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsAsync = ref.watch(productsProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Products')),
+      body: productsAsync.when(
+        loading: () =&gt; const Center(child: CircularProgressIndicator()),
+        error: (err, stack) =&gt; Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Failed to load: $err'),
+              FilledButton(
+                onPressed: () =&gt; ref.invalidate(productsProvider),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+        data: (products) =&gt; ListView.builder(
+          itemCount: products.length,
+          itemBuilder: (context, index) =&gt;
+              ListTile(title: Text(products[index])),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+      <h2 is-upgraded>Lab 3 — Test all three states</h2>
+      <ol type="1">
+        <li>Copy the code above into your ToDo project (or a separate project) and run it. Observe the loading screen for the first 2 seconds.</li>
+        <li>Temporarily change <code>build()</code> to throw an error: <code>throw Exception('Failed to connect to the server');</code>. Run and observe the error screen with its <em>Retry</em> button.</li>
+        <li>Press Retry <code>ref.invalidate</code> re-runs the provider. Restore the code and confirm the success state is shown.</li>
+        <li>Reflect: why is showing stale data with a refresh indicator sometimes better than blanking the screen? When is that pattern important?</li>
+      </ol>
+      <aside class="warning"><p><strong>Common mistakes (exam material):</strong> (1) calling <code>ref.watch</code> inside a callback; (2) mutating state in place without creating a new object; (3) omitting the error UI so the application shows a white screen when the API fails; (4) using <code>setState</code> for state shared across screens.</p></aside>
+    </google-codelab-step>
+<google-codelab-step label="AI Challenge" duration="20">
+      <h2 is-upgraded>The role of AI in this codelab</h2>
+      <p>For navigation and state management, AI may be used as a <strong>co-developer</strong> to help create boilerplate but you must still read, explain, verify, fix, and test the result. The grade is not based on how much code AI produces, but on prompt quality, verification, and documentation.</p>
+      <h2 is-upgraded>AI Prompt Challenge</h2>
+      <p>Ask an AI coding assistant (Cursor, Copilot, Claude Code, or equivalent) with the following prompt:</p>
+      <pre><code>Create a Flutter page named StatsPage using flutter_riverpod.
+Requirements:
+- A ConsumerWidget with one AsyncNotifierProvider that simulates
+  fetching statistics (2-second delay, ~30% chance of failure).
+- The UI must handle loading (spinner), error (message + retry button),
+  and success (ListView with 3 items).
+- Provide a unit test for the notifier.
+Explain each part of the code with comments.</code></pre>
+      <h2 is-upgraded>AI Verification Checklist</h2>
+      <p>Before accepting AI-generated code, verify the following and record your findings in the README:</p>
+      <ul>
+        <li>Is state mutated immutably (no <code>state.add()</code> or direct list mutation)?</li>
+        <li>Is <code>ref.watch</code> used only inside <code>build</code>, and <code>ref.read</code> inside callbacks?</li>
+        <li>Are all three AsyncValue states really handled (not only success)?</li>
+        <li>Is the provider declared with an explicit type and not duplicated with other providers?</li>
+        <li>Does the AI code use old Riverpod APIs (<code>StateProvider</code> antipattern, deprecated <code>StateNotifierProvider</code>, or unnecessary nested <code>Consumer</code>)? Fix them to use the <code>Notifier</code>/<code>ConsumerWidget</code> pattern.</li>
+        <li>Run <code>flutter analyze</code> and <code>flutter test</code> does the AI output pass without warnings?</li>
+      </ul>
+      <aside class="special"><p><strong>Technical responsibility:</strong> store the prompt used, the initial AI output, the fixes you made, and the test results in the <code>docs/</code> folder of this week&apos;s task. During the demo, you must be able to explain every line of the AI-generated code.</p></aside>
+    </google-codelab-step>
+<google-codelab-step label="Refactoring and testing" duration="15">
+      <h2 is-upgraded>Refactoring Challenge</h2>
+      <p>Perform the following refactoring on your ToDo application, then commit with clear messages:</p>
+      <ol type="1">
+        <li>Split the ToDo row widget into a separate <code>TodoTile</code> so <code>build</code> is shorter and easier to test.</li>
+        <li>Extract filtering logic (for example, show only unfinished tasks) into a derived <code>Provider</code> that reads <code>todoListProvider</code>.</li>
+        <li>Integrate the ToDo application with GoRouter: <code>/</code> for the list and <code>/stats</code> for a statistics page, adding a <code>NavigationBar</code> to switch between them.</li>
+      </ol>
+      <h2 is-upgraded>Testing</h2>
+      <p>A widget test to make sure the UI reacts to provider state changes:</p>
+      <pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:week3_todo/main.dart';
+
+void main() {
+  testWidgets('adds a new task', (tester) async {
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    expect(find.text('No tasks yet'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'Do week 3 homework');
+    await tester.tap(find.text('Add'));
+    await tester.pump();
+
+    expect(find.text('Do week 3 homework'), findsOneWidget);
+  });
+}</code></pre>
+      <p>Run all verifications:</p>
+      <pre><code>flutter analyze
+flutter test</code></pre>
+      <h2 is-upgraded>Self-verification checklist</h2>
+      <ul>
+        <li>GoRouter navigation works: navigating pages, going back, and accessing the detail path directly.</li>
+        <li>ProviderScope wraps the application root; ToDo state survives when switching pages.</li>
+        <li>The AsyncValue UI handles loading, error, and success, not only success.</li>
+        <li><code>flutter analyze</code> has no issues and all tests pass.</li>
+        <li>AI output is verified and documented in the <code>docs/</code> folder.</li>
+      </ul>
+    </google-codelab-step>
+
+    <google-codelab-step label="Assignment, reflection, references" duration="10">
+      <h2 is-upgraded>Mini project / Industry Challenge</h2>
+      <p>Build a <strong>ToDo application with navigation and Riverpod</strong> as this week&apos;s assignment:</p>
+      <ol type="1">
+        <li>At least 2 pages with GoRouter: a task list and a detail/statistics page.</li>
+        <li>State managed with Riverpod (<code>Notifier</code>), the UI using <code>ConsumerWidget</code>.</li>
+        <li>Add a simulated async feature with <code>AsyncValue</code>: loading, error, and success states must display correctly.</li>
+        <li>Include at least 1 unit/widget test that passes.</li>
+        <li>Complete the AI Challenge section and document the prompt, AI output, fixes, and the reasons for your technical decisions.</li>
+        <li>Push to the portfolio repository under <code>03-week-3-navigation-state-management/</code> with the structure <code>lib/</code>, <code>test/</code>, <code>README.md</code>, and <code>screenshots/</code>. The README should explain the objective, main features, technology stack, run instructions, and achieved results.</li>
+      </ol>
+      <h2 is-upgraded>Reflection</h2>
+      <ul>
+        <li>When is <code>setState</code> still enough, and when should state be lifted into Riverpod?</li>
+        <li>What is the difference between <code>context.go</code> and <code>context.push</code>, and when should each be used?</li>
+        <li>How does <code>AsyncValue</code> prevent bugs compared with three separate booleans?</li>
+        <li>Which part of the AI output did you fix, and why?</li>
+      </ul>
+      <h2 is-upgraded>References</h2>
+      <ul>
+        <li><a href="https://drive.google.com/file/d/1Dagwmk3itpa25l_O7kd-kTwse6AO0_Qz/view" target="_blank">Presentation Slide: Navigation & State Management in Flutter</a></li>
+        <li><a href="https://docs.flutter.dev/ui/navigation" target="_blank">Flutter: Navigation overview</a></li>
+        <li><a href="https://pub.dev/packages/go_router" target="_blank">GoRouter package</a></li>
+        <li><a href="https://riverpod.dev/docs/introduction/getting_started" target="_blank">Riverpod: Getting started</a></li>
+        <li><a href="https://riverpod.dev/docs/concepts/async_notifiers" target="_blank">Riverpod: AsyncNotifier and AsyncValue</a></li>
+        <li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+      </ul>
+    </google-codelab-step>
+
+  </google-codelab>
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+</body>
+</html>
