@@ -1,604 +1,652 @@
-
 <!doctype html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#04 | Networking &amp; REST API</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="04-minggu-4-networking-rest-api" title="#04 | Networking &amp; REST API" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
 
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <meta name="theme-color" content="#4F7DC9">
-  <meta charset="UTF-8">
-  <title>#14 | RESTful API</title>
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
-  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
-  <style>
-    .success {
-      color: #1e8e3e;
-    }
-    .error {
-      color: red;
-    }
-  </style>
-</head>
-<body>
-  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab codelab-gaid="G-H7507PFEJB"
-                  id="14-restful-api"
-                  title="#14 | RESTful API"
-                  environment="web"
-                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
-    
-      <google-codelab-step label="RESTful API di Flutter" duration="0">
-        <p><strong>Terakhir diperbarui:</strong> 24 November 2025</p>
-<p><strong>Penulis:</strong> Habibie Ed Dien</p>
-<p>Pada codelab ini, Anda akan mempelajari tentang RESTful API di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara menggunakan RESTful API ke dalam project flutter.</p>
-<p>Video singkat berikut menjelaskan tentang <em>fetching</em> data di Flutter. Silakan simak dan pahami!</p>
-<iframe class="youtube-video" src="https://www.youtube.com/embed/0zuYCE3-3Y0?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
-<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
-<ul>
-<li>Mendesain klien HTTP untuk mengambil data dari layanan web (verb GET).</li>
-<li>Mengirim data ke server menggunakan operasi POST.</li>
-<li>Memperbarui data yang ada di server menggunakan operasi PUT.</li>
-<li>Menghapus data dari server menggunakan operasi DELETE.</li>
-<li>Menggunakan http library untuk membuat permintaan ke layanan web.</li>
-</ul>
-<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023) dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
-</aside>
-<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
-<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
-<ul>
-<li>PC atau Laptop dengan spesifikasi minimum RAM 6GB Processor Core i3</li>
-<li>Koneksi internet</li>
-<li>Chrome Browser</li>
-<li>Perangkat mobile (Android/iOS)</li>
-</ul>
-<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
-<ul>
-<li>Algoritma dan Pemrograman Dasar</li>
-<li>Pemrograman Berorientasi Objek</li>
-<li>Bahasa Pemrograman Dart</li>
-<li>Pemrograman Asynchronous</li>
-</ul>
+<google-codelab-step label="Selamat datang" duration="5">
+<p><strong>Terakhir diperbarui:</strong> 11 September 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Tujuan pembelajaran</h2><p>Setelah menyelesaikan codelab ini, mahasiswa mampu:</p><ul>
+<li>menjelaskan konsep HTTP, REST API, dan JSON;</li><li>memetakan JSON ke model Dart (serialization) dengan aman null;</li><li>menerapkan repository pattern dasar sehingga UI tidak memanggil API secara langsung;</li><li>mengonfigurasi Dio (base URL, timeout, interceptor) dan menangani error jaringan;</li><li>menampilkan state loading, error, empty, dan success pada UI dengan AsyncValue + Riverpod;</li><li>menerapkan pagination dasar (infinite scroll).</li></ul>
+<h2 is-upgraded>Persiapan</h2><ul><li>Laptop/PC, koneksi internet, dan repository portfolio (GitHub/GitLab) dari minggu sebelumnya.</li><li>Flutter SDK, VS Code (ekstensi Flutter/Dart), emulator Android atau perangkat fisik.</li><li>Pemahaman Minggu 3: GoRouter, Riverpod, Notifier, AsyncValue.</li></ul>
+<aside class="warning"><p><strong>Kebijakan AI.</strong> Minggu 4 adalah materi lanjutan: AI boleh membantu merancang repository layer, tetapi Anda wajib menguji error handling, memperbaiki logic, serta mampu menjelaskan setiap keputusan teknis. Jangan biarkan AI menulis seluruh project tanpa verifikasi.</p></aside>
+</google-codelab-step>
 
+<google-codelab-step label="Konsep HTTP, REST, dan JSON" duration="15">
+<h2 is-upgraded>HTTP dan REST API</h2><p>HTTP adalah protokol request–response: client mengirim request (method + URL + header + body), server membalas dengan status code + body. REST adalah gaya arsitektur yang memetakan operasi ke resource melalui URL dan method HTTP:</p>
+<table><tr><th>Method</th><th>Makna pada koleksi resource</th><th>Contoh</th></tr><tr><td><code>GET</code></td><td>Membaca data (tanpa efek samping).</td><td><code>GET /posts</code>, <code>GET /posts/1</code></td></tr><tr><td><code>POST</code></td><td>Membuat resource baru.</td><td><code>POST /posts</code></td></tr><tr><td><code>PUT / PATCH</code></td><td>Mengganti / memperbarui sebagian resource.</td><td><code>PUT /posts/1</code></td></tr><tr><td><code>DELETE</code></td><td>Menghapus resource.</td><td><code>DELETE /posts/1</code></td></tr></table>
+<p>Status code penting: <code>200 OK</code>, <code>201 Created</code>, <code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>404 Not Found</code>, <code>500 Internal Server Error</code>. Aplikasi mobile wajib menyiapkan UI untuk tiap kelompok: success (2xx), client error (4xx), dan server/network error (5xx/timeout).</p>
+<h2 is-upgraded>JSON dan model Dart</h2><p>JSON (JavaScript Object Notation) adalah format tukar data standar API. Contoh respons <code>GET https://jsonplaceholder.typicode.com/posts/1</code>:</p>
+<pre><code>{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere...",
+  "body": "quia et suscipit..."
+}</code></pre>
+<p>Di Dart, JSON mentah (<code>Map&lt;String, dynamic&gt;</code>) harus dipetakan ke class model agar aman terhadap null dan kesalahan ketik. Pola manual <code>fromJson</code>/<code>toJson</code> cukup untuk codelab ini; untuk project besar gunakan code generator (<code>json_serializable</code> / <code>freezed</code>).</p>
+<h2 is-upgraded>Repository pattern dasar</h2><p>Aturan arsitektur minggu ini (jembatan menuju Clean Architecture di Minggu 7):</p>
+<ul><li><strong>UI tidak boleh memanggil Dio/http secara langsung.</strong> UI hanya membaca provider.</li><li><strong>Repository</strong> adalah satu-satunya pintu ke sumber data (API). Ia mengubah exception jaringan menjadi kegagalan yang bermakna bagi UI.</li><li><strong>Provider Riverpod</strong> mengekspos <code>AsyncValue</code> ke UI (loading/error/data).</li></ul>
+<pre><code>UI (ConsumerWidget) --watch--&gt; Provider (AsyncValue)
+Provider --panggil--&gt; Repository --pakai--&gt; Dio --HTTP--&gt; REST API</code></pre>
+</google-codelab-step>
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Apa itu RESTful API ?" duration="10">
-        <p>API RESTful (atau layanan web RESTful) adalah layanan <em>backend</em> yang menyediakan data untuk aplikasi Anda (<em>frontend</em> atau <em>client</em>), dengan tujuan memungkinkan operasi <strong>CRUD</strong> (<em>Create, Read, Update, dan Delete</em>) pada data.</p>
-<p>Komunikasi ini dilakukan menggunakan protokol HTTP dan serangkaian aksi standar yang disebut <em>verbs</em>. Data yang ditransfer biasanya dalam format JSON.</p>
-<p>Empat <em>verb</em> utama yang digunakan adalah:</p>
-<ol type="1" start="1">
-<li><strong>GET:</strong> Untuk mengambil data dari server.</li>
-<li><strong>POST:</strong> Untuk mengirim atau memasukkan data baru.</li>
-<li><strong>PUT:</strong> Untuk memperbarui data yang sudah ada.</li>
-<li><strong>DELETE:</strong> Untuk menghapus data.</li>
-</ol>
-<p>Materi Anda selanjutnya berfokus pada cara mendesain klien HTTP untuk melakukan operasi CRUD ini di Flutter.</p>
+<google-codelab-step label="Praktikum 1: Dio dan model data" duration="25">
+<h2 is-upgraded>Siapkan project</h2>
+<pre><code>flutter create week4_api
+cd week4_api
+flutter pub add dio flutter_riverpod</code></pre>
+<p>Struktur folder:</p>
+<pre><code>lib/
+├── main.dart
+├── data/
+│   ├── api_client.dart
+│   ├── models/
+│   │   └── post.dart
+│   └── repositories/
+│       └── post_repository.dart
+└── pages/
+    └── post_list_page.dart</code></pre>
+<h2 is-upgraded>1. Model data dengan fromJson aman null</h2>
+<p>Buat <code>lib/data/models/post.dart</code>. API dummy yang dipakai minggu ini adalah <a href="https://jsonplaceholder.typicode.com" target="_blank">JSONPlaceholder</a> (gratis, tanpa API key) dengan endpoint <code>GET /posts</code>.</p>
+<pre><code>class Post {
+  const Post({
+    required this.userId,
+    required this.id,
+    required this.title,
+    required this.body,
+  });
 
+  final int userId;
+  final int id;
+  final String title;
+  final String body;
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Mendesain Klien HTTP dan Mengambil Data" duration="10">
-        <p>Sebagian besar aplikasi seluler bergantung pada data yang berasal dari sumber eksternal. Bayangkan aplikasi untuk membaca buku, menonton film, berbagi foto dengan teman, membaca berita, atau menulis email: semua aplikasi ini menggunakan data yang diambil dari sumber eksternal. Saat aplikasi mengonsumsi data eksternal, biasanya ada layanan backend yang menyediakan data tersebut untuk aplikasi: layanan web atau API web.</p>
-<p>Yang terjadi adalah aplikasi Anda (frontend atau klien) terhubung ke layanan web melalui HTTP dan meminta beberapa data. Layanan backend kemudian merespons dengan mengirimkan data ke aplikasi, biasanya dalam format JSON atau XML.</p>
-<p>Untuk codelab ini, kita akan membuat aplikasi yang membaca dan menulis data dari layanan web. Karena membuat API web berada di luar ruang lingkup codelab ini, kita akan menggunakan layanan mock, yang disebut Wire Mock Cloud, yang akan mensimulasikan perilaku layanan web nyata, tetapi akan sangat mudah untuk disiapkan dan digunakan.</p>
+  factory Post.fromJson(Map&lt;String, dynamic&gt; json) {
+    return Post(
+      userId: (json['userId'] as num?)?.toInt() ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title'] as String? ?? '',
+      body: json['body'] as String? ?? '',
+    );
+  }
 
+  Map&lt;String, dynamic&gt; toJson() =&gt; {
+        'userId': userId,
+        'id': id,
+        'title': title,
+        'body': body,
+      };
+}</code></pre>
+<aside class="special"><p><strong>Mengapa cast defensif?</strong> Respons API nyata sering tidak sesuai dokumentasi (field hilang, tipe berubah). Pola <code>as String? ?? ''</code> mencegah crash <code>type 'Null' is not a subtype</code> yang menjadi sumber bug paling umum pada integrasi API pertama.</p></aside>
+<h2 is-upgraded>2. Konfigurasi Dio terpusat</h2>
+<p>Buat <code>lib/data/api_client.dart</code>. Seluruh konfigurasi jaringan (base URL, timeout, logging) hidup di satu tempat:</p>
+<pre><code>import 'package:dio/dio.dart';
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 1: Membuat layanan Mock API" duration="30">
-        <p>Untuk mengikuti codelab ini, perangkat Anda memerlukan koneksi internet untuk mengambil data dari layanan web.</p>
-<p>Dalam codelab ini, kita akan mensimulasikan layanan web menggunakan Wire Mock Cloud dan membuat aplikasi yang membaca data dari layanan mock. Kita akan mulai dengan menyiapkan layanan baru:</p>
-<ol type="1" start="1">
-<li>Daftar untuk layanan Mock Lab di<a href="https://app.wiremock.cloud/" target="_blank">https://app.wiremock.cloud/</a> dan daftar ke situs tersebut, buat nama pengguna dan kata sandi Anda.</li>
-<li>Masuk ke layanan tersebut, buka &#34;Example Mock API&#34;, dan klik pada bagian Stubs dari API contoh. Kemudian, klik pada entri pertama—yaitu, Get a JSON resource. Anda harus melihat layar yang mirip dengan berikut ini:<br><img style="width: 589.00px" src="img/3cf97640f6c91fe9.png"></li>
-<li>Klik pada tombol New. Untuk Namanya, ketik Pizza List, biarkan GET sebagai verb, dan di kotak teks di dekat verb GET, ketik /pizzalist. Kemudian, di bagian Response, untuk status 200, pilih JSON sebagai format dan tempel konten JSON yang tersedia di<a href="https://bit.ly/pizzalist" target="_blank">https://bit.ly/pizzalist</a>. </li>
-</ol>
-<p class="image-container"><img style="width: 380.00px" src="img/e2b2daba90db4453.png"></p>
-<ol type="1" start="4">
-<li>Tekan tombol Save di bagian bawah halaman untuk menyimpan stub. Ini menyelesaikan pengaturan untuk layanan mock backend.</li>
-<li>Kembali ke proyek Flutter Anda, tambahkan dependensi http dengan mengetik di Terminal Anda:</li>
-</ol>
-<pre><code>flutter pub add http</code></pre>
-<ol type="1" start="6">
-<li>Di folder lib dalam proyek Anda, tambahkan file baru bernama httphelper.dart.</li>
-<li>Di file httphelper.dart, tambahkan kode berikut:</li>
-</ol>
-<pre><code>import &#39;dart:io&#39;; 
-import &#39;package:http/http.dart&#39; as http; 
-import &#39;dart:convert&#39;; 
-import &#39;pizza.dart&#39;; 
+Dio createDio() {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: 'https://jsonplaceholder.typicode.com',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      headers: {'Accept': 'application/json'},
+    ),
+  );
+  dio.interceptors.add(
+    LogInterceptor(requestBody: true, responseBody: false),
+  );
+  return dio;
+}</code></pre>
+<aside class="special"><p><strong>Mengapa Dio, bukan package http?</strong> Dio memberi timeout per-request, interceptor (logging/auth header), dan error terstruktur (<code>DioException</code> dengan <code>type</code>) tanpa boilerplate tambahan.</p></aside>
+<h2 is-upgraded>3. Repository sebagai pintu data</h2>
+<p>Buat <code>lib/data/repositories/post_repository.dart</code>:</p>
+<pre><code>import 'package:dio/dio.dart';
+import '../models/post.dart';
 
-class HttpHelper {
-  final String authority = &#39;02z2g.mocklab.io&#39;;
-  final String path = &#39;pizzalist&#39;;
-  Future&lt;List&lt;Pizza&gt;&gt; getPizzaList() async {
-    final Uri url = Uri.https(authority, path);
-    final http.Response result = await http.get(url);
-    if (result.statusCode == HttpStatus.ok) {
-      final jsonResponse = json.decode(result.body);
-      //provide a type argument to the map method to avoid type 
-      //error
-      List&lt;Pizza&gt; pizzas =
-          jsonResponse.map&lt;Pizza&gt;((i) =&gt; 
-            Pizza.fromJson(i)).toList();
-      return pizzas;
-    } else {
-      return [];
-    }
+class PostRepository {
+  PostRepository(this._dio);
+  final Dio _dio;
+
+  Future&lt;List&lt;Post&gt;&gt; fetchPosts() async {
+    final response = await _dio.get&lt;List&gt;('/posts');
+    final data = response.data ?? [];
+    return data
+        .whereType&lt;Map&lt;String, dynamic&gt;&gt;()
+        .map(Post.fromJson)
+        .toList();
   }
 }</code></pre>
-<ol type="1" start="8">
-<li>Di file main.dart, di kelas _MyHomePageState, tambahkan metode bernama callPizzas. Ini mengembalikan Future dari List objek Pizza dengan memanggil metode getPizzaList dari kelas HttpHelper, sebagai berikut:</li>
-</ol>
-<pre><code>Future&lt;List&lt;Pizza&gt;&gt; callPizzas() async {
-  HttpHelper helper = HttpHelper(); 
-  List&lt;Pizza&gt; pizzas = await helper.getPizzaList(); 
-  return pizzas; 
-} </code></pre>
-<ol type="1" start="9">
-<li>Di metode build dari kelas _MyHomePageState, di body Scaffold, tambahkan FutureBuilder yang membangun ListView dari widget ListTile yang berisi objek Pizza:</li>
-</ol>
-<pre><code>Widget build(BuildContext context) { 
-    return Scaffold(
-      appBar: AppBar(title: const Text(&#39;JSON&#39;)),
-      body: FutureBuilder(
-          future: callPizzas(),
-          builder: (BuildContext context, AsyncSnapshot&lt;List&lt;Pizza&gt;&gt; 
-snapshot) {
-          if (snapshot.hasError) {
-            return const Text(&#39;Something went wrong&#39;);
-          }
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          }
-            return ListView.builder(
-                itemCount: (snapshot.data == null) ? 0 : snapshot.
-data!.length,
-                itemBuilder: (BuildContext context, int position) {
-                  return ListTile(
-                    title: Text(snapshot.data![position].pizzaName),
-                    subtitle: Text(snapshot.data![position].
-description +
-                        &#39; - € &#39; +
-                        snapshot.data![position].price.toString()),
-                  );
-                });
-          }),
-    );  
-}</code></pre>
-<ol type="1" start="10">
-<li>Jalankan aplikasi. Anda harus melihat layar yang mirip dengan berikut ini:</li>
-</ol>
-<p class="image-container"><img style="width: 327.00px" src="img/44d3a7d9b9e646bb.png"></p>
-<p>Gambar tersebut merupakan tangkapan layar dari daftar item yang diambil melalui HTTP, menampilkan ListView dengan nama pizza dan deskripsinya.</p>
-<aside class="warning"><h3 is-upgraded><strong>Soal 1</strong></h3>
-<ul>
-<li>Tambahkan <strong>nama panggilan Anda</strong> pada <code>title</code> app sebagai identitas hasil pekerjaan Anda.</li>
-<li>Gantilah warna tema aplikasi sesuai kesukaan Anda.</li>
-<li>Capture hasil aplikasi Anda, lalu masukkan ke laporan di README dan lakukan commit hasil jawaban Soal 1 dengan pesan <strong>&#34;W14: Jawaban Soal 1&#34;</strong></li>
-</ul>
-</aside>
-<p>Kita sekarang hanya memiliki satu metode yang menggunakan kelas HttpHelper. Seiring bertumbuhnya aplikasi, kita mungkin perlu memanggil HttpHelper beberapa kali di bagian berbeda dari aplikasi, dan akan menjadi pemborosan sumber daya untuk membuat banyak instance kelas setiap kali perlu menggunakan metode dari kelas tersebut.</p>
-<p>Salah satu cara untuk menghindari ini adalah dengan menggunakan konstruktor factory dan pola singleton: ini memastikan Anda hanya menginstansiasi kelas sekali. Ini berguna setiap kali hanya satu objek yang diperlukan di aplikasi Anda dan ketika Anda perlu mengakses sumber daya yang ingin Anda bagikan di seluruh aplikasi.</p>
-<p>Di file <code>httphelper.dart</code>, tambahkan kode berikut ke kelas <code>HttpHelper</code>, tepat di bawah deklarasi:</p>
-<pre><code>static final HttpHelper _httpHelper = HttpHelper._internal();
-HttpHelper._internal();
-factory HttpHelper() {
-    return _httpHelper;
-}</code></pre>
-<p>Ada beberapa pola di Dart dan Flutter yang memungkinkan Anda berbagi layanan dan logika bisnis di aplikasi Anda, dan pola singleton hanya salah satunya. Pilihan lain termasuk Dependency injection, Inherited Widgets, dan Provider serta Service Locators. Ada artikel menarik tentang pilihan berbeda yang tersedia di Flutter di <a href="http://bit.ly/flutter_DI" target="_blank">http://bit.ly/flutter_DI</a> </p>
+<p>Perhatikan: repository tidak menampilkan UI apa pun dan tidak menangkap exception menjadi nilai diam-diam. Exception dibiarkan naik agar provider mengubahnya menjadi <code>AsyncError</code> secara otomatis di langkah berikutnya.</p>
+</google-codelab-step>
 
+<google-codelab-step label="Praktikum 2: Provider dan error handling" duration="20">
+<h2 is-upgraded>4. Provider AsyncNotifier + pesan error ramah pengguna</h2>
+<p>Buat <code>lib/data/providers.dart</code>. Provider mengubah exception teknis menjadi pesan yang bisa ditampilkan ke pengguna:</p>
+<pre><code>import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
+import 'api_client.dart';
+import 'models/post.dart';
+import 'repositories/post_repository.dart';
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 2: Mengirim Data ke Web Service (POST)" duration="30">
-        <p>Pada praktikum ini, Anda akan belajar bagaimana melakukan aksi POST pada layanan web. Ini berguna setiap kali Anda terhubung ke layanan web yang tidak hanya menyediakan data tetapi juga memungkinkan Anda untuk mengubah informasi yang disimpan di sisi server. Biasanya, Anda harus memberikan beberapa bentuk otentikasi ke layanan, tetapi untuk codelab ini, karena kita menggunakan layanan mock, ini tidak diperlukan.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah menyelesaikan Praktikum 1 dan telah menyiapkan stub POST di layanan mock API Anda.</p>
-</aside>
-<p>Untuk melakukan aksi POST pada layanan web, ikuti langkah-langkah berikut:</p>
-<ol type="1" start="1">
-<li>Masuk ke layanan Mock Lab di<a href="https://app.wiremock.cloud/" target="_blank">https://app.wiremock.cloud/</a> dan klik pada bagian Stubs dari API contoh. Kemudian, buat stub baru.</li>
-<li>Lengkapi permintaan sebagai berikut:</li>
-</ol>
-<ul>
-<li>Nama: Post Pizza</li>
-<li>Verb: POST</li>
-<li>Alamat: /pizza</li>
-<li>Status: 201</li>
-<li>Tipe Body: json</li>
-<li>Body: {&#34;message&#34;: &#34;The pizza was posted&#34;}</li>
-</ul>
-<p class="image-container"><img style="width: 391.00px" src="img/cb71a534bac6d454.png"></p>
-<p>Tangkapan layar dari WireMock Post Pizza stub, menampilkan konfigurasi stub dengan nama, verb POST, path, status 201, dan body respons JSON.</p>
-<ol type="1" start="3">
-<li>Tekan tombol Save.</li>
-<li>Di proyek Flutter, di file httphelper.dart, di kelas HttpHelper, buat metode baru bernama postPizza, sebagai berikut:</li>
-</ol>
-<pre><code>Future&lt;String&gt; postPizza(Pizza pizza) async {
-  const postPath = &#39;/pizza&#39;;
-  String post = json.encode(pizza.toJson());
-  Uri url = Uri.https(authority, postPath);
-  http.Response r = await http.post(
-    url,
-    body: post,
-  );
-  return r.body;
-}</code></pre>
-<ol type="1" start="5">
-<li>Di proyek, buat file baru bernama pizza_detail.dart.</li>
-<li>Di bagian atas file baru, tambahkan impor yang diperlukan:</li>
-</ol>
-<pre><code>import &#39;package:flutter/material.dart&#39;;
-import &#39;pizza.dart&#39;;
-import &#39;httphelper.dart&#39;;</code></pre>
-<ol type="1" start="7">
-<li>Buat StatefulWidget bernama PizzaDetailScreen:</li>
-</ol>
-<pre><code>class PizzaDetailScreen extends StatefulWidget {
-  const PizzaDetailScreen({super.key});
+final dioProvider = Provider&lt;Dio&gt;((ref) =&gt; createDio());
+
+final postRepositoryProvider = Provider&lt;PostRepository&gt;(
+  (ref) =&gt; PostRepository(ref.watch(dioProvider)),
+);
+
+class PostListNotifier extends AsyncNotifier&lt;List&lt;Post&gt;&gt; {
   @override
-  State&lt;PizzaDetailScreen&gt; createState() =&gt; _PizzaDetailScreenState();
+  Future&lt;List&lt;Post&gt;&gt; build() async {
+    // Exception dari repository otomatis menjadi AsyncError.
+    // Inilah ekuivalen deklaratif dari AsyncValue.guard di versi lama.
+    final repository = ref.watch(postRepositoryProvider);
+    return repository.fetchPosts();
+  }
+
+  Future&lt;void&gt; refresh() async {
+    state = const AsyncLoading();
+    try {
+      final repository = ref.read(postRepositoryProvider);
+      state = AsyncData(await repository.fetchPosts());
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
+  }
 }
 
-class _PizzaDetailScreenState extends State&lt;PizzaDetailScreen&gt; {
+final postListProvider =
+    AsyncNotifierProvider&lt;PostListNotifier, List&lt;Post&gt;&gt;(
+        PostListNotifier.new,
+        // Nonaktifkan retry otomatis Riverpod 3 agar error langsung
+        // final dan mudah diuji (tanpa ini, future provider di-test
+        // akan me-retry dan menggantung).
+        retry: (retryCount, error) =&gt; null);
+
+/// Helper khusus testing (letakkan di providers.dart): membaca state
+/// pertama yang bukan loading lewat listener + completer, sehingga
+/// test tidak menunggu retry dan tidak melakukan HTTP sungguhan.
+Future&lt;List&lt;Post&gt;&gt; readPostsOnce(ProviderContainer container) {
+  final completer = Completer&lt;List&lt;Post&gt;&gt;();
+  final sub = container.listen&lt;AsyncValue&lt;List&lt;Post&gt;&gt;&gt;(
+    postListProvider,
+    (previous, next) {
+      if (next.isLoading || completer.isCompleted) return;
+      next.whenData(completer.complete);
+      if (next.hasError) {
+        completer.completeError(
+          next.error ?? StateError('unknown error'),
+          next.stackTrace ?? StackTrace.empty,
+        );
+      }
+    },
+    fireImmediately: true,
+  );
+  return completer.future.whenComplete(sub.close);
+}
+
+Future&lt;Object?&gt; readPostsErrorOnce(ProviderContainer container) {
+  final completer = Completer&lt;Object?&gt;();
+  final sub = container.listen&lt;AsyncValue&lt;List&lt;Post&gt;&gt;&gt;(
+    postListProvider,
+    (previous, next) {
+      if (next.isLoading || completer.isCompleted) return;
+      completer.complete(next.error);
+    },
+    fireImmediately: true,
+  );
+  return completer.future.whenComplete(sub.close);
+}
+
+String friendlyErrorMessage(Object error) {
+  if (error is DioException) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'Koneksi lambat atau timeout. Periksa internet Anda lalu coba lagi.';
+      case DioExceptionType.connectionError:
+        return 'Tidak dapat terhubung ke server. Periksa internet Anda.';
+      case DioExceptionType.badResponse:
+        final code = error.response?.statusCode;
+        if (code == 404) return 'Data tidak ditemukan (404).';
+        if (code == 401 || code == 403) {
+          return 'Akses ditolak ($code). Periksa kredensial Anda.';
+        }
+        return 'Server bermasalah ($code). Coba lagi nanti.';
+      default:
+        return 'Terjadi kesalahan jaringan. Coba lagi.';
+    }
+  }
+  return 'Terjadi kesalahan tak terduga: $error';
+}</code></pre>
+<h2 is-upgraded>5. UI: loading, error, empty, success</h2>
+<p>Buat <code>lib/pages/post_list_page.dart</code>. Setiap state mendapat tampilannya sendiri:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/providers.dart';
+
+class PostListPage extends ConsumerWidget {
+  const PostListPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final postsAsync = ref.watch(postListProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Posts API'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () =&gt;
+                ref.read(postListProvider.notifier).refresh(),
+          ),
+        ],
+      ),
+      body: postsAsync.when(
+        loading: () =&gt;
+            const Center(child: CircularProgressIndicator()),
+        error: (err, _) =&gt; Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(friendlyErrorMessage(err),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                FilledButton(
+                  onPressed: () =&gt; ref.invalidate(postListProvider),
+                  child: const Text('Coba lagi'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        data: (posts) {
+          if (posts.isEmpty) {
+            return const Center(
+                child: Text('Belum ada data dari server.'));
+          }
+          return RefreshIndicator(
+            onRefresh: () =&gt;
+                ref.read(postListProvider.notifier).refresh(),
+            child: ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                      child: Text(post.id.toString())),
+                  title: Text(post.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                  subtitle: Text(post.body,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded>6. Entry point dengan ProviderScope</h2>
+<p>Isi <code>lib/main.dart</code>:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'pages/post_list_page.dart';
+
+void main() =&gt; runApp(const ProviderScope(child: MyApp()));
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) =&gt; MaterialApp(
+        title: 'Week 4 - REST API',
+        theme: ThemeData(
+            colorSchemeSeed: Colors.indigo, useMaterial3: true),
+        home: const PostListPage(),
+      );
+}</code></pre>
+<h2 is-upgraded>Uji tiga skenario error</h2>
+<ol type="1">
+<li>Jalankan aplikasi dengan internet normal, amati loading lalu daftar 100 posts.</li><li>Matikan internet (mode pesawat), tekan refresh, amati pesan ramah + tombol Coba lagi. Nyalakan kembali internet, tekan Coba lagi.</li><li>Sementara ubah <code>baseUrl</code> menjadi URL salah, amati pesan error koneksi. Kembalikan setelah uji.</li>
+</ol>
+<aside class="warning"><p><strong>Kesalahan umum (bahan ujian):</strong> memanggil Dio langsung dari widget; menelan exception dengan <code>catch</code> kosong; menampilkan pesan teknis mentah ke pengguna; lupa menangani empty state; tidak ada timeout sehingga UI menggantung selamanya.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum 3: Pagination dasar" duration="20">
+<h2 is-upgraded>Konsep pagination</h2><p>API dengan data besar tidak dikirim sekaligus, melainkan per halaman. JSONPlaceholder mendukung query <code>?_page=N&amp;_limit=M</code>. Strategi UI: <em>infinite scroll</em>, muat halaman berikut saat pengguna mendekati ujung list, tampilkan indikator kecil di bawah tanpa menghapus data lama.</p>
+<h2 is-upgraded>7. Repository paginated</h2>
+<p>Tambahkan method berikut ke <code>PostRepository</code>:</p>
+<pre><code>Future&lt;List&lt;Post&gt;&gt; fetchPostsPage({
+  required int page,
+  int limit = 10,
+}) async {
+  final response = await _dio.get&lt;List&gt;(
+    '/posts',
+    queryParameters: {'_page': page, '_limit': limit},
+  );
+  final data = response.data ?? [];
+  return data
+      .whereType&lt;Map&lt;String, dynamic&gt;&gt;()
+      .map(Post.fromJson)
+      .toList();
+}</code></pre>
+<h2 is-upgraded>8. Notifier dengan state halaman</h2>
+<p>Lanjutkan <code>lib/data/paged_posts.dart</code> dengan notifier (guard ganda + data lama dipertahankan saat error):</p>
+<pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'models/post.dart';
+import 'providers.dart';
+
+class PagedPostsState {
+  const PagedPostsState({
+    this.items = const [],
+    this.page = 0,
+    this.isLoadingMore = false,
+    this.hasMore = true,
+    this.error,
+  });
+
+  final List&lt;Post&gt; items;
+  final int page;
+  final bool isLoadingMore;
+  final bool hasMore;
+  final Object? error;
+}</code></pre>
+<h2 is-upgraded>8. Notifier dengan state halaman (lanjutan)</h2>
+<p>Lanjutkan file <code>lib/data/paged_posts.dart</code> dengan notifier:</p>
+<pre><code>class PagedPostsNotifier extends Notifier&lt;PagedPostsState&gt; {
+  @override
+  PagedPostsState build() {
+    Future.microtask(loadFirstPage);
+    return const PagedPostsState();
+  }
+
+  Future&lt;void&gt; loadFirstPage() async {
+    final repository = ref.read(postRepositoryProvider);
+    try {
+      final items =
+          await repository.fetchPostsPage(page: 1, limit: 10);
+      state = PagedPostsState(
+        items: items,
+        page: 1,
+        hasMore: items.length == 10,
+      );
+    } catch (e) {
+      state = PagedPostsState(error: e);
+    }
+  }
+
+  Future&lt;void&gt; loadNextPage() async {
+    if (state.isLoadingMore || !state.hasMore) return;
+    final repo = ref.read(postRepositoryProvider);
+    final currentItems = state.items;
+    final currentPage = state.page;
+    state = PagedPostsState(
+      items: currentItems,
+      page: currentPage,
+      isLoadingMore: true,
+      hasMore: state.hasMore,
+    );
+    try {
+      final next = currentPage + 1;
+      final items =
+          await repo.fetchPostsPage(page: next, limit: 10);
+      state = PagedPostsState(
+        items: [...currentItems, ...items],
+        page: next,
+        hasMore: items.length == 10,
+      );
+    } catch (e) {
+      state = PagedPostsState(
+        items: currentItems,
+        page: currentPage,
+        error: e,
+      );
+    }
+  }
+}
+
+final pagedPostsProvider =
+    NotifierProvider&lt;PagedPostsNotifier, PagedPostsState&gt;(
+        PagedPostsNotifier.new);</code></pre>
+<aside class="special"><p><strong>Guard penting:</strong> <code>if (state.isLoadingMore || !state.hasMore) return;</code> mencegah request ganda saat scroll listener terpanggil berkali-kali, dan menghentikan request saat data habis.</p></aside>
+<h2 is-upgraded>9. UI infinite scroll</h2>
+<p>Buat <code>lib/pages/paged_post_page.dart</code> dengan ScrollController yang memicu halaman berikut 200px sebelum ujung list:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/paged_posts.dart';
+import '../data/providers.dart';
+
+class PagedPostPage extends ConsumerStatefulWidget {
+  const PagedPostPage({super.key});
+
+  @override
+  ConsumerState&lt;PagedPostPage&gt; createState() =&gt;
+      _PagedPostPageState();
+}
+
+class _PagedPostPageState
+    extends ConsumerState&lt;PagedPostPage&gt; {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (_controller.position.pixels &gt;=
+          _controller.position.maxScrollExtent - 200) {
+        ref.read(pagedPostsProvider.notifier).loadNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    final state = ref.watch(pagedPostsProvider);
+    if (state.error != null &amp;&amp; state.items.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Posts Paged')),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(friendlyErrorMessage(state.error!)),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () =&gt; ref
+                    .read(pagedPostsProvider.notifier)
+                    .loadFirstPage(),
+                child: const Text('Coba lagi'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(title: const Text('Posts Paged')),
+      body: ListView.builder(
+        controller: _controller,
+        itemCount: state.items.length + 1,
+        itemBuilder: (context, index) {
+          if (index == state.items.length) {
+            if (!state.hasMore) {
+              return const Padding(
+                padding: EdgeInsets.all(16),
+                child:
+                    Center(child: Text('Semua data termuat.')),
+              );
+            }
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+          final post = state.items[index];
+          return ListTile(
+            leading: CircleAvatar(
+                child: Text(post.id.toString())),
+            title: Text(post.title,
+                maxLines: 1, overflow: TextOverflow.ellipsis),
+          );
+        },
+      ),
+    );
   }
 }</code></pre>
-<ol type="1" start="8">
-<li>Di bagian atas kelas _PizzaDetailScreenState, tambahkan lima TextEditingController. Ini akan berisi data untuk objek Pizza yang akan diposting nanti. Juga, tambahkan String yang akan berisi hasil dari permintaan POST:</li>
+<p>Ubah <code>home</code> di <code>main.dart</code> menjadi <code>PagedPostPage</code>, jalankan, dan scroll sampai bawah. Amati: halaman 1 tampil dulu, indikator muncul, data bertambah tanpa reload penuh.</p>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="20">
+<h2 is-upgraded>Peran AI pada codelab ini</h2><p>Minggu 4 adalah materi lanjutan: AI boleh membantu merancang repository layer, tetapi Anda wajib menguji error handling dan memperbaiki logic. Nilai bukan pada banyaknya kode yang dihasilkan AI, melainkan pada kualitas prompt, verifikasi, dan dokumentasi.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Minta AI coding assistant (Cursor, Copilot, Claude Code, atau tool setara) dengan prompt berikut:</p>
+<pre><code>Buatkan repository layer Flutter untuk endpoint GET /comments?postId={id}
+dari JSONPlaceholder menggunakan Dio + flutter_riverpod.
+Requirements:
+- Model Comment dengan fromJson aman null (postId, id, name, email, body).
+- CommentRepository dengan method fetchComments(postId) + timeout 10 detik.
+- AsyncNotifierProvider dengan penanganan error otomatis (AsyncError)
+  dan fungsi pesan error
+  ramah pengguna untuk timeout, connection error, 404, dan 500.
+- Satu unit test untuk fromJson dengan field yang hilang.
+Jelaskan setiap bagian kode dalam komentar.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Sebelum kode AI diterima, verifikasi hal berikut dan catat temuan Anda di README:</p>
+<ul><li>Apakah UI memanggil Dio secara langsung (dilarang) atau lewat repository?</li><li>Apakah <code>fromJson</code> aman null, atau masih memakai cast langsung yang bisa crash?</li><li>Apakah semua tipe <code>DioExceptionType</code> (timeout, connectionError, badResponse) dipetakan ke pesan pengguna?</li><li>Apakah <code>baseUrl</code>/timeout terpusat di satu client, bukan tersebar di tiap method?</li><li>Apakah test AI benar-benar menguji kasus field hilang, atau hanya happy path? Tambahkan minimal 1 edge case sendiri.</li><li>Jalankan <code>flutter analyze</code> dan <code>flutter test</code>, apakah hasil AI lolos tanpa warning?</li></ul>
+<aside class="special"><p><strong>Tanggung jawab teknis:</strong> simpan prompt yang digunakan, output awal AI, perbaikan yang Anda lakukan, dan hasil testing pada folder <code>docs/</code> tugas minggu ini. Saat demo, Anda harus mampu menjelaskan setiap baris kode hasil AI.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring dan testing" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<p>Lakukan refactoring berikut pada project API Anda, lalu commit dengan pesan yang jelas:</p>
+<ol type="1">
+<li>Ekstrak widget baris post menjadi <code>PostTile</code> tersendiri agar <code>ListView.builder</code> pendek dan mudah diuji.</li><li>Pindahkan <code>friendlyErrorMessage</code> ke file <code>lib/data/network_errors.dart</code> agar bisa dipakai ulang halaman paged dan non-paged.</li><li>Tambahkan halaman detail post dengan GoRouter (<code>/post/:id</code>) yang menampilkan <code>title</code> dan <code>body</code> lengkap, state detail diambil dari list yang sudah dimuat atau via repository bila langsung dibuka.</li>
 </ol>
-<pre><code>final TextEditingController txtId = TextEditingController();
-final TextEditingController txtName = TextEditingController();
-final TextEditingController txtDescription = TextEditingController();
-final TextEditingController txtPrice = TextEditingController();
-final TextEditingController txtImageUrl = TextEditingController();
-String operationResult = &#39;&#39;;</code></pre>
-<ol type="1" start="9">
-<li>Override metode dispose() untuk membuang controller:</li>
-</ol>
-<pre><code>@override
-void dispose() {
-  txtId.dispose();
-  txtName.dispose();
-  txtDescription.dispose();
-  txtPrice.dispose();
-  txtImageUrl.dispose();
-  super.dispose();
-}</code></pre>
-<ol type="1" start="10">
-<li>Di metode build() dari kelas, kembalikan Scaffold, yang AppBar-nya berisi Text &#34;Pizza Detail&#34; dan body-nya berisi Padding dan SingleChildScrollView yang berisi Column:</li>
-</ol>
-<pre><code>return Scaffold(
-  appBar: AppBar(
-    title: const Text(&#39;Pizza Detail&#39;),
-  ),
-  body: Padding(
-      padding: const EdgeInsets.all(12),
-      child: SingleChildScrollView(
-        child: Column(children: []),
-      )));</code></pre>
-<ol type="1" start="11">
-<li>Untuk properti children dari Column, tambahkan beberapa Text yang akan berisi hasil dari post, lima TextField, masing-masing terikat ke TextEditingController mereka sendiri, dan ElevatedButton untuk menyelesaikan aksi POST (metode postPizza akan dibuat selanjutnya). Juga, tambahkan SizedBox untuk menjauhkan widget di layar:</li>
-</ol>
-<pre><code>Text(
-  operationResult,
-  style: TextStyle(
-      backgroundColor: Colors.green[200],
-      color: Colors.black),
-),
-const SizedBox(
-  height: 24,
-),
-TextField(
-  controller: txtId,
-  decoration: const InputDecoration(hintText: &#39;Insert ID&#39;),
-),
-const SizedBox(
-  height: 24,
-),
-TextField(
-  controller: txtName,
-  decoration: const InputDecoration(hintText: &#39;Insert Pizza Name&#39;),
-),
-const SizedBox(
-  height: 24,
-),
-TextField(
-  controller: txtDescription,
-  decoration: const InputDecoration(hintText: &#39;Insert Description&#39;),
-),
-const SizedBox(
-  height: 24,
-),
-TextField(
-  controller: txtPrice,
-  decoration: const InputDecoration(hintText: &#39;Insert Price&#39;),
-),
-const SizedBox(
-  height: 24,
-),
-TextField(
-  controller: txtImageUrl,
-  decoration: const InputDecoration(hintText: &#39;Insert Image Url&#39;),
-),
-const SizedBox(
-  height: 48,
-),
-ElevatedButton(
-    child: const Text(&#39;Send Post&#39;),
-    onPressed: () {
-      postPizza();
-    })           </code></pre>
-<ol type="1" start="12">
-<li>Di bagian bawah kelas _PizzaDetailScreenState, tambahkan metode postPizza:</li>
-</ol>
-<pre><code>Future postPizza() async {
-  HttpHelper helper = HttpHelper();
-  Pizza pizza = Pizza();
-  pizza.id = int.tryParse(txtId.text);
-  pizza.pizzaName = txtName.text;
-  pizza.description = txtDescription.text;
-  pizza.price = double.tryParse(txtPrice.text);
-  pizza.imageUrl = txtImageUrl.text;
-  String result = await helper.postPizza(pizza);
-  setState(() {
-    operationResult = result;
+<h2 is-upgraded>Testing: unit test model + mock repository</h2>
+<p>Buat <code>test/post_test.dart</code>, uji parsing aman null, mapping error, dan provider dengan repository palsu (tanpa internet):</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:week4_api/data/models/post.dart';
+import 'package:week4_api/data/providers.dart';
+import 'package:week4_api/data/repositories/post_repository.dart';
+
+class FakePostRepository extends PostRepository {
+  FakePostRepository({this.items, this.throwError = false})
+      : super(Dio());
+  final List&lt;Post&gt;? items;
+  final bool throwError;
+
+  @override
+  Future&lt;List&lt;Post&gt;&gt; fetchPosts() async {
+    if (throwError) {
+      throw DioException(
+        requestOptions: RequestOptions(path: '/posts'),
+        type: DioExceptionType.connectionError,
+      );
+    }
+    return items ?? const [];
+  }
+
+  @override
+  Future&lt;List&lt;Post&gt;&gt; fetchPostsPage(
+      {required int page, int limit = 10}) async {
+    return fetchPosts();
+  }
+}
+
+void main() {
+  test('fromJson aman terhadap field yang hilang', () {
+    final post = Post.fromJson({'id': 7});
+    expect(post.id, 7);
+    expect(post.title, '');
+    expect(post.userId, 0);
+  });
+
+  test('friendlyErrorMessage untuk connection error', () {
+    final err = DioException(
+      requestOptions: RequestOptions(path: '/posts'),
+      type: DioExceptionType.connectionError,
+    );
+    expect(friendlyErrorMessage(err), contains('terhubung'));
+  });
+
+  test('provider sukses dengan repository palsu', () async {
+    final container = ProviderContainer(
+      overrides: [
+        postRepositoryProvider.overrideWithValue(
+          FakePostRepository(items: [
+            const Post(
+                userId: 1, id: 1, title: 'Tes', body: 'Isi'),
+          ]),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    // Gunakan helper readPostsOnce (lihat providers.dart).
+    final posts = await readPostsOnce(container);
+    expect(posts.length, 1);
+    expect(posts.first.title, 'Tes');
+  });
+
+  test('provider error dengan repository palsu', () async {
+    final container = ProviderContainer(
+      overrides: [
+        postRepositoryProvider.overrideWithValue(
+          FakePostRepository(throwError: true),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    // Gunakan helper readPostsErrorOnce (lihat providers.dart).
+    final err = await readPostsErrorOnce(container);
+    expect(err, isA&lt;DioException&gt;());
+    expect(friendlyErrorMessage(err!), contains('terhubung'));
   });
 }</code></pre>
-<ol type="1" start="13">
-<li>Di file main.dart, impor file pizza_detail.dart</li>
-<li>Di Scaffold dari metode build() kelas _MyHomePageState, tambahkan FloatingActionButton yang akan navigasi ke rute PizzaDetail:</li>
+<p>Struktur akhir file test: import + <code>FakePostRepository</code> + <code>main()</code> berisi 4 test. Jalankan:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<aside class="special"><p><strong>Catatan implementasi:</strong> pola override repository palsu ini adalah fondasi mock API yang dipakai lagi di Minggu 12 (Testing &amp; QA). Pastikan tidak ada request HTTP sungguhan di dalam test.</p></aside>
+<h2 is-upgraded>Checklist verifikasi mandiri</h2>
+<ul><li>UI tidak memanggil Dio langsung, semua akses data lewat repository + provider.</li><li>Empat state tampil benar: loading, error (+ retry), empty, success.</li><li>Pagination: data bertambah saat scroll, tidak ada request ganda, ada indikator akhir data.</li><li><code>flutter analyze</code> tanpa issue dan semua test lulus.</li><li>Hasil AI diverifikasi dan didokumentasikan pada folder <code>docs/</code>.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Tugas, refleksi, dan referensi" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Bangun <strong>aplikasi daftar data dari REST API</strong> sebagai tugas minggu ini (kembangkan project codelab atau buat baru):</p>
+<ol type="1">
+<li>Ambil data dari API dummy (JSONPlaceholder <code>/posts</code> atau API publik lain tanpa key). Tampilkan ke UI melalui repository + Riverpod.</li><li>Terapkan Dio terpusat (base URL, timeout, interceptor logging) dan model <code>fromJson</code> aman null.</li><li>Tampilkan keempat state: loading, error (+ tombol retry), empty, success.</li><li>Tambahkan pagination dasar (infinite scroll, 10 item per halaman) dengan guard request ganda.</li><li>Sertakan minimal 2 test yang lulus (1 unit test model/error mapping + 1 test provider dengan repository palsu).</li><li>Kerjakan bagian AI Challenge dan dokumentasikan prompt, hasil AI, perbaikan, serta alasan keputusan teknis Anda di <code>docs/</code>.</li><li>Push ke repository portfolio pada folder <code>04-week-4-networking-rest-api/</code> dengan struktur <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, dan <code>screenshots/</code>. README menjelaskan tujuan, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai.</li>
 </ol>
-<pre><code>floatingActionButton: FloatingActionButton(
-  child: const Icon(Icons.add),
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) =&gt; const PizzaDetailScreen()),
-    );
-  }),</code></pre>
-<ol type="1" start="15">
-<li>Jalankan aplikasi. Di layar utama, tekan FloatingActionButton untuk navigasi ke rute PizzaDetail.</li>
-<li>Tambahkan detail pizza di field teks dan tekan tombol Send Post. Anda seharusnya melihat hasil yang sukses, seperti yang ditunjukkan pada Gambar berikut ini:</li>
-</ol>
-<p class="image-container"><img style="width: 267.00px" src="img/6d1e46c50d6e7874.png"></p>
-<p>Tangkapan layar dari layar Pizza Detail dengan pesan sukses &#34;The pizza was posted&#34; setelah menekan tombol Send Post.</p>
-<p>Layanan web (khususnya, layanan web RESTful) bekerja dengan verb. Ada empat aksi utama (atau verb) yang umumnya Anda gunakan ketika data terlibat: GET, POST, PUT, dan DELETE.</p>
-<p>Dalam praktikum 2 ini, kita menggunakan POST, yang merupakan verb yang secara konvensional digunakan ketika aplikasi meminta server web untuk menyisipkan potongan data baru.</p>
-<p>Inilah sebabnya kita harus menginstruksikan layanan web mock untuk menerima POST di alamat /pizza terlebih dahulu, sehingga dapat mencoba mengirim beberapa data ke sana dan membuatnya merespons dengan pesan sukses.</p>
-<p>Setelah membuat stub POST di Wiremock, kita membuat metode postPizza, untuk benar-benar melakukan panggilan ke server. Karena ini mengambil string JSON, kita menggunakan metode json.encode untuk mengubah Map menjadi JSON.</p>
-<aside class="warning"><h3 is-upgraded><strong>Soal 2</strong></h3>
+<h2 is-upgraded>Refleksi</h2>
+<ul><li>Mengapa UI dilarang memanggil Dio langsung? Apa yang rusak jika aturan ini dilanggar?</li><li>Kapan pagination client-side cukup, dan kapan harus mengandalkan pagination server (<code>_page</code>/<code>_limit</code>)?</li><li>Bagaimana exception repository berubah menjadi <code>AsyncError</code> tanpa try/catch di setiap widget? Kapan try/catch eksplisit tetap dibutuhkan?</li><li>Bagian mana dari hasil AI yang Anda perbaiki, dan mengapa?</li></ul>
+<h2 is-upgraded>Referensi pendukung</h2>
 <ul>
-<li>Tambahkan <strong>field baru </strong>dalam JSON maupun POST ke Wiremock!</li>
-<li>Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 2 dengan pesan <strong>&#34;W14: Jawaban Soal 2&#34;</strong></li>
+<li><a href="https://drive.google.com/open?id=1tqDg_xjU7V4kWlygn4Utxr9CdxmTu9wb&usp=drive_fs" target="_blank">Slide Minggu 4: Networking & REST API</a></li>
+  <li><a href="https://pub.dev/packages/dio" target="_blank">Dio package</a></li>
+<li><a href="https://jsonplaceholder.typicode.com" target="_blank">JSONPlaceholder (API dummy)</a></li>
+<li><a href="https://riverpod.dev/docs/concepts/async_notifiers" target="_blank">Riverpod: AsyncNotifier dan AsyncValue</a></li>
+<li><a href="https://docs.flutter.dev/cookbook/networking/fetch-data" target="_blank">Flutter cookbook: Fetch data from the internet</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
 </ul>
-</aside>
+</google-codelab-step>
 
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 3: Memperbarui Data di Web Service (PUT)" duration="30">
-        <p>Dalam praktikum ini, Anda akan belajar cara melakukan aksi PUT pada layanan web. Ini berguna ketika aplikasi Anda perlu mengedit data yang ada di layanan web.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah menyelesaikan Praktikum 2 dan telah menyiapkan stub PUT di layanan mock API Anda.</p>
-</aside>
-<p>Untuk melakukan aksi PUT pada layanan web, ikuti langkah-langkah berikut:</p>
-<ol type="1" start="1">
-<li>Masuk ke layanan Wiremock di<a href="https://app.wiremock.cloud" target="_blank">https://app.wiremock.cloud</a> dan klik pada bagian Stubs dari API contoh. Kemudian, buat stub baru.</li>
-<li>Lengkapi permintaan sebagai berikut:</li>
-</ol>
-<ul>
-<li>Nama: Put Pizza</li>
-<li>Verb: PUT</li>
-<li>Alamat: /pizza</li>
-<li>Status: 200</li>
-<li>Tipe Body: json</li>
-<li>Body: {&#34;message&#34;: &#34;Pizza was updated&#34;}</li>
-</ul>
-<p class="image-container"><img style="width: 317.00px" src="img/7c8814b596f8f422.png"></p>
-<p>Tangkapan layar dari WireMock Put Pizza stub, menampilkan konfigurasi stub dengan nama, verb PUT, path, status 200, dan body respons JSON.</p>
-<ol type="1" start="3">
-<li>Klik tombol Save.</li>
-<li>Di proyek Flutter, tambahkan metode putPizza ke kelas HttpHelper di file http_helper.dart:</li>
-</ol>
-<pre><code>Future&lt;String&gt; putPizza(Pizza pizza) async {
-  const putPath = &#39;/pizza&#39;;
-  String put = json.encode(pizza.toJson());
-  Uri url = Uri.https(authority, putPath);
-  http.Response r = await http.put(
-    url,
-    body: put,
-  );
-  return r.body;
-}</code></pre>
-<ol type="1" start="5">
-<li>Di kelas PizzaDetailScreen di file pizza_detail.dart, tambahkan dua properti, sebuah Pizza dan sebuah boolean, dan di konstruktor, atur kedua properti tersebut:</li>
-</ol>
-<pre><code>final Pizza pizza;
-final bool isNew;
-const PizzaDetailScreen(
-    {super.key, required this.pizza, required this.isNew});</code></pre>
-<ol type="1" start="6">
-<li>Di kelas PizzaDetailScreenState, override metode initState. Ketika properti isNew dari kelas PizzaDetail bukan baru, itu mengatur konten TextField dengan nilai-nilai objek Pizza yang diteruskan:</li>
-</ol>
-<pre><code>@override
-void initState() {
-  if (!widget.isNew) {
-    txtId.text = widget.pizza.id.toString();
-    txtName.text = widget.pizza.pizzaName;
-    txtDescription.text = widget.pizza.description;
-    txtPrice.text = widget.pizza.price.toString();
-    txtImageUrl.text = widget.pizza.imageUrl;
-  }
-  super.initState();
-}</code></pre>
-<ol type="1" start="7">
-<li>Edit metode savePizza sehingga memanggil metode helper.postPizza ketika isNew benar, dan helper.putPizza ketika salah:</li>
-</ol>
-<pre><code>Future savePizza() async {
-...
-    final result = await (widget.isNew
-  ? helper.postPizza(pizza)
-  : helper.putPizza(pizza));    
-  setState(() {
-      operationResult = result;
-    });
-  }</code></pre>
-<ol type="1" start="8">
-<li>Di file main.dart, di metode build dari _MyHomePageState, tambahkan properti onTap ke ListTile sehingga ketika pengguna mengetuknya, aplikasi akan mengubah rute dan menampilkan layar PizzaDetail, meneruskan pizza saat ini dan false untuk parameter isNew:</li>
-</ol>
-<pre><code>return ListTile(
-    title: Text(pizzas.data![position].pizzaName),
-    subtitle: Text(pizzas.data![position].description +
-                  &#39; - € &#39; +
-                  pizzas.data![position].price.toString()),
-    onTap: () {
-       Navigator.push(
-          context,
-          MaterialPageRoute(
-             builder: (context) =&gt; PizzaDetailScreen(
-                pizza: pizzas.data![position], isNew: false)),
-    );</code></pre>
-<ol type="1" start="9">
-<li>Di floatingActionButton, teruskan Pizza baru dan true untuk parameter isNew ke rute PizzaDetail:</li>
-</ol>
-<pre><code>floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =&gt; PizzaDetailScreen(
-                        pizza: Pizza(),
-                        isNew: true,
-                      )),            
-           );
-      }),
-);</code></pre>
-<ol type="1" start="10">
-<li>Jalankan aplikasi. Di layar utama, ketuk Pizza apa pun untuk navigasi ke rute PizzaDetail.</li>
-<li>Edit detail pizza di field teks dan tekan tombol Save. Anda seharusnya melihat pesan yang menunjukkan bahwa detail pizza telah diperbarui.</li>
-</ol>
-<aside class="warning"><h3 is-upgraded><strong>Soal 3</strong></h3>
-<ul>
-<li>Ubah salah satu data dengan Nama dan NIM Anda, lalu perhatikan hasilnya di Wiremock.</li>
-<li>Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 3 dengan pesan <strong>&#34;W14: Jawaban Soal 3&#34;</strong></li>
-</ul>
-</aside>
-<p>Praktikum ini cukup mirip dengan yang sebelumnya, tetapi di sini menggunakan PUT, verb yang secara konvensional digunakan ketika aplikasi meminta server web untuk memperbarui potongan data yang ada.</p>
-<p>Inilah sebabnya harus menginstruksikan layanan web mock untuk menerima PUT di alamat /pizza, sehingga dapat mencoba mengirim beberapa data ke sana.</p>
-<p>Perhatikan bahwa alamat /pizza persis sama dengan yang diatur untuk POST, satu-satunya yang berubah adalah verb. Dengan kata lain, Anda dapat melakukan aksi berbeda di URL yang sama, tergantung pada verb yang Anda gunakan.</p>
-<p>Setelah membuat stub PUT di Wiremock, kita membuat metode putPizza, yang bekerja seperti metode postPizza, kecuali untuk verb-nya.</p>
-<p>Untuk membuat pengguna memperbarui Pizza yang ada, kita menggunakan layar yang sama, PizzaDetail, tetapi juga meneruskan objek Pizza yang ingin diperbarui dan nilai Boolean yang memberi tahu apakah objek Pizza adalah objek baru (sehingga harus menggunakan POST) atau yang ada (sehingga harus menggunakan PUT).</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 4: Menghapus Data dari Web Service (DELETE)" duration="15">
-        <p>Dalam praktikum ini, Anda akan belajar cara melakukan aksi DELETE pada layanan web. Ini berguna ketika aplikasi Anda perlu menghapus data yang ada di layanan web.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah menyelesaikan Praktikum 3 dan telah menyiapkan stub DELETE di layanan mock API Anda.</p>
-</aside>
-<p>Untuk melakukan aksi DELETE pada layanan web, ikuti langkah-langkah berikut:</p>
-<ol type="1" start="1">
-<li>Masuk ke layanan Wiremock di<a href="https://app.wiremock.cloud" target="_blank">https://app.wiremock.cloud</a> dan klik pada bagian Stubs dari API contoh. Kemudian, buat stub baru.</li>
-<li>Lengkapi permintaan dengan data berikut:</li>
-</ol>
-<ul>
-<li>Nama: Delete Pizza</li>
-<li>Verb: DELETE</li>
-<li>Alamat: /pizza</li>
-<li>Status: 200</li>
-<li>Tipe Body: json</li>
-<li>Body: {&#34;message&#34;: &#34;Pizza was deleted&#34;}</li>
-</ul>
-<ol type="1" start="3">
-<li>Simpan stub baru.</li>
-<li>Di proyek Flutter, tambahkan metode deletePizza ke kelas HttpHelper di file http_helper.dart:</li>
-</ol>
-<pre><code>Future&lt;String&gt; deletePizza(int id) async {
-  const deletePath = &#39;/pizza&#39;;
-  Uri url = Uri.https(authority, deletePath);
-  http.Response r = await http.delete(
-    url,
-  );
-  return r.body;
-}</code></pre>
-<ol type="1" start="5">
-<li>Di file main.dart, di metode build dari kelas _MyHomePageState, refactor itemBuilder dari ListView.builder sehingga ListTile terkandung dalam widget Dismissible, sebagai berikut:</li>
-</ol>
-<pre><code>return ListView.builder(
-    itemCount: (pizzas.data == null) ? 0 : pizzas.data.length,
-    itemBuilder: (BuildContext context, int position) {
-        return Dismissible(
-                    key: Key(position.toString()),
-                    onDismissed: (item) {
-                      HttpHelper helper = HttpHelper();
-                      pizzas.data!.removeWhere(
-                          (element) =&gt; element.id == pizzas.data![position].id);
-                      helper.deletePizza(pizzas.data![position].id!);
-                    },
-                    child: ListTile(...</code></pre>
-<ol type="1" start="6">
-<li>Jalankan aplikasi. Ketika Anda swipe elemen apa pun dari daftar pizza, ListTile akan menghilang.</li>
-</ol>
-<aside class="warning"><h3 is-upgraded><strong>Soal 4</strong></h3>
-<ul>
-<li>Capture hasil aplikasi Anda berupa GIF di README dan lakukan commit hasil jawaban Soal 4 dengan pesan <strong>&#34;W14: Jawaban Soal 4&#34;</strong></li>
-</ul>
-</aside>
-<p>Praktikum ini cukup mirip dengan dua praktikum sebelumnya, tetapi di sini, menggunakan DELETE, verb yang secara konvensional digunakan ketika aplikasi meminta server web untuk menghapus potongan data yang ada.</p>
-<p>Inilah sebabnya harus menginstruksikan layanan web mock untuk menerima DELETE di alamat /pizza, sehingga dapat mencoba mengirim beberapa data ke sana dan itu akan merespons dengan pesan sukses.</p>
-<p>Setelah membuat stub DELETE di Wiremock, kita membuat metode deletePizza, yang bekerja seperti metode postPizza dan putPizza; itu hanya memerlukan ID pizza untuk menghapusnya.</p>
-<p>Untuk membuat pengguna menghapus Pizza yang ada, kita menggunakan widget Dismissible, yang digunakan ketika Anda ingin swipe elemen (kiri atau kanan) untuk menghapusnya dari layar.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Kelompok PBL" duration="90">
-        <ol type="1" start="1">
-<li>Selesaikan semua fitur di aplikasi PBL kelompok Anda mulai dari materi Codelab 9: Camera hingga Codelab 14: Restful API.</li>
-<li>Push progress pekerjaan PBL kelompok Anda ke repository git, lalu presentasikan progress pada pertemuan berikutnya kepada dosen Anda!</li>
-</ol>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Selamat!" duration="0">
-        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait Restful API di Flutter dan contoh penggunaannya.</p>
-<p>Dalam codelab terakhir ini, Anda telah melihat beberapa cara untuk mengelola data di aplikasi Flutter dan membaca serta menulis data ke layanan web.</p>
-<p>Pertama, Anda telah melihat proses mengonversi model Dart menjadi format JSON, format data yang ringan dan diterima secara universal.</p>
-<p>Anda juga telah melihat cara menserialisasi dan mendeserialisasi objek Dart ke dan dari JSON serta belajar cara menangani data JSON yang tidak kompatibel dengan model aplikasi Anda, dengan beberapa strategi untuk menyesuaikan dan mengatasinya.</p>
-<p>Anda telah menggunakan SharedPreferences dari pekan lalu, sistem penyimpanan key-value sederhana yang memungkinkan menyimpan jumlah data kecil. Anda kemudian telah melihat cara menggunakan SecureStorage sebagai metode untuk menyimpan data sensitif seperti kata sandi.</p>
-<p>Anda belajar cara mengakses filesystem dengan memanfaatkan paket path_provider, yang memungkinkan pengembang untuk mengambil lokasi di filesystem perangkat. Anda telah melihat cara membuat, membaca, dan menulis file di perangkat Anda.</p>
-<p>Mengalihkan fokus ke komunikasi dengan layanan web, Anda telah belajar tentang desain klien HTTP dan melihat cara mengambil data dari layanan web serta mengirim data ke server menggunakan verb POST, PUT, dan DELETE.</p>
-<p>Singkatnya, dalam codelab ini, Anda mendapatkan pandangan mendalam tentang penanganan JSON, persistensi data, penyimpanan aman, dan komunikasi dengan internet. Anda sekarang telah dilengkapi dengan pengetahuan dan keterampilan yang diperlukan untuk mengelola data secara efektif dan berkomunikasi dengan server remote di aplikasi Flutter Anda.</p>
-<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
-<p>Silakan cek beberapa sumber belajar lainnya...</p>
-<ul>
-<li><a href="https://medium.com/flutter-community/in-this-tutorial-we-will-cover-the-three-forms-of-the-accepted-dependency-injection-in-flutter-8154aa147982" target="_blank">https://medium.com/flutter-community/in-this-tutorial-we-will-cover-the-three-forms-of-the-accepted-dependency-injection-in-flutter-8154aa147982</a> </li>
-<li><a href="https://wiremock.org/docs/getting-started/" target="_blank">https://wiremock.org/docs/getting-started/</a> </li>
-<li><a href="https://blog.postman.com/using-postman-proxy-to-capture-and-inspect-api-calls-from-ios-or-android-devices/" target="_blank">https://blog.postman.com/using-postman-proxy-to-capture-and-inspect-api-calls-from-ios-or-android-devices/</a> </li>
-</ul>
-<h2 is-upgraded><strong>Referensi</strong></h2>
-<ul>
-<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
-<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
-<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a></li>
-</ul>
-
-
-      </google-codelab-step>
-    
-  </google-codelab>
-
-  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
-  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
-  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
-  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
-  <script src="//support.google.com/inapp/api.js"></script>
-
-</body>
-</html>
+</google-codelab>
+<script src="https://storage.googleapis.com/claat-public/native-shim.js"></script><script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script><script src="https://storage.googleapis.com/claat-public/prettify.js"></script><script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
