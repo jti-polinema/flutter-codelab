@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#04 | Networking &amp; REST API</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="04-minggu-4-networking-rest-api" title="#04 | Networking &amp; REST API" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> September 11, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning Objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>explain HTTP, REST API, and JSON concepts;</li><li>map JSON to null-safe Dart models (serialization);</li><li>apply the basic repository pattern so the UI never calls the API directly;</li><li>configure Dio (base URL, timeouts, interceptors) and handle network errors;</li><li>display loading, error, empty, and success states with AsyncValue + Riverpod;</li><li>implement basic pagination (infinite scroll).</li></ul>
+<h2 is-upgraded>Prerequisites</h2><ul><li>Laptop/PC, internet connection, and the portfolio repository (GitHub/GitLab) from previous weeks.</li><li>Flutter SDK, VS Code (Flutter/Dart extensions), an Android emulator or physical device.</li><li>Week 3 knowledge: GoRouter, Riverpod, Notifier, AsyncValue.</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 4 is advanced material: AI may help design the repository layer, but you must test the error handling, fix the logic, and be able to explain every technical decision. Do not let AI write the entire project without verification.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="HTTP, REST, and JSON concepts" duration="15">
+<h2 is-upgraded>HTTP and REST APIs</h2><p>HTTP is a request–response protocol: the client sends a request (method + URL + headers + body), the server replies with a status code + body. REST is an architectural style that maps operations to resources via URLs and HTTP methods:</p>
+<table><tr><th>Method</th><th>Meaning on a resource collection</th><th>Example</th></tr><tr><td><code>GET</code></td><td>Reads data (no side effects).</td><td><code>GET /posts</code>, <code>GET /posts/1</code></td></tr><tr><td><code>POST</code></td><td>Creates a new resource.</td><td><code>POST /posts</code></td></tr><tr><td><code>PUT / PATCH</code></td><td>Replaces / partially updates a resource.</td><td><code>PUT /posts/1</code></td></tr><tr><td><code>DELETE</code></td><td>Deletes a resource.</td><td><code>DELETE /posts/1</code></td></tr></table>
+<p>Key status codes: <code>200 OK</code>, <code>201 Created</code>, <code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>404 Not Found</code>, <code>500 Internal Server Error</code>. A mobile app must prepare a UI for each group: success (2xx), client errors (4xx), and server/network errors (5xx/timeout).</p>
+<h2 is-upgraded>JSON and Dart models</h2><p>JSON is the standard data-exchange format of APIs. Example response of <code>GET https://jsonplaceholder.typicode.com/posts/1</code>:</p>
+<pre><code>{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere...",
+  "body": "quia et suscipit..."
+}</code></pre>
+<p>In Dart, raw JSON (<code>Map&lt;String, dynamic&gt;</code>) must be mapped to model classes to be null-safe and typo-proof. Manual <code>fromJson</code>/<code>toJson</code> is enough for this codelab; for large projects use a code generator (<code>json_serializable</code> / <code>freezed</code>).</p>
+<h2 is-upgraded>Basic repository pattern</h2><p>This week's architecture rule (a bridge to Clean Architecture in Week 7):</p>
+<ul><li><strong>The UI must never call Dio/http directly.</strong> The UI only reads providers.</li><li>The <strong>repository</strong> is the single gateway to data sources (the API). It lets network exceptions propagate as meaningful failures.</li><li>A <strong>Riverpod provider</strong> exposes <code>AsyncValue</code> to the UI (loading/error/data).</li></ul>
+<pre><code>UI (ConsumerWidget) --watch--&gt; Provider (AsyncValue)
+Provider --calls--&gt; Repository --uses--&gt; Dio --HTTP--&gt; REST API</code></pre>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 1 — Dio and data models" duration="25">
+<h2 is-upgraded>Set up the project</h2>
+<pre><code>flutter create week4_api
+cd week4_api
+flutter pub add dio flutter_riverpod</code></pre>
+<p>Folder structure:</p>
+<pre><code>lib/
+├── main.dart
+├── data/
+│   ├── api_client.dart
+│   ├── models/
+│   │   └── post.dart
+│   └── repositories/
+│       └── post_repository.dart
+└── pages/
+    └── post_list_page.dart</code></pre>
+<h2 is-upgraded>1. Null-safe fromJson model</h2>
+<p>Create <code>lib/data/models/post.dart</code>. This week's dummy API is <a href="https://jsonplaceholder.typicode.com" target="_blank">JSONPlaceholder</a> (free, no API key) with endpoint <code>GET /posts</code>.</p>
+<pre><code>class Post {
+  const Post({
+    required this.userId,
+    required this.id,
+    required this.title,
+    required this.body,
+  });
+
+  final int userId;
+  final int id;
+  final String title;
+  final String body;
+
+  factory Post.fromJson(Map&lt;String, dynamic&gt; json) {
+    return Post(
+      userId: (json['userId'] as num?)?.toInt() ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      title: json['title'] as String? ?? '',
+      body: json['body'] as String? ?? '',
+    );
+  }
+
+  Map&lt;String, dynamic&gt; toJson() =&gt; {
+        'userId': userId,
+        'id': id,
+        'title': title,
+        'body': body,
+      };
+}</code></pre>
+<aside class="special"><p><strong>Why defensive casts?</strong> Real API responses often deviate from the docs (missing fields, changed types). The <code>as String? ?? ''</code> pattern prevents the most common first-integration crash: <code>type 'Null' is not a subtype</code>.</p></aside>
+<h2 is-upgraded>2. Centralized Dio configuration</h2>
+<p>Create <code>lib/data/api_client.dart</code>. All networking configuration (base URL, timeouts, logging) lives in one place:</p>
+<pre><code>import 'package:dio/dio.dart';
+
+Dio createDio() {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: 'https://jsonplaceholder.typicode.com',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      headers: {'Accept': 'application/json'},
+    ),
+  );
+  dio.interceptors.add(
+    LogInterceptor(requestBody: true, responseBody: false),
+  );
+  return dio;
+}</code></pre>
+<aside class="special"><p><strong>Why Dio instead of package:http?</strong> Dio provides per-request timeouts, interceptors (logging/auth headers), and structured errors (<code>DioException</code> with <code>type</code>) without extra boilerplate — matching the curriculum's recommended stack.</p></aside>
+<h2 is-upgraded>3. Repository as the data gateway</h2>
+<p>Create <code>lib/data/repositories/post_repository.dart</code>:</p>
+<pre><code>import 'package:dio/dio.dart';
+import '../models/post.dart';
+
+class PostRepository {
+  PostRepository(this._dio);
+  final Dio _dio;
+
+  Future&lt;List&lt;Post&gt;&gt; fetchPosts() async {
+    final response = await _dio.get&lt;List&gt;('/posts');
+    final data = response.data ?? [];
+    return data
+        .whereType&lt;Map&lt;String, dynamic&gt;&gt;()
+        .map(Post.fromJson)
+        .toList();
+  }
+}</code></pre>
+<p>Note: the repository shows no UI and never silently swallows exceptions. Exceptions propagate so the provider can turn them into <code>AsyncError</code> automatically in the next step.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 2 — Provider and error handling" duration="20">
+<h2 is-upgraded>4. AsyncNotifier provider + user-friendly errors</h2>
+<p>Create <code>lib/data/providers.dart</code>. The provider turns technical exceptions into messages suitable for users:</p>
+<pre><code>import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
+import 'api_client.dart';
+import 'models/post.dart';
+import 'repositories/post_repository.dart';
+
+final dioProvider = Provider&lt;Dio&gt;((ref) =&gt; createDio());
+
+final postRepositoryProvider = Provider&lt;PostRepository&gt;(
+  (ref) =&gt; PostRepository(ref.watch(dioProvider)),
+);
+
+class PostListNotifier extends AsyncNotifier&lt;List&lt;Post&gt;&gt; {
+  @override
+  Future&lt;List&lt;Post&gt;&gt; build() async {
+    // Exceptions from the repository automatically become AsyncError.
+    // Automatic retry is disabled in the provider declaration below
+    // so errors are final and easy to test.
+    final repository = ref.watch(postRepositoryProvider);
+    return repository.fetchPosts();
+  }
+
+  Future&lt;void&gt; refresh() async {
+    state = const AsyncLoading();
+    try {
+      final repository = ref.read(postRepositoryProvider);
+      state = AsyncData(await repository.fetchPosts());
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
+  }
+}
+
+final postListProvider =
+    AsyncNotifierProvider&lt;PostListNotifier, List&lt;Post&gt;&gt;(
+        PostListNotifier.new,
+        // Disable Riverpod 3 automatic retry so errors are final
+        // and testable (otherwise the provider future in tests
+        // would retry and hang).
+        retry: (retryCount, error) =&gt; null);
+
+String friendlyErrorMessage(Object error) {
+  if (error is DioException) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return 'Slow connection or timeout. Check your internet and retry.';
+      case DioExceptionType.connectionError:
+        return 'Cannot reach the server. Check your internet connection.';
+      case DioExceptionType.badResponse:
+        final code = error.response?.statusCode;
+        if (code == 404) return 'Data not found (404).';
+        if (code == 401 || code == 403) {
+          return 'Access denied ($code). Check your credentials.';
+        }
+        return 'Server problem ($code). Try again later.';
+      default:
+        return 'A network error occurred. Try again.';
+    }
+  }
+  return 'An unexpected error occurred: $error';
+}</code></pre>
+<h2 is-upgraded>5. UI: loading, error, empty, success</h2>
+<p>Create <code>lib/pages/post_list_page.dart</code>. Each state gets its own presentation:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/providers.dart';
+
+class PostListPage extends ConsumerWidget {
+  const PostListPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final postsAsync = ref.watch(postListProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Posts API'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () =&gt;
+                ref.read(postListProvider.notifier).refresh(),
+          ),
+        ],
+      ),
+      body: postsAsync.when(
+        loading: () =&gt;
+            const Center(child: CircularProgressIndicator()),
+        error: (err, _) =&gt; Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(friendlyErrorMessage(err),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                FilledButton(
+                  onPressed: () =&gt; ref.invalidate(postListProvider),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        data: (posts) {
+          if (posts.isEmpty) {
+            return const Center(
+                child: Text('No data from the server yet.'));
+          }
+          return RefreshIndicator(
+            onRefresh: () =&gt;
+                ref.read(postListProvider.notifier).refresh(),
+            child: ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                      child: Text(post.id.toString())),
+                  title: Text(post.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                  subtitle: Text(post.body,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded>6. Entry point with ProviderScope</h2>
+<p>Fill in <code>lib/main.dart</code>:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'pages/post_list_page.dart';
+
+void main() =&gt; runApp(const ProviderScope(child: MyApp()));
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) =&gt; MaterialApp(
+        title: 'Week 4 - REST API',
+        theme: ThemeData(
+            colorSchemeSeed: Colors.indigo, useMaterial3: true),
+        home: const PostListPage(),
+      );
+}</code></pre>
+<h2 is-upgraded>Test three error scenarios</h2>
+<ol type="1">
+<li>Run the app with normal internet — observe loading, then the list of 100 posts.</li><li>Turn off the internet (airplane mode), press refresh — observe the friendly message + Retry button. Turn the internet back on, press Retry.</li><li>Temporarily change <code>baseUrl</code> to a wrong URL — observe the connection error message. Restore it after the test.</li>
+</ol>
+<aside class="warning"><p><strong>Common mistakes (exam material):</strong> calling Dio directly from a widget; swallowing exceptions with an empty <code>catch</code>; showing raw technical messages to users; forgetting the empty state; no timeout so the UI hangs forever.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 3 — Basic pagination" duration="20">
+<h2 is-upgraded>Pagination concept</h2><p>APIs with large data do not send everything at once, but page by page. JSONPlaceholder supports the query <code>?_page=N&amp;_limit=M</code>. UI strategy: <em>infinite scroll</em> — load the next page as the user approaches the end of the list, show a small indicator at the bottom without discarding old data.</p>
+<h2 is-upgraded>7. Paginated repository</h2>
+<p>Add this method to <code>PostRepository</code>:</p>
+<pre><code>Future&lt;List&lt;Post&gt;&gt; fetchPostsPage({
+  required int page,
+  int limit = 10,
+}) async {
+  final response = await _dio.get&lt;List&gt;(
+    '/posts',
+    queryParameters: {'_page': page, '_limit': limit},
+  );
+  final data = response.data ?? [];
+  return data
+      .whereType&lt;Map&lt;String, dynamic&gt;&gt;()
+      .map(Post.fromJson)
+      .toList();
+}</code></pre>
+<h2 is-upgraded>8. Notifier with page state</h2>
+<p>Create <code>lib/data/paged_posts.dart</code> — immutable state plus a notifier with a double-request guard:</p>
+<pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'models/post.dart';
+import 'providers.dart';
+
+class PagedPostsState {
+  const PagedPostsState({
+    this.items = const [],
+    this.page = 0,
+    this.isLoadingMore = false,
+    this.hasMore = true,
+    this.error,
+  });
+
+  final List&lt;Post&gt; items;
+  final int page;
+  final bool isLoadingMore;
+  final bool hasMore;
+  final Object? error;
+}
+
+class PagedPostsNotifier extends Notifier&lt;PagedPostsState&gt; {
+  @override
+  PagedPostsState build() {
+    Future.microtask(loadFirstPage);
+    return const PagedPostsState();
+  }
+
+  Future&lt;void&gt; loadFirstPage() async {
+    state = const PagedPostsState(isLoadingMore: true);
+    final repository = ref.read(postRepositoryProvider);
+    try {
+      final items =
+          await repository.fetchPostsPage(page: 1, limit: 10);
+      state = PagedPostsState(
+        items: items,
+        page: 1,
+        hasMore: items.length == 10,
+      );
+    } catch (e) {
+      state = PagedPostsState(error: e);
+    }
+  }
+
+  Future&lt;void&gt; loadNextPage() async {
+    if (state.isLoadingMore || !state.hasMore) return;
+    final repo = ref.read(postRepositoryProvider);
+    final currentItems = state.items;
+    final currentPage = state.page;
+    state = PagedPostsState(
+      items: currentItems,
+      page: currentPage,
+      isLoadingMore: true,
+      hasMore: state.hasMore,
+    );
+    try {
+      final next = currentPage + 1;
+      final items =
+          await repo.fetchPostsPage(page: next, limit: 10);
+      state = PagedPostsState(
+        items: [...currentItems, ...items],
+        page: next,
+        hasMore: items.length == 10,
+      );
+    } catch (e) {
+      state = PagedPostsState(
+        items: currentItems,
+        page: currentPage,
+        error: e,
+      );
+    }
+  }
+}
+
+final pagedPostsProvider =
+    NotifierProvider&lt;PagedPostsNotifier, PagedPostsState&gt;(
+        PagedPostsNotifier.new);</code></pre>
+<aside class="special"><p><strong>Important guard:</strong> <code>if (state.isLoadingMore || !state.hasMore) return;</code> prevents duplicate requests when the scroll listener fires repeatedly, and stops requesting when the data runs out.</p></aside>
+<h2 is-upgraded>9. Infinite-scroll UI</h2>
+<p>Create <code>lib/pages/paged_post_page.dart</code> with a ScrollController that triggers the next page 200px before the end of the list:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/paged_posts.dart';
+import '../data/providers.dart';
+
+class PagedPostPage extends ConsumerStatefulWidget {
+  const PagedPostPage({super.key});
+
+  @override
+  ConsumerState&lt;PagedPostPage&gt; createState() =&gt;
+      _PagedPostPageState();
+}
+
+class _PagedPostPageState
+    extends ConsumerState&lt;PagedPostPage&gt; {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (_controller.position.pixels &gt;=
+          _controller.position.maxScrollExtent - 200) {
+        ref.read(pagedPostsProvider.notifier).loadNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(pagedPostsProvider);
+    if (state.error != null &amp;&amp; state.items.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Posts Paged')),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(friendlyErrorMessage(state.error!)),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () =&gt; ref
+                    .read(pagedPostsProvider.notifier)
+                    .loadFirstPage(),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(title: const Text('Posts Paged')),
+      body: ListView.builder(
+        controller: _controller,
+        itemCount: state.items.length + 1,
+        itemBuilder: (context, index) {
+          if (index == state.items.length) {
+            if (!state.hasMore) {
+              return const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(child: Text('All data loaded.')),
+              );
+            }
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+          final post = state.items[index];
+          return ListTile(
+            leading: CircleAvatar(
+                child: Text(post.id.toString())),
+            title: Text(post.title,
+                maxLines: 1, overflow: TextOverflow.ellipsis),
+          );
+        },
+      ),
+    );
+  }
+}</code></pre>
+<p>Change <code>home</code> in <code>main.dart</code> to <code>PagedPostPage</code>, run, and scroll to the bottom. Observe: page 1 appears first, the indicator shows, and data grows without a full reload.</p>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="20">
+<h2 is-upgraded>The role of AI in this codelab</h2><p>Week 4 is advanced material: AI may help design the repository layer, but you must test the error handling and fix the logic. The grade is not based on how much code AI produces, but on prompt quality, verification, and documentation.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Ask an AI coding assistant (Cursor, Copilot, Claude Code, or equivalent) with the following prompt:</p>
+<pre><code>Create a Flutter repository layer for the GET /comments?postId={id}
+endpoint of JSONPlaceholder using Dio + flutter_riverpod.
+Requirements:
+- Comment model with null-safe fromJson (postId, id, name, email, body).
+- CommentRepository with fetchComments(postId) + 10-second timeout.
+- AsyncNotifierProvider with automatic error handling (AsyncError)
+  and a user-friendly error-message function for timeout,
+  connection error, 404, and 500.
+- One unit test for fromJson with missing fields.
+Explain each part of the code with comments.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Before accepting AI-generated code, verify the following and record your findings in the README:</p>
+<ul><li>Does the UI call Dio directly (forbidden) or go through the repository?</li><li>Is <code>fromJson</code> null-safe, or does it still use direct casts that can crash?</li><li>Are all <code>DioExceptionType</code> values (timeout, connectionError, badResponse) mapped to user messages?</li><li>Are <code>baseUrl</code>/timeouts centralized in one client instead of scattered across methods?</li><li>Does the AI test really cover the missing-field case, or only the happy path? Add at least 1 edge case of your own.</li><li>Run <code>flutter analyze</code> and <code>flutter test</code> — does the AI output pass without warnings?</li></ul>
+<aside class="special"><p><strong>Technical responsibility:</strong> store the prompt used, the initial AI output, the fixes you made, and the test results in the <code>docs/</code> folder of this week's task. During the demo, you must be able to explain every line of the AI-generated code.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring and testing" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<p>Perform the following refactoring on your API project, then commit with clear messages:</p>
+<ol type="1">
+<li>Extract the post row widget into a separate <code>PostTile</code> so <code>ListView.builder</code> stays short and testable.</li><li>Move <code>friendlyErrorMessage</code> into <code>lib/data/network_errors.dart</code> so both the paged and non-paged pages can reuse it.</li><li>Add a post detail page with GoRouter (<code>/post/:id</code>) showing the full <code>title</code> and <code>body</code> — the detail state comes from the already-loaded list, or via the repository when opened directly.</li>
+</ol>
+<h2 is-upgraded>Testing: unit tests + fake repository</h2>
+<p>Create <code>test/post_test.dart</code> — test null-safe parsing, error mapping, and the provider with a fake repository (no internet). First the imports and the fake:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:week4_api/data/models/post.dart';
+import 'package:week4_api/data/providers.dart';
+import 'package:week4_api/data/repositories/post_repository.dart';
+
+class FakePostRepository extends PostRepository {
+  FakePostRepository({this.items, this.throwError = false})
+      : super(Dio());
+  final List&lt;Post&gt;? items;
+  final bool throwError;
+
+  @override
+  Future&lt;List&lt;Post&gt;&gt; fetchPosts() async {
+    if (throwError) {
+      throw DioException(
+        requestOptions: RequestOptions(path: '/posts'),
+        type: DioExceptionType.connectionError,
+      );
+    }
+    return items ?? const [];
+  }
+
+  @override
+  Future&lt;List&lt;Post&gt;&gt; fetchPostsPage(
+      {required int page, int limit = 10}) async {
+    return fetchPosts();
+  }
+}
+
+void main() {
+  test('fromJson is safe against missing fields', () {
+    final post = Post.fromJson({'id': 7});
+    expect(post.id, 7);
+    expect(post.title, '');
+    expect(post.userId, 0);
+  });
+
+  test('friendlyErrorMessage for connection error', () {
+    final err = DioException(
+      requestOptions: RequestOptions(path: '/posts'),
+      type: DioExceptionType.connectionError,
+    );
+    expect(friendlyErrorMessage(err), contains('reach'));
+  });</code></pre>
+  test('provider succeeds with a fake repository', () async {
+    final container = ProviderContainer(
+      overrides: [
+        postRepositoryProvider.overrideWithValue(
+          FakePostRepository(items: [
+            const Post(
+                userId: 1, id: 1, title: 'Test', body: 'Body'),
+          ]),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    // Use the readPostsOnce helper (see providers.dart).
+    final posts = await readPostsOnce(container);
+    expect(posts.length, 1);
+    expect(posts.first.title, 'Test');
+  });
+
+  test('provider errors with a fake repository', () async {
+    final container = ProviderContainer(
+      overrides: [
+        postRepositoryProvider.overrideWithValue(
+          FakePostRepository(throwError: true),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    // Use the readPostsErrorOnce helper (see providers.dart).
+    final err = await readPostsErrorOnce(container);
+    expect(err, isA&lt;DioException&gt;());
+    expect(friendlyErrorMessage(err!), contains('reach'));
+  });
+}</code></pre>
+<p>Final test file structure: imports + <code>FakePostRepository</code> + <code>main()</code> with 4 tests. Run:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<aside class="special"><p><strong>Implementation note:</strong> this fake-repository override pattern is the foundation of API mocking reused in Week 12 (Testing &amp; QA). Make sure no real HTTP request happens inside tests.</p></aside>
+<h2 is-upgraded>Self-verification checklist</h2>
+<ul><li>The UI never calls Dio directly — all data access goes through repository + provider.</li><li>All four states render correctly: loading, error (+ retry), empty, success.</li><li>Pagination: data grows on scroll, no duplicate requests, end-of-data indicator present.</li><li><code>flutter analyze</code> has no issues and all tests pass.</li><li>AI output is verified and documented in the <code>docs/</code> folder.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, references" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Build a <strong>data-list application backed by a REST API</strong> as this week's assignment (extend the codelab project or start a new one):</p>
+<ol type="1">
+<li>Fetch data from a dummy API (JSONPlaceholder <code>/posts</code> or another public keyless API). Display it through repository + Riverpod.</li><li>Apply centralized Dio (base URL, timeouts, logging interceptor) and a null-safe <code>fromJson</code> model.</li><li>Show all four states: loading, error (+ retry button), empty, success.</li><li>Add basic pagination (infinite scroll, 10 items per page) with a double-request guard.</li><li>Include at least 2 passing tests (1 model/error-mapping unit test + 1 provider test with a fake repository).</li><li>Complete the AI Challenge section and document the prompt, AI output, fixes, and reasons for your technical decisions in <code>docs/</code>.</li><li>Push to the portfolio repository under <code>04-week-4-networking-rest-api/</code> with the structure <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, and <code>screenshots/</code>. The README explains the objective, main features, technology stack, run instructions, and achieved results.</li>
+</ol>
+<h2 is-upgraded>Reflection</h2>
+<ul><li>Why is the UI forbidden from calling Dio directly? What breaks if this rule is violated?</li><li>When is client-side pagination enough, and when must you rely on server pagination (<code>_page</code>/<code>_limit</code>)?</li><li>How do repository exceptions become <code>AsyncError</code> without try/catch in every widget? When is explicit try/catch still needed?</li><li>Which part of the AI output did you fix, and why?</li></ul>
+<h2 is-upgraded>References</h2>
+<ul>
+<li><a href="https://pub.dev/packages/dio" target="_blank">Dio package</a></li>
+<li><a href="https://jsonplaceholder.typicode.com" target="_blank">JSONPlaceholder (dummy API)</a></li>
+<li><a href="https://riverpod.dev/docs/concepts/async_notifiers" target="_blank">Riverpod: AsyncNotifier and AsyncValue</a></li>
+<li><a href="https://docs.flutter.dev/cookbook/networking/fetch-data" target="_blank">Flutter cookbook: Fetch data from the internet</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+
+<script src="https://storage.googleapis.com/claat-public/native-shim.js"></script><script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script><script src="https://storage.googleapis.com/claat-public/prettify.js"></script><script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
