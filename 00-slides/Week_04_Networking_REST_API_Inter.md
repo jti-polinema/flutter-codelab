@@ -181,6 +181,8 @@ Server (REST API)
 Client displays data
 ```
 
+---
+
 Main methods:
 
 | Method | Purpose |
@@ -274,7 +276,9 @@ Product (Object)
 JSON (Map)
 ```
 
-**Principle:** JSON parsing happens in only one place — the model.
+**Principle:** JSON parsing happens in only one place the model.
+
+---
 
 # Example Product Model
 
@@ -385,8 +389,7 @@ http              Dio
 
 Dio advantages:
 
-- centralized base URL
-- global timeout
+- centralized base URL & global timeout
 - interceptors (auth, log)
 - typed errors via `DioException`
 - cleaner query parameters
@@ -475,6 +478,8 @@ await dio.get('/products/101');
 
 > Avoid manual URL string concatenation when `queryParameters` works.
 
+---
+
 # Error Handling with Dio
 
 Never use an empty `try/catch`.
@@ -503,9 +508,11 @@ try {
 }
 ```
 
-### Remember
+---
 
-> User-facing messages ≠ technical logs for developers.
+# Remember!
+
+## User-facing messages ≠ technical logs for developers.
 
 ---
 
@@ -595,11 +602,15 @@ class ProductRepository {
 }
 ```
 
-Benefits:
+---
+
+# Benefits:
 
 - centralized API logic
 - easy to swap data sources
 - easy to mock for testing
+
+---
 
 # Repository + Riverpod
 
@@ -627,10 +638,8 @@ final productsProvider =
       .getProducts(),
 );
 ```
-
 ```text
-Widget → watch(productsProvider)
-  → Repository → Dio → API
+Widget → watch(productsProvider) → Repository → Dio → API
 ```
 
 ---

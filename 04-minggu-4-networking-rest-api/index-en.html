@@ -34,7 +34,7 @@
 Provider --calls--&gt; Repository --uses--&gt; Dio --HTTP--&gt; REST API</code></pre>
 </google-codelab-step>
 
-<google-codelab-step label="Lab 1 — Dio and data models" duration="25">
+<google-codelab-step label="Lab 1: Dio and data models" duration="25">
 <h2 is-upgraded>Set up the project</h2>
 <pre><code>flutter create week4_api
 cd week4_api
@@ -100,7 +100,7 @@ Dio createDio() {
   );
   return dio;
 }</code></pre>
-<aside class="special"><p><strong>Why Dio instead of package:http?</strong> Dio provides per-request timeouts, interceptors (logging/auth headers), and structured errors (<code>DioException</code> with <code>type</code>) without extra boilerplate — matching the curriculum's recommended stack.</p></aside>
+<aside class="special"><p><strong>Why Dio instead of package:http?</strong> Dio provides per-request timeouts, interceptors (logging/auth headers), and structured errors (<code>DioException</code> with <code>type</code>) without extra boilerplate, matching the curriculum's recommended stack.</p></aside>
 <h2 is-upgraded>3. Repository as the data gateway</h2>
 <p>Create <code>lib/data/repositories/post_repository.dart</code>:</p>
 <pre><code>import 'package:dio/dio.dart';
@@ -122,7 +122,7 @@ class PostRepository {
 <p>Note: the repository shows no UI and never silently swallows exceptions. Exceptions propagate so the provider can turn them into <code>AsyncError</code> automatically in the next step.</p>
 </google-codelab-step>
 
-<google-codelab-step label="Lab 2 — Provider and error handling" duration="20">
+<google-codelab-step label="Lab 2: Provider and error handling" duration="20">
 <h2 is-upgraded>4. AsyncNotifier provider + user-friendly errors</h2>
 <p>Create <code>lib/data/providers.dart</code>. The provider turns technical exceptions into messages suitable for users:</p>
 <pre><code>import 'package:dio/dio.dart';
@@ -283,13 +283,13 @@ class MyApp extends StatelessWidget {
 }</code></pre>
 <h2 is-upgraded>Test three error scenarios</h2>
 <ol type="1">
-<li>Run the app with normal internet — observe loading, then the list of 100 posts.</li><li>Turn off the internet (airplane mode), press refresh — observe the friendly message + Retry button. Turn the internet back on, press Retry.</li><li>Temporarily change <code>baseUrl</code> to a wrong URL — observe the connection error message. Restore it after the test.</li>
+<li>Run the app with normal internet, observe loading, then the list of 100 posts.</li><li>Turn off the internet (airplane mode), press refresh, observe the friendly message + Retry button. Turn the internet back on, press Retry.</li><li>Temporarily change <code>baseUrl</code> to a wrong URL, observe the connection error message. Restore it after the test.</li>
 </ol>
 <aside class="warning"><p><strong>Common mistakes (exam material):</strong> calling Dio directly from a widget; swallowing exceptions with an empty <code>catch</code>; showing raw technical messages to users; forgetting the empty state; no timeout so the UI hangs forever.</p></aside>
 </google-codelab-step>
 
-<google-codelab-step label="Lab 3 — Basic pagination" duration="20">
-<h2 is-upgraded>Pagination concept</h2><p>APIs with large data do not send everything at once, but page by page. JSONPlaceholder supports the query <code>?_page=N&amp;_limit=M</code>. UI strategy: <em>infinite scroll</em> — load the next page as the user approaches the end of the list, show a small indicator at the bottom without discarding old data.</p>
+<google-codelab-step label="Lab 3: Basic pagination" duration="20">
+<h2 is-upgraded>Pagination concept</h2><p>APIs with large data do not send everything at once, but page by page. JSONPlaceholder supports the query <code>?_page=N&amp;_limit=M</code>. UI strategy: <em>infinite scroll</em> load the next page as the user approaches the end of the list, show a small indicator at the bottom without discarding old data.</p>
 <h2 is-upgraded>7. Paginated repository</h2>
 <p>Add this method to <code>PostRepository</code>:</p>
 <pre><code>Future&lt;List&lt;Post&gt;&gt; fetchPostsPage({
@@ -307,7 +307,7 @@ class MyApp extends StatelessWidget {
       .toList();
 }</code></pre>
 <h2 is-upgraded>8. Notifier with page state</h2>
-<p>Create <code>lib/data/paged_posts.dart</code> — immutable state plus a notifier with a double-request guard:</p>
+<p>Create <code>lib/data/paged_posts.dart</code> immutable state plus a notifier with a double-request guard:</p>
 <pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'models/post.dart';
 import 'providers.dart';
@@ -493,7 +493,7 @@ Requirements:
 Explain each part of the code with comments.</code></pre>
 <h2 is-upgraded>AI Verification Checklist</h2>
 <p>Before accepting AI-generated code, verify the following and record your findings in the README:</p>
-<ul><li>Does the UI call Dio directly (forbidden) or go through the repository?</li><li>Is <code>fromJson</code> null-safe, or does it still use direct casts that can crash?</li><li>Are all <code>DioExceptionType</code> values (timeout, connectionError, badResponse) mapped to user messages?</li><li>Are <code>baseUrl</code>/timeouts centralized in one client instead of scattered across methods?</li><li>Does the AI test really cover the missing-field case, or only the happy path? Add at least 1 edge case of your own.</li><li>Run <code>flutter analyze</code> and <code>flutter test</code> — does the AI output pass without warnings?</li></ul>
+<ul><li>Does the UI call Dio directly (forbidden) or go through the repository?</li><li>Is <code>fromJson</code> null-safe, or does it still use direct casts that can crash?</li><li>Are all <code>DioExceptionType</code> values (timeout, connectionError, badResponse) mapped to user messages?</li><li>Are <code>baseUrl</code>/timeouts centralized in one client instead of scattered across methods?</li><li>Does the AI test really cover the missing-field case, or only the happy path? Add at least 1 edge case of your own.</li><li>Run <code>flutter analyze</code> and <code>flutter test</code>, does the AI output pass without warnings?</li></ul>
 <aside class="special"><p><strong>Technical responsibility:</strong> store the prompt used, the initial AI output, the fixes you made, and the test results in the <code>docs/</code> folder of this week's task. During the demo, you must be able to explain every line of the AI-generated code.</p></aside>
 </google-codelab-step>
 
@@ -501,10 +501,10 @@ Explain each part of the code with comments.</code></pre>
 <h2 is-upgraded>Refactoring Challenge</h2>
 <p>Perform the following refactoring on your API project, then commit with clear messages:</p>
 <ol type="1">
-<li>Extract the post row widget into a separate <code>PostTile</code> so <code>ListView.builder</code> stays short and testable.</li><li>Move <code>friendlyErrorMessage</code> into <code>lib/data/network_errors.dart</code> so both the paged and non-paged pages can reuse it.</li><li>Add a post detail page with GoRouter (<code>/post/:id</code>) showing the full <code>title</code> and <code>body</code> — the detail state comes from the already-loaded list, or via the repository when opened directly.</li>
+<li>Extract the post row widget into a separate <code>PostTile</code> so <code>ListView.builder</code> stays short and testable.</li><li>Move <code>friendlyErrorMessage</code> into <code>lib/data/network_errors.dart</code> so both the paged and non-paged pages can reuse it.</li><li>Add a post detail page with GoRouter (<code>/post/:id</code>) showing the full <code>title</code> and <code>body</code> the detail state comes from the already-loaded list, or via the repository when opened directly.</li>
 </ol>
 <h2 is-upgraded>Testing: unit tests + fake repository</h2>
-<p>Create <code>test/post_test.dart</code> — test null-safe parsing, error mapping, and the provider with a fake repository (no internet). First the imports and the fake:</p>
+<p>Create <code>test/post_test.dart</code>, test null-safe parsing, error mapping, and the provider with a fake repository (no internet). First the imports and the fake:</p>
 <pre><code>import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -550,7 +550,7 @@ void main() {
       type: DioExceptionType.connectionError,
     );
     expect(friendlyErrorMessage(err), contains('reach'));
-  });</code></pre>
+  });
   test('provider succeeds with a fake repository', () async {
     final container = ProviderContainer(
       overrides: [
@@ -589,7 +589,7 @@ void main() {
 flutter test</code></pre>
 <aside class="special"><p><strong>Implementation note:</strong> this fake-repository override pattern is the foundation of API mocking reused in Week 12 (Testing &amp; QA). Make sure no real HTTP request happens inside tests.</p></aside>
 <h2 is-upgraded>Self-verification checklist</h2>
-<ul><li>The UI never calls Dio directly — all data access goes through repository + provider.</li><li>All four states render correctly: loading, error (+ retry), empty, success.</li><li>Pagination: data grows on scroll, no duplicate requests, end-of-data indicator present.</li><li><code>flutter analyze</code> has no issues and all tests pass.</li><li>AI output is verified and documented in the <code>docs/</code> folder.</li></ul>
+<ul><li>The UI never calls Dio directly, all data access goes through repository + provider.</li><li>All four states render correctly: loading, error (+ retry), empty, success.</li><li>Pagination: data grows on scroll, no duplicate requests, end-of-data indicator present.</li><li><code>flutter analyze</code> has no issues and all tests pass.</li><li>AI output is verified and documented in the <code>docs/</code> folder.</li></ul>
 </google-codelab-step>
 
 <google-codelab-step label="Assignment, reflection, references" duration="10">
@@ -602,6 +602,7 @@ flutter test</code></pre>
 <ul><li>Why is the UI forbidden from calling Dio directly? What breaks if this rule is violated?</li><li>When is client-side pagination enough, and when must you rely on server pagination (<code>_page</code>/<code>_limit</code>)?</li><li>How do repository exceptions become <code>AsyncError</code> without try/catch in every widget? When is explicit try/catch still needed?</li><li>Which part of the AI output did you fix, and why?</li></ul>
 <h2 is-upgraded>References</h2>
 <ul>
+  <li><a href="https://drive.google.com/open?id=1lwfYRUi3Z5cEbDK8eL8s8tOLPb99D6q3&usp=drive_fs" target="_blank">Week 4 Slides: Networking & REST API</a></li>
 <li><a href="https://pub.dev/packages/dio" target="_blank">Dio package</a></li>
 <li><a href="https://jsonplaceholder.typicode.com" target="_blank">JSONPlaceholder (dummy API)</a></li>
 <li><a href="https://riverpod.dev/docs/concepts/async_notifiers" target="_blank">Riverpod: AsyncNotifier and AsyncValue</a></li>
