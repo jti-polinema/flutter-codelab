@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#05 | Local Storage &amp; Offline First</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="05-minggu-5-local-storage-offline-first" title="#05 | Local Storage &amp; Offline First" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> September 18, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning Objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>explain the difference between key-value, relational, and NoSQL on-device storage;</li><li>persist simple preferences (theme, last opened) with SharedPreferences;</li><li>implement note CRUD with SQLite (sqflite) behind a local repository;</li><li>apply the offline-first pattern: cache-first reads, dirty flags, and a sync queue;</li><li>render loading, error, empty, and success states for local data with Riverpod;</li><li>test a local repository with a fake repository (no real database).</li></ul>
+<h2 is-upgraded>Prerequisites</h2><ul><li>A laptop/PC and the portfolio repository (GitHub/GitLab) from previous weeks.</li><li>Flutter SDK, VS Code (Flutter/Dart extensions), an Android emulator or physical device.</li><li>Week 3 knowledge (Riverpod, AsyncValue) and Week 4 (repository pattern, Dio).</li><li>No internet connection is required for the core labs, you will simulate being offline.</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 5 is an advanced topic: AI may suggest storage options (SharedPreferences vs Hive vs SQLite vs Drift), but you must compare the trade-offs, choose the option that best fits the app, and be able to explain every technical decision. Grading rewards comparison quality, verification, and documentation, not the volume of AI-generated code.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Local storage and offline-first concepts" duration="15">
+<h2 is-upgraded>Types of local storage</h2><p>A practical rule for choosing storage:</p>
+<table><tr><th>Need</th><th>Choice</th><th>Example</th></tr><tr><td>Small key-value settings</td><td><code>SharedPreferences</code></td><td>dark/light theme, language, last opened time</td></tr><tr><td>Structured relational data</td><td><code>SQLite</code> via <code>sqflite</code></td><td>notes, tasks, transactions</td></tr><tr><td>Lightweight embedded NoSQL</td><td><code>Hive</code></td><td>object cache, simple boxes</td></tr><tr><td>Reactive, type-safe relational</td><td><code>Drift</code></td><td>large apps with complex queries + streams</td></tr></table>
+<p>This codelab uses <code>SharedPreferences</code> + <code>SQLite (sqflite)</code>: the most common industry combination for offline notes apps. You must fill in the Hive vs Drift comparison table in the AI Challenge as evidence of your decision-making.</p>
+<h2 is-upgraded>Offline-first, not offline-only</h2><p>Offline-first means the app is <strong>always readable and writable</strong> without internet, then <strong>synchronized</strong> when connectivity returns. Three core mechanisms:</p>
+<ul><li><strong>Cache-first read:</strong> show local data instantly, then refresh from the network in the background and persist the result.</li><li><strong>Dirty flag:</strong> every local change not yet uploaded is marked (<code>dirty = 1</code>) so it can sync later.</li><li><strong>Sync queue:</strong> pending operations are processed in order when online; conflicts are resolved with an explicit rule (e.g. <em>last-write-wins</em> based on <code>updated_at</code>).</li></ul>
+<pre><code>UI (ConsumerWidget) --watch--&gt; Provider (AsyncValue)
+Provider --calls--&gt; LocalRepository --CRUD--&gt; SQLite
+LocalRepository --sync--&gt; Remote (simulated) --success--&gt; dirty = 0
+Cache: read local first, refresh in background, persist</code></pre>
+<h2 is-upgraded>Repository for local data</h2><p>The same architecture rules from Week 4 apply, only the data source changes:</p>
+<ul><li><strong>The UI must never call SQLite/SharedPreferences directly.</strong> The UI only reads providers.</li><li>The <strong>local repository</strong> is the single gateway to the database and preferences. It converts platform exceptions into meaningful failures for the UI.</li><li><strong>Riverpod providers</strong> expose <code>AsyncValue</code> (loading/error/data) plus an <code>invalidate</code> function for refresh.</li></ul>
+<aside class="special"><p><strong>Why not store everything in SharedPreferences?</strong> SharedPreferences is for small primitive values only. Storing a note list as one JSON string there makes querying, partial updates, and synchronization fragile and slow. Collections always belong in a database.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 1: SharedPreferences" duration="20">
+<h2 is-upgraded>Set up the project</h2>
+<pre><code>flutter create week5_offline_notes
+cd week5_offline_notes
+flutter pub add flutter_riverpod shared_preferences sqflite path</code></pre>
+<p>Folder structure:</p>
+<pre><code>lib/
+├── main.dart
+├── data/
+│   ├── local/
+│   │   ├── db.dart
+│   │   └── note.dart
+│   ├── prefs.dart
+│   └── repositories/
+│       └── note_repository.dart
+└── pages/
+    ├── settings_page.dart
+    └── notes_page.dart</code></pre>
+<h2 is-upgraded>1. Preferences repository</h2>
+<p>Create <code>lib/data/prefs.dart</code>. All key-value access lives here, never scattered across widgets:</p>
+<pre><code>import 'package:shared_preferences/shared_preferences.dart';
+
+class PrefsRepository {
+  static const _darkModeKey = 'dark_mode';
+  static const _lastOpenedKey = 'last_opened_at';
+
+  Future&lt;bool&gt; getDarkMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_darkModeKey) ?? false;
+  }
+
+  Future&lt;void&gt; setDarkMode(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_darkModeKey, value);
+  }
+
+  Future&lt;void&gt; markOpenedNow() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastOpenedKey, DateTime.now().toIso8601String());
+  }
+
+  Future&lt;String?&gt; getLastOpened() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_lastOpenedKey);
+  }
+}</code></pre>
+<h2 is-upgraded>2. Provider and settings page</h2>
+<p>A minimal Riverpod wiring in <code>lib/pages/settings_page.dart</code>:</p>
+<pre><code>import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/prefs.dart';
+
+final prefsRepositoryProvider = Provider((ref) =&gt; PrefsRepository());
+final darkModeProvider =
+    AsyncNotifierProvider&lt;DarkModeNotifier, bool&gt;(DarkModeNotifier.new);
+
+class DarkModeNotifier extends AsyncNotifier&lt;bool&gt; {
+  @override
+  Future&lt;bool&gt; build() =&gt;
+      ref.watch(prefsRepositoryProvider).getDarkMode();
+
+  Future&lt;void&gt; toggle() async {
+    final next = !(state.value ?? false);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(prefsRepositoryProvider).setDarkMode(next);
+      return next;
+    });
+  }
+}</code></pre>
+<aside class="special"><p><strong>Common mistake:</strong> calling <code>SharedPreferences.getInstance()</code> inside a widget <code>build()</code> method. Always wrap it in a repository + provider so the result is cached and testable.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 2: SQLite and the notes repository" duration="30">
+<h2 is-upgraded>1. Note model</h2>
+<p>Create <code>lib/data/local/note.dart</code>. The <code>dirty</code> field marks notes that are not yet synchronized:</p>
+<pre><code>class Note {
+  const Note({
+    this.id,
+    required this.title,
+    this.body = '',
+    required this.updatedAt,
+    this.dirty = false,
+  });
+
+  final int? id;
+  final String title;
+  final String body;
+  final DateTime updatedAt;
+  final bool dirty;
+
+  Map&lt;String, Object?&gt; toMap() =&gt; {
+        'id': id,
+        'title': title,
+        'body': body,
+        'updated_at': updatedAt.toIso8601String(),
+        'dirty': dirty ? 1 : 0,
+      };
+
+  factory Note.fromMap(Map&lt;String, Object?&gt; map) {
+    return Note(
+      id: (map['id'] as num?)?.toInt(),
+      title: map['title'] as String? ?? '',
+      body: map['body'] as String? ?? '',
+      updatedAt: DateTime.tryParse(map['updated_at'] as String? ?? '') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+      dirty: ((map['dirty'] as num?)?.toInt() ?? 0) == 1,
+    );
+  }
+}</code></pre>
+<h2 is-upgraded>2. Database opener</h2>
+<p>Create <code>lib/data/local/db.dart</code>. A single opener function is shared by every repository:</p>
+<pre><code>import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart';
+
+Future&lt;Database&gt; openNotesDb() async {
+  final dir = await getDatabasesPath();
+  return openDatabase(
+    p.join(dir, 'offline_notes.db'),
+    version: 1,
+    onCreate: (db, version) async {
+      await db.execute('''
+        CREATE TABLE notes(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          body TEXT NOT NULL DEFAULT '',
+          updated_at TEXT NOT NULL,
+          dirty INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE cached_posts(
+          id INTEGER PRIMARY KEY,
+          payload TEXT NOT NULL,
+          cached_at TEXT NOT NULL
+        )
+      ''');
+    },
+  );
+}</code></pre>
+<h2 is-upgraded>3. Repository as the single data gateway</h2>
+<p>Create <code>lib/data/repositories/note_repository.dart</code>:</p>
+<pre><code>import 'package:sqflite/sqflite.dart';
+import '../local/db.dart';
+import '../local/note.dart';
+
+class NoteRepository {
+  NoteRepository({Future&lt;Database&gt; Function()? openDb})
+      : _openDb = openDb ?? openNotesDb;
+
+  final Future&lt;Database&gt; Function() _openDb;
+
+  Future&lt;List&lt;Note&gt;&gt; fetchNotes() async {
+    final db = await _openDb();
+    final rows = await db.query('notes', orderBy: 'updated_at DESC');
+    return rows.map(Note.fromMap).toList();
+  }
+
+  Future&lt;Note&gt; addNote({required String title, String body = ''}) async {
+    final db = await _openDb();
+    final note = Note(
+      title: title,
+      body: body,
+      updatedAt: DateTime.now(),
+      dirty: true,
+    );
+    final id = await db.insert('notes', note.toMap());
+    return Note(
+      id: id,
+      title: note.title,
+      body: note.body,
+      updatedAt: note.updatedAt,
+      dirty: true,
+    );
+  }
+
+  Future&lt;void&gt; deleteNote(int id) async {
+    final db = await _openDb();
+    await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future&lt;int&gt; countDirty() async {
+    final db = await _openDb();
+    final rows = await db.rawQuery(
+        'SELECT COUNT(*) AS c FROM notes WHERE dirty = 1');
+    return ((rows.first['c'] as num?)?.toInt() ?? 0);
+  }
+
+  Future&lt;void&gt; markAllSynced() async {
+    final db = await _openDb();
+    await db.update('notes', {'dirty': 0}, where: 'dirty = 1');
+  }
+}</code></pre>
+<aside class="special"><p><strong>Why does the constructor accept <code>openDb</code>?</strong> So tests can inject a fake/in-memory database without touching real SQLite. This injection pattern returns in Week 12 (Testing &amp; QA).</p></aside>
+<h2 is-upgraded>4. Offline notes page</h2>
+<p>Notes live on the device, so this page <strong>works fully in airplane mode</strong>. Show a badge with the count of unsynchronized (<code>dirty</code>) notes as the sync-queue indicator.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 3: Cache-first and the sync queue" duration="20">
+<h2 is-upgraded>1. Cache-first reads for API data</h2><p>Reuse the Week 4 endpoint (<code>GET /posts</code> from JSONPlaceholder). The flow: render the local cache instantly, refresh from the network in the background, persist the result for the next visit:</p>
+<pre><code>Future&lt;List&lt;Post&gt;&gt; loadPostsCacheFirst() async {
+  final cached = await readCachedPosts(); // from the cached_posts table
+  // 1. Return the cache immediately so the UI is never blank offline.
+  // 2. In the background: fetch via Dio -&gt; save to cached_posts
+  //    -&gt; invalidate the provider.
+  refreshPostsInBackground();
+  return cached;
+}</code></pre>
+<h2 is-upgraded>2. Syncing dirty notes</h2>
+<p>Since this codelab has no write backend yet, simulate the server with a delay. What is graded is the <strong>mechanism</strong>, not the server:</p>
+<pre><code>Future&lt;int&gt; syncNotes(NoteRepository repo) async {
+  final dirtyCount = await repo.countDirty();
+  if (dirtyCount == 0) return 0;
+  // Simulate upload: in a real project, send each dirty note
+  // to the REST API here, then mark it clean on a 2xx response.
+  await Future.delayed(const Duration(seconds: 1));
+  await repo.markAllSynced();
+  return dirtyCount;
+}</code></pre>
+<h2 is-upgraded>3. Deterministic offline simulation</h2>
+<p>Beyond real airplane mode, provide a <code>forceOffline</code> toggle on the provider so demos and tests never depend on classroom Wi-Fi:</p>
+<ul><li>Turn off Wi-Fi / enable airplane mode, then reopen the app: notes still render and the dirty badge stays accurate.</li><li>Reconnect, run <code>syncNotes</code>: the badge returns to 0.</li><li>Record your steps and observations (screenshots before/after) in the <code>screenshots/</code> folder.</li></ul>
+<aside class="warning"><p><strong>Conflict rule:</strong> define and document exactly one rule, e.g. <em>last-write-wins</em> based on <code>updated_at</code>. Without an explicit rule, two-way sync silently overwrites data.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>The role of AI in this codelab</h2><p>AI may propose storage options, but <strong>you decide</strong>. Grading rewards comparison quality and justification, not AI-generated code.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Ask an AI coding assistant (Cursor, Copilot, Claude Code, or an equivalent tool) with the following prompt:</p>
+<pre><code>Flutter Offline Notes app: note CRUD + theme preference.
+Compare SharedPreferences, Hive, sqflite (SQLite), and Drift
+for these two needs. Requirements:
+- Criteria: query complexity, relational needs, reactivity (streams),
+  type-safety, boilerplate size, and testability.
+- Give a final recommendation: which for preferences, which for notes,
+  with reasons in one table.
+- Show the table/box schema for 1000+ notes.
+Explain the trade-off of each choice.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Before accepting the AI recommendation, verify the following and record your findings in the README:</p>
+<ul><li>Did the AI place the note list in SharedPreferences? (Reject: fragile for collections.)</li><li>Does the AI schema support a sync queue (dirty flag / updated_at) or only plain CRUD?</li><li>Is the AI &quot;real-time&quot; claim backed by streams (Drift/watch) or just assumed?</li><li>Is the AI boilerplate estimate realistic after you try the install (<code>flutter pub add</code> + schema migration)?</li><li>Your final decision with reasons, it may differ from the AI recommendation as long as it is argued.</li></ul>
+<aside class="special"><p><strong>Technical responsibility:</strong> keep the prompt you used, the initial AI output, the final comparison table, and the test results in the week <code>docs/</code> folder. During the demo you must be able to explain why the SharedPreferences + SQLite combination was chosen.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, and common errors" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<p>Apply the following refactorings to your notes project, then commit with a clear message:</p>
+<ol type="1">
+<li>Extract the note row into a dedicated <code>NoteTile</code> widget that shows an &quot;unsynced&quot; badge when <code>dirty == true</code>.</li><li>Move the posts-caching logic and <code>syncNotes</code> into <code>lib/data/sync.dart</code> so the repository stays focused on CRUD.</li><li>Add a note detail page with GoRouter (<code>/note/:id</code>) that reads from the local repository, not from the list page state.</li>
+</ol>
+<h2 is-upgraded>Testing: model unit tests + a fake repository</h2>
+<p>Create <code>test/note_test.dart</code>. Test null-safe mapping and providers with a fake repository (no real SQLite):</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:week5_offline_notes/data/local/note.dart';
+import 'package:week5_offline_notes/data/repositories/note_repository.dart';
+
+class FakeNoteRepository extends NoteRepository {
+  FakeNoteRepository({this.items = const [], this.throwError = false})
+      : super(openDb: () =&gt; throw UnimplementedError());
+
+  final List&lt;Note&gt; items;
+  final bool throwError;
+
+  @override
+  Future&lt;List&lt;Note&gt;&gt; fetchNotes() async {
+    if (throwError) throw Exception('db locked (simulated)');
+    return items;
+  }
+
+  @override
+  Future&lt;int&gt; countDirty() =&gt;
+      Future.value(items.where((n) =&gt; n.dirty).length);
+}
+
+void main() {
+  test('fromMap is safe against missing fields', () {
+    final note = Note.fromMap({'title': 'Groceries'});
+    expect(note.title, 'Groceries');
+    expect(note.body, '');
+    expect(note.dirty, isFalse);
+  });
+
+  test('dirty flag survives serialization', () {
+    final note = Note(
+      title: 'a',
+      updatedAt: DateTime(2026, 9, 18),
+      dirty: true,
+    );
+    final restored = Note.fromMap(note.toMap());
+    expect(restored.dirty, isTrue);
+  });
+
+  test('provider succeeds with a fake repository', () async {
+    final container = ProviderContainer(
+      overrides: [
+        noteRepositoryProvider.overrideWithValue(
+          FakeNoteRepository(items: [
+            Note(title: 'Test', updatedAt: DateTime.now()),
+          ]),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final notes = await container.read(notesProvider.future);
+    expect(notes.length, 1);
+    expect(notes.first.title, 'Test');
+  });
+
+  test('provider fails with a fake repository', () async {
+    final container = ProviderContainer(
+      overrides: [
+        noteRepositoryProvider.overrideWithValue(
+          FakeNoteRepository(throwError: true),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    await expectLater(
+      container.read(notesProvider.future),
+      throwsA(isA&lt;Exception&gt;()),
+    );
+  });
+}</code></pre>
+<p>Run:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<h2 is-upgraded>Common errors and solutions</h2>
+<table><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr><tr><td><code>MissingPluginException</code> for shared_preferences/sqflite</td><td>Hot restart after adding a plugin without a full rebuild</td><td>Stop the app and run <code>flutter run</code> again (not hot reload)</td></tr><tr><td><code>databaseException: table notes already exists</code></td><td><code>onCreate</code> ran twice / version not bumped after a schema change</td><td>Bump <code>version</code> + implement <code>onUpgrade</code>, or uninstall the app during dev</td></tr><tr><td>Dirty badge never reaches zero</td><td><code>markAllSynced</code> never called after a successful sync</td><td>Call it only after the &quot;server&quot; reports success; verify with <code>countDirty</code></td></tr><tr><td>UI does not refresh after adding a note</td><td>Forgot <code>ref.invalidate(notesProvider)</code> after mutation</td><td>Invalidate the provider in the repository caller, not in a random widget</td></tr><tr><td>Tests touch a real database</td><td>The real repository is used in tests</td><td>Use <code>FakeNoteRepository</code> via overrides as in the example above</td></tr></table>
+<h2 is-upgraded>Self-verification checklist</h2>
+<ul><li>The UI never calls SQLite/SharedPreferences directly; everything goes through repository + provider.</li><li>The app fully works in airplane mode: read, add, and delete notes.</li><li>The dirty badge is accurate before/after sync; cached posts render without internet.</li><li><code>flutter analyze</code> is clean and all tests pass.</li><li>AI output is verified and documented in the <code>docs/</code> folder.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, references" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Build an <strong>Offline Notes app</strong> as this week assignment (extend the codelab project or start fresh):</p>
+<ol type="1">
+<li>Preferences: dark/light theme toggle + last-opened time via SharedPreferences.</li><li>Persistent note CRUD via SQLite (sqflite) through a local repository + Riverpod; list ordered by newest <code>updated_at</code>.</li><li>Offline-first: cache-first for reads, dirty flag + <code>syncNotes</code> for writes, and a documented explicit conflict rule.</li><li>Airplane-mode proof: screenshots of the note list while offline and of the dirty badge before/after sync.</li><li>At least 2 passing tests (1 model unit test + 1 provider test with a fake repository).</li><li>Complete the AI Challenge section and document the prompt, the storage comparison table, the final decision, and your technical reasons in <code>docs/</code>.</li><li>Push to the portfolio repository under <code>05-week-5-local-storage-offline-first/</code> with <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, and <code>screenshots/</code>. The README explains the objective, main features, tech stack, how to run it, and the result.</li>
+</ol>
+<h2 is-upgraded>Reflection</h2>
+<ul><li>Why must the note list not be stored in SharedPreferences? What breaks if this rule is violated?</li><li>When is cache-first enough, and when do you need another strategy (e.g. network-first for real-time prices)?</li><li>How does a dirty flag become a sync queue without blocking the UI? When does a separate queue (outbox table) become necessary?</li><li>Which part of the AI recommendation did you reject, and why?</li></ul>
+<h2 is-upgraded>References</h2>
+<ul>
+  <li><a href="https://drive.google.com/file/d/1-_100Tn0JD-jTmtzCcN05rNlEUyQPs_w/view?usp=sharing" target="_blank">Slides: Offline-First Storage Strategies</a></li>
+<li><a href="https://docs.flutter.dev/cookbook/persistence/key-value" target="_blank">Flutter cookbook: Store key-value data</a></li>
+<li><a href="https://pub.dev/packages/shared_preferences" target="_blank">shared_preferences package</a></li>
+<li><a href="https://pub.dev/packages/sqflite" target="_blank">sqflite package</a></li>
+<li><a href="https://pub.dev/packages/hive" target="_blank">Hive package (NoSQL alternative)</a></li>
+<li><a href="https://pub.dev/packages/drift" target="_blank">Drift package (reactive alternative)</a></li>
+<li><a href="https://riverpod.dev/docs/concepts/async_notifiers" target="_blank">Riverpod: AsyncNotifier and AsyncValue</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
