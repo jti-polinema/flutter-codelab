@@ -1,684 +1,419 @@
-
 <!doctype html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#06 | Authentication, Security &amp; FCM</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="06-minggu-6-authentication-security-fcm" title="#06 | Authentication, Security &amp; FCM" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
 
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <meta name="theme-color" content="#4F7DC9">
-  <meta charset="UTF-8">
-  <title>#09 | Kamera</title>
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
-  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
-  <style>
-    .success {
-      color: #1e8e3e;
-    }
-    .error {
-      color: red;
-    }
-  </style>
-</head>
-<body>
-  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab codelab-gaid="G-H7507PFEJB"
-                  id="09-kamera"
-                  title="#09 | Kamera"
-                  environment="web"
-                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
-    
-      <google-codelab-step label="Kamera" duration="0">
-        <iframe class="youtube-video" src="https://www.youtube.com/embed/d1sRCa5k2Sg?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p><strong>Terakhir diperbarui:</strong> 22 Oktober 2024</p>
-<p><strong>Penulis:</strong> Habibie Ed Dien</p>
-<p>Pada codelab ini, Anda akan mempelajari cara menggunakan kamera di Flutter.</p>
-<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
-<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
-<ul>
-<li>Menggunakan plugin kamera di Flutter</li>
-<li>Menampilkan preview foto di kamera</li>
-<li>Mengambil foto dari kamera</li>
-<li>Menampilkan hasil pengambilan foto dari kamera</li>
-</ul>
-<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku Flutter for Beginners - second edition dan Buku Ajar Pemrograman Mobile Flutter JTI Polinema serta sumber referensi lainnya.</p>
-</aside>
-<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
-<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
-<ul>
-<li>PC atau Laptop dengan spesifikasi minimum RAM 6GB Processor Core i3</li>
-<li>Koneksi internet</li>
-<li>Chrome Browser</li>
-<li>Perangkat mobile (Android/iOS)</li>
-</ul>
-<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
-<ul>
-<li>Algoritma dan Pemrograman Dasar</li>
-<li>Pemrograman Berorientasi Objek</li>
-<li>Bahasa Pemrograman Dart</li>
-</ul>
+<google-codelab-step label="Selamat datang" duration="5">
+<p><strong>Terakhir diperbarui:</strong> 27 September 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Tujuan pembelajaran</h2><p>Setelah menyelesaikan codelab ini, mahasiswa mampu:</p><ul>
+<li>menjelaskan alur autentikasi (Firebase Auth / JWT / OAuth / Google Login) dan perbedaan ID token vs access token vs refresh token;</li><li>menyimpan token secara aman dengan secure storage serta menerapkan token refresh otomatis;</li><li>menjelaskan arsitektur FCM: app server, Firebase, dan perangkat;</li><li>meminta notification permission dan mengelola token lifecycle (<code>getToken</code>, <code>onTokenRefresh</code>);</li><li>membedakan notification payload vs data payload serta perilakunya pada state foreground, background, dan terminated;</li><li>menangani klik notifikasi (deep link dengan GoRouter) dan topic messaging;</li><li>menerapkan prinsip keamanan dasar aplikasi mobile (tidak menyimpan secret di kode, tidak log token).</li></ul>
+<h2 is-upgraded>Persiapan</h2><ul><li>Laptop/PC dan repository portfolio (GitHub/GitLab) dari minggu sebelumnya.</li><li>Flutter SDK, VS Code (ekstensi Flutter/Dart), emulator Android atau perangkat fisik (notifikasi paling mudah diuji di perangkat fisik).</li><li>Pemahaman Minggu 3 (Riverpod, AsyncValue, GoRouter) dan Minggu 4 (Dio, repository pattern).</li><li>Akun Firebase (gratis, paket Spark) untuk project console. Tanpa kartu kredit.</li></ul>
+<aside class="warning"><p><strong>Kebijakan AI.</strong> Minggu 6 adalah materi lanjutan: AI boleh membuat implementasi awal FCM dan boilerplate auth, tetapi Anda wajib memvalidasi token lifecycle, jenis payload, dan perilaku notifikasi di tiga app state secara manual. Nilai ada pada pembuktian perilaku nyata (screenshot + log), bukan pada kode yang dihasilkan AI.</p></aside>
+</google-codelab-step>
 
+<google-codelab-step label="Konsep autentikasi, keamanan, dan FCM" duration="15">
+<h2 is-upgraded>1. Model autentikasi yang dipakai di codelab ini</h2><p>Tiga pola login yang umum di industri:</p>
+<table><tr><th>Pola</th><th>Cara kerja singkat</th><th>Kapan dipakai</th></tr><tr><td><code>Firebase Auth</code> (email/Google)</td><td>SDK Firebase menukar kredensial menjadi ID token JWT yang diverifikasi backend</td><td>Aplikasi kampus yang butuh login cepat tanpa membangun server auth sendiri</td></tr><tr><td><code>JWT + refresh token</code> (REST API sendiri)</td><td>Server menerbitkan access token berumur pendek + refresh token berumur panjang</td><td>Backend kampus/JSONPlaceholder-style milik sendiri</td></tr><tr><td><code>OAuth (Google Login)</code></td><td>Aplikasi mendapat authorization code, ditukar menjadi token via provider</td><td>Login sosial / SSO kampus</td></tr></table>
+<p>Codelab ini memakai <strong>mock auth provider + JWT simulasi</strong> agar bisa berjalan tanpa backend, lalu menunjukkan titik di mana Firebase Auth dipasang. Pola repository dan token refresh-nya identik, sehingga migrasi ke Firebase Auth hanya mengganti sumber token.</p>
+<h2 is-upgraded>2. Token: access, refresh, dan ID token</h2><ul><li><strong>ID token:</strong> bukti identitas pengguna (siapa dia). Diverifikasi backend setiap request yang butuh identitas.</li><li><strong>Access token:</strong> izin akses berumur pendek (misalnya 15 menit). Dikirim sebagai <code>Authorization: Bearer ...</code>.</li><li><strong>Refresh token:</strong> tiket berumur panjang untuk meminta access token baru tanpa login ulang. <strong>Hanya disimpan di secure storage, tidak pernah di SharedPreferences.</strong></li></ul>
+<pre><code>Login --&gt; access (15 mnt) + refresh (7 hari) tersimpan aman
+Request API --header Bearer access--&gt; 401 expired?
+Ya --&gt; tukar refresh --&gt; access baru --&gt; ulangi request sekali
+Refresh ikut kedaluwarsa --&gt; logout, kembali ke /login</code></pre>
+<h2 is-upgraded>3. Arsitektur FCM</h2>
+<pre><code>App Server (backend) --kirim ke--> Firebase Cloud Messaging
+FCM --push--> Perangkat Android / iOS
+Aplikasi --daftar token--> Backend (simpan token per user)</code></pre>
+<p>Alur wajibnya: (1) aplikasi meminta izin notifikasi, (2) aplikasi mengambil <strong>registration token</strong> via <code>FirebaseMessaging.instance.getToken()</code>, (3) token dikirim ke backend dan disimpan per user, (4) backend memanggil FCM API untuk mengirim pesan ke token/topik tertentu.</p>
+<h2 is-upgraded>4. Notification payload vs data payload</h2><table><tr><th>Jenis</th><th>Isi</th><th>Perilaku sistem</th></tr><tr><td><code>notification</code></td><td><code>title</code> + <code>body</code> tampilan</td><td>Android menampilkan otomatis saat background/terminated; foreground butuh tampil manual</td></tr><tr><td><code>data</code></td><td>key-value bebas mis. <code>{route: /pengumuman/3}</code></td><td>Selalu diteruskan ke handler aplikasi; tidak ditampilkan otomatis</td></tr></table>
+<p>Aturan praktis <strong>Campus Notification App</strong>: selalu kirim gabungan <code>notification + data</code>. <code>notification</code> untuk teks yang dibaca manusia, <code>data.route</code> untuk deep link tujuan klik.</p>
+<h2 is-upgraded>5. Tiga app state yang wajib diuji</h2><table><tr><th>State</th><th>Arti</th><th>Handler yang bekerja</th></tr><tr><td>Foreground</td><td>Aplikasi terbuka</td><td><code>FirebaseMessaging.onMessage</code> (tampilkan manual via local notification)</td></tr><tr><td>Background</td><td>Aplikasi diminimize</td><td>Banner sistem otomatis + <code>onMessageOpenedApp</code> saat diklik</td></tr><tr><td>Terminated</td><td>Aplikasi dimatikan</td><td><code>getInitialMessage()</code> saat dibuka dari notifikasi</td></tr></table>
+<aside class="special"><p><strong>Prinsip keamanan dasar.</strong> Jangan pernah: menyimpan token/secret di SharedPreferences atau di-hardcode di Dart, mencetak token ke log production, atau mengirim refresh token lewat query URL. Refresh token hanya lewat body POST HTTPS dan disimpan di <code>flutter_secure_storage</code> (Keychain/Keystore).</p></aside>
+</google-codelab-step>
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Kamera di Flutter" duration="10">
-        <p>Banyak aplikasi yang mengharuskan penggunaan kamera perangkat untuk mengambil foto dan video. Flutter menyediakan plugin kamera untuk tujuan ini. Plugin kamera menyediakan alat untuk mendapatkan daftar kamera yang tersedia, menampilkan pratinjau yang berasal dari kamera tertentu, dan mengambil foto atau video.</p>
-<p>Pada codelab ini Anda akan mempelajari cara menggunakan plugin kamera untuk menampilkan pratinjau, mengambil foto, dan menampilkannya menggunakan langkah-langkah berikut:</p>
-<ol type="1" start="1">
-<li>Tambahkan dependensi yang diperlukan.</li>
-<li>Dapatkan daftar kamera yang tersedia.</li>
-<li>Buat dan inisialisasi <code>CameraController</code>.</li>
-<li>Gunakan <code>CameraPreview</code> untuk menampilkan kamera.</li>
-<li>Ambil gambar dengan <code>CameraController</code>.</li>
-<li>Tampilkan gambar hasil foto dengan widget <code>Image</code>.</li>
-</ol>
+<google-codelab-step label="Praktikum 1: Login + secure storage + token refresh" duration="25">
+<h2 is-upgraded>Siapkan project</h2>
+<pre><code>flutter create campus_notify
+cd campus_notify
+flutter pub add flutter_riverpod go_router dio flutter_secure_storage
+flutter pub add firebase_core firebase_messaging flutter_local_notifications</code></pre>
+<p>Struktur folder:</p>
+<pre><code>lib/
+├── main.dart
+├── data/
+│   ├── auth_repository.dart
+│   ├── token_store.dart
+│   └── api_client.dart
+├── providers/
+│   └── auth_provider.dart
+├── messaging/
+│   └── push_service.dart
+└── pages/
+    ├── login_page.dart
+    ├── home_page.dart
+    └── announcement_page.dart</code></pre>
+<h2 is-upgraded>1. Penyimpanan token yang aman</h2>
+<p>Buat <code>lib/data/token_store.dart</code>. Seluruh token hanya keluar-masuk lewat kelas ini:</p>
+<pre><code>import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+class TokenStore {
+  TokenStore({FlutterSecureStorage? storage})
+      : _storage = storage ?? const FlutterSecureStorage();
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 1: Mengambil Foto dengan Kamera di Flutter" duration="90">
-        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
-</aside>
-<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
-<p>Buatlah sebuah project flutter baru dengan nama <strong>kamera_flutter</strong>, lalu sesuaikan style laporan praktikum yang Anda buat.</p>
-<h2 is-upgraded>Langkah 2: Tambah dependensi yang diperlukan</h2>
-<p>Anda memerlukan tiga dependensi pada project flutter untuk menyelesaikan praktikum ini.</p>
-<p><code>camera</code> → menyediakan seperangkat alat untuk bekerja dengan kamera pada device.</p>
-<p><code>path_provider</code> → menyediakan lokasi atau path untuk menyimpan hasil foto.</p>
-<p><code>path</code> → membuat path untuk mendukung berbagai platform.</p>
-<p>Untuk menambahkan dependensi plugin, jalankan perintah <code>flutter pub add</code> seperti berikut di terminal:</p>
-<pre><code>flutter pub add camera path_provider path</code></pre>
-<aside class="special"><p><strong>Tips</strong></p>
-<ul>
-<li>Untuk Android, Anda harus update variabel <code>minSdkVersion</code> = <code>21</code> (atau lebih tinggi) pada file <code>gradle</code>.</li>
-<li>Pada iOS, baris kode berikut harus ditambahkan pada file <code>ios/Runner/Info.plist</code> untuk mengakses kamera dan microphone.</li>
-</ul>
-</aside>
-<pre><code>&lt;key&gt;NSCameraUsageDescription&lt;/key&gt;
-&lt;string&gt;Explanation on why the camera access is needed.&lt;/string&gt;
-&lt;key&gt;NSMicrophoneUsageDescription&lt;/key&gt;
-&lt;string&gt;Explanation on why the microphone access is needed.&lt;/string&gt;</code></pre>
-<h2 is-upgraded><strong>Langkah 3: Ambil Sensor Kamera dari device</strong></h2>
-<p>Selanjutnya, kita perlu mengecek jumlah kamera yang tersedia pada perangkat menggunakan plugin <code>camera</code> seperti pada kode berikut ini. Kode ini letakkan dalam <code>void main()</code>.</p>
-<p><strong>lib/main.dart</strong></p>
-<pre><code>// Ensure that plugin services are initialized so that `availableCameras()`
-// can be called before `runApp()`
-WidgetsFlutterBinding.ensureInitialized();
+  final FlutterSecureStorage _storage;
+  static const _accessKey = 'access_token';
+  static const _refreshKey = 'refresh_token';
 
-// Obtain a list of the available cameras on the device.
-final cameras = await availableCameras();
+  Future&lt;void&gt; save({required String access, required String refresh}) async {
+    await _storage.write(key: _accessKey, value: access);
+    await _storage.write(key: _refreshKey, value: refresh);
+  }
 
-// Get a specific camera from the list of available cameras.
-final firstCamera = cameras.first;</code></pre>
-<p>Ubah <code>void main()</code> menjadi async function seperti berikut ini.</p>
-<p><strong>lib/main.dart</strong></p>
-<pre><code>Future&lt;void&gt; main() async {
-  ...
+  Future&lt;String?&gt; readAccess() =&gt; _storage.read(key: _accessKey);
+  Future&lt;String?&gt; readRefresh() =&gt; _storage.read(key: _refreshKey);
+
+  Future&lt;void&gt; clear() =&gt; _storage.deleteAll();
 }</code></pre>
-<p>Pastikan melakukan impor plugin sesuai yang dibutuhkan.</p>
-<h2 is-upgraded>Langkah 4: Buat dan inisialisasi <strong><code>CameraController</code></strong></h2>
-<p>Setelah Anda dapat mengakses kamera, gunakan langkah-langkah berikut untuk membuat dan menginisialisasi <code>CameraController</code>. Pada langkah berikut ini, Anda akan membuat koneksi ke kamera perangkat yang memungkinkan Anda untuk mengontrol kamera dan menampilkan pratinjau umpan kamera.</p>
-<ol type="1" start="1">
-<li>Buat <code>StatefulWidget</code> dengan kelas <code>State</code> pendamping.</li>
-<li>Tambahkan variabel ke kelas <code>State</code> untuk menyimpan <code>CameraController</code>.</li>
-<li>Tambahkan variabel ke kelas <code>State</code> untuk menyimpan <code>Future</code> yang dikembalikan dari <code>CameraController.initialize()</code>.</li>
-<li>Buat dan inisialisasi controller dalam metode <code>initState()</code>.</li>
-<li>Hapus controller dalam metode <code>dispose()</code>.</li>
-</ol>
-<p><strong>lib/widget/takepicture_screen.dart</strong></p>
-<pre><code>// A screen that allows users to take a picture using a given camera.
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    super.key,
-    required this.camera,
-  });
-
-  final CameraDescription camera;
-
-  @override
-  TakePictureScreenState createState() =&gt; TakePictureScreenState();
+<h2 is-upgraded>2. Repository auth (mock yang siap diganti Firebase Auth)</h2>
+<p>Buat <code>lib/data/auth_repository.dart</code>:</p>
+<pre><code>class AuthSession {
+  const AuthSession({required this.access, required this.refresh});
+  final String access;
+  final String refresh;
 }
 
-class TakePictureScreenState extends State&lt;TakePictureScreen&gt; {
-  late CameraController _controller;
-  late Future&lt;void&gt; _initializeControllerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
+class AuthRepository {
+  // GANTI titik ini dengan FirebaseAuth.instance.signInWithEmailAndPassword
+  // atau GoogleSignIn saat backend Firebase sudah siap.
+  Future&lt;AuthSession&gt; login(
+      {required String email, required String password}) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!email.contains('@') || password.length &lt; 6) {
+      throw Exception('Email atau kata sandi tidak valid');
+    }
+    // Simulasi JWT: header.payload.signature (jangan parse manual di produksi,
+    // gunakan verifikasi server).
+    return AuthSession(
+      access: 'mock-access-for-$email',
+      refresh: 'mock-refresh-for-$email',
     );
-
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
   }
 
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Fill this out in the next steps.
-    return Container();
+  Future&lt;String&gt; refresh(String refreshToken) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (refreshToken.isEmpty) throw Exception('Refresh token hilang');
+    return 'mock-access-renewed-${DateTime.now().millisecondsSinceEpoch}';
   }
 }</code></pre>
-<aside class="warning"><p><strong>Perhatian:</strong> Jika Anda tidak menginisialisasi <code>CameraController</code>, Anda tidak dapat menggunakan kamera untuk menampilkan pratinjau dan mengambil gambar.</p>
-</aside>
-<h2 is-upgraded>Langkah 5: Gunakan <code>CameraPreview </code><strong>untuk menampilkan preview foto</strong></h2>
-<p>Gunakan widget <code>CameraPreview</code> dari package <code>camera</code> untuk menampilkan preview foto. Anda perlu tipe objek void berupa <code>FutureBuilder</code> untuk menangani proses async.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Pada kode ini Anda perlu logic untuk menunggu controller selesai proses inisialisasi sebelum bekerja dengan kamera. Anda harus menunggu hasil dari method <code>_initializeControllerFuture()</code>, yang telah dibuat sebelumnya, agar dapat menampilkan preview foto dengan <code>CameraPreview</code>.</p>
-</aside>
-<p><strong>lib/widget/takepicture_screen.dart</strong></p>
-<pre><code>@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(&#39;Take a picture - NIM Anda&#39;)),
-      // You must wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner until the
-      // controller has finished initializing.
-      body: FutureBuilder&lt;void&gt;(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),</code></pre>
-<h2 is-upgraded>Langkah 6: Ambil foto dengan <strong><code>CameraController</code></strong></h2>
-<p>Anda dapat menggunakan <code>CameraController</code> untuk mengambil gambar menggunakan metode <code>takePicture()</code>, yang mengembalikan objek <code>XFile</code>, merupakan sebuah objek abstraksi <code>File</code> lintas platform yang disederhanakan. Pada Android dan iOS, gambar baru disimpan dalam direktori cache masing-masing, dan <code>path</code> ke lokasi tersebut dikembalikan dalam <code>XFile</code>.</p>
-<p>Pada codelab ini, buatlah sebuah <code>FloatingActionButton</code> yang digunakan untuk mengambil gambar menggunakan <code>CameraController</code> saat pengguna mengetuk tombol.</p>
-<p>Pengambilan gambar memerlukan 2 langkah:</p>
-<ol type="1" start="1">
-<li>Pastikan kamera telah diinisialisasi.</li>
-<li>Gunakan controller untuk mengambil gambar dan pastikan ia mengembalikan objek <code>Future<XFile></code>.</li>
-</ol>
-<p>Praktik baik untuk membungkus operasi kode ini dalam blok <code>try / catch</code> guna menangani berbagai kesalahan yang mungkin terjadi.</p>
-<p>Kode berikut letakkan dalam <code>Widget build</code> setelah field <code>body</code>.</p>
-<p><strong>lib/widget/takepicture_screen.dart</strong></p>
-<pre><code>FloatingActionButton(
-  // Provide an onPressed callback.
-  onPressed: () async {
-    // Take the Picture in a try / catch block. If anything goes wrong,
-    // catch the error.
-    try {
-      // Ensure that the camera is initialized.
-      await _initializeControllerFuture;
+<h2 is-upgraded>3. Dio dengan refresh otomatis</h2>
+<p>Buat <code>lib/data/api_client.dart</code>. Interceptor mencoba refresh <strong>satu kali</strong> saat menerima 401, lalu mengulang request:</p>
+<pre><code>import 'package:dio/dio.dart';
+import 'auth_repository.dart';
+import 'token_store.dart';
 
-      // Attempt to take a picture and then get the location
-      // where the image file is saved.
-      final image = await _controller.takePicture();
-    } catch (e) {
-      // If an error occurs, log the error to the console.
-      print(e);
-    }
+Dio buildApiClient(TokenStore store, AuthRepository auth) {
+  final dio = Dio(BaseOptions(baseUrl: 'https://example-campus-api.test'));
+  dio.interceptors.add(InterceptorsWrapper(
+    onRequest: (options, handler) async {
+      final access = await store.readAccess();
+      if (access != null) {
+        options.headers['Authorization'] = 'Bearer $access';
+      }
+      handler.next(options);
+    },
+    onError: (e, handler) async {
+      if (e.response?.statusCode == 401) {
+        final refresh = await store.readRefresh();
+        if (refresh == null) return handler.next(e);
+        try {
+          final renewed = await auth.refresh(refresh);
+          await store.save(access: renewed, refresh: refresh);
+          final retry = await dio.fetch(
+            e.requestOptions..headers['Authorization'] = 'Bearer $renewed',
+          );
+          return handler.resolve(retry);
+        } catch (_) {
+          await store.clear(); // refresh ikut mati -&gt; paksa login ulang
+        }
+      }
+      handler.next(e);
+    },
+  ));
+  return dio;
+}</code></pre>
+<h2 is-upgraded>4. Provider auth + guard route</h2>
+<p>Contoh <code>lib/providers/auth_provider.dart</code> dan pengaman GoRouter di <code>main.dart</code>:</p>
+<pre><code>final authStateProvider =
+    AsyncNotifierProvider&lt;AuthNotifier, bool&gt;(AuthNotifier.new);
+
+class AuthNotifier extends AsyncNotifier&lt;bool&gt; {
+  @override
+  Future&lt;bool&gt; build() async {
+    final token = await ref.watch(tokenStoreProvider).readAccess();
+    return token != null;
+  }
+
+  Future&lt;void&gt; login(String email, String password) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final session = await ref
+          .read(authRepositoryProvider)
+          .login(email: email, password: password);
+      await ref
+          .read(tokenStoreProvider)
+          .save(access: session.access, refresh: session.refresh);
+      return true;
+    });
+  }
+
+  Future&lt;void&gt; logout() async {
+    await ref.read(tokenStoreProvider).clear();
+    ref.invalidateSelf();
+  }
+}</code></pre>
+<pre><code>GoRouter(
+  redirect: (context, state) {
+    final loggedIn =
+        container.read(authStateProvider).value ?? false;
+    final goingLogin = state.matchedLocation == '/login';
+    if (!loggedIn &amp;&amp; !goingLogin) return '/login';
+    if (loggedIn &amp;&amp; goingLogin) return '/';
+    return null;
   },
-  child: const Icon(Icons.camera_alt),
-)</code></pre>
-<h2 is-upgraded>Langkah 7: Buat widget baru <strong><code>DisplayPictureScreen</code></strong></h2>
-<p>Buatlah file baru pada folder widget yang berisi kode berikut.</p>
-<p><strong>lib/widget/displaypicture_screen.dart</strong></p>
-<pre><code>// A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-
-  const DisplayPictureScreen({super.key, required this.imagePath});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(&#39;Display the Picture - NIM Anda&#39;)),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
-    );
-  }
-}</code></pre>
-<h2 is-upgraded>Langkah 8: Edit <strong><code>main.dart</code></strong></h2>
-<p>Edit pada file ini bagian <code>runApp</code> seperti kode berikut.</p>
-<p><strong>lib/main.dart</strong></p>
-<pre><code>runApp(
-    MaterialApp(
-      theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        camera: firstCamera,
-      )
-      debugShowCheckedModeBanner: false,
+  routes: [
+    GoRoute(path: '/login', builder: (_, __) =&gt; const LoginPage()),
+    GoRoute(path: '/', builder: (_, __) =&gt; const HomePage()),
+    GoRoute(
+      path: '/pengumuman/:id',
+      builder: (_, s) =&gt;
+          AnnouncementPage(id: s.pathParameters['id'] ?? ''),
     ),
-  );</code></pre>
-<h2 is-upgraded><strong>Langkah 9: Menampilkan hasil foto</strong></h2>
-<p>Tambahkan kode seperti berikut pada bagian <code>try / catch</code> agar dapat menampilkan hasil foto pada <code>DisplayPictureScreen</code>.</p>
-<p><strong>lib/widget/takepicture_screen.dart</strong></p>
-<pre><code>// Take the Picture in a try / catch block. If anything goes wrong,
-          // catch the error.
-          try {
-            // Ensure that the camera is initialized.
-            await _initializeControllerFuture;
+  ],
+);</code></pre>
+<aside class="special"><p><strong>Kesalahan umum:</strong> menyimpan access/refresh token di SharedPreferences agar "lebih mudah". Itu salah secara keamanan karena SharedPreferences tidak terenkripsi. Selalu gunakan <code>flutter_secure_storage</code> untuk token.</p></aside>
+</google-codelab-step>
 
-            // Attempt to take a picture and get the file `image`
-            // where it was saved.
-            final image = await _controller.takePicture();
+<google-codelab-step label="Praktikum 2: FCM, permission, dan token lifecycle" duration="30">
+<h2 is-upgraded>1. Daftarkan aplikasi ke Firebase</h2>
+<ol type="1"><li>Buat project di <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a>, tambahkan aplikasi Android dengan package name sesuai <code>applicationId</code> Anda.</li><li>Unduh <code>google-services.json</code> ke <code>android/app/</code> dan ikuti panduan <a href="https://firebase.google.com/docs/cloud-messaging/flutter/client" target="_blank">FCM Flutter client</a> (terapkan plugin <code>google-services</code> dan dependensi). Untuk iOS tambahkan <code>GoogleService-Info.plist</code>.</li><li>Pastikan <code>firebase_core</code> diinisialisasi sebelum <code>runApp</code>: <code>await Firebase.initializeApp()</code>.</li></ol>
+<h2 is-upgraded>2. Minta izin notifikasi</h2>
+<p>Android 13+ dan iOS wajib meminta izin runtime. Buat <code>lib/messaging/push_service.dart</code>:</p>
+<pre><code>import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-            if (!context.mounted) return;
+final _local = FlutterLocalNotificationsPlugin();
 
-            // If the picture was taken, display it on a new screen.
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =&gt; DisplayPictureScreen(
-                  // Pass the automatically generated path to
-                  // the DisplayPictureScreen widget.
-                  imagePath: image.path,
-                ),
-              ),
-            );
-          } catch (e) {
-            // If an error occurs, log the error to the console.
-            print(e);
-          }</code></pre>
-<p>Silakan deploy pada device atau smartphone Anda dan perhatikan hasilnya! 🙂</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 2: Membuat photo filter carousel" duration="90">
-        <p>Semua orang tahu bahwa foto akan terlihat lebih bagus dengan filter. Pada codelab ini, Anda akan membuat rangkaian pilihan filter yang dapat digeser sesuai pilihan warna.</p>
-<p>Berikut ini menunjukkan aplikasi yang akan Anda buat:</p>
-<p class="image-container"><img style="width: 274.00px" src="img\\d6bc522d40ee316e.gif"></p>
-<p>Selesaikan langkah-langkah praktikum berikut ini.</p>
-<h2 is-upgraded><strong>Langkah 1: Buat project baru</strong></h2>
-<p>Buatlah project flutter baru di pertemuan 09 dengan nama <strong>photo_filter_carousel</strong></p>
-<h2 is-upgraded><strong>Langkah 2: Buat widget Selector ring dan dark gradient</strong></h2>
-<p>Buatlah folder <code>widget</code> dan file baru yang berisi kode berikut.</p>
-<p><strong>lib/widget/filter_selector.dart</strong></p>
-<pre><code>@immutable
-class FilterSelector extends StatefulWidget {
-  const FilterSelector({
-    super.key,
-    required this.filters,
-    required this.onFilterChanged,
-    this.padding = const EdgeInsets.symmetric(vertical: 24),
-  });
-
-  final List&lt;Color&gt; filters;
-  final void Function(Color selectedColor) onFilterChanged;
-  final EdgeInsets padding;
-
-  @override
-  State&lt;FilterSelector&gt; createState() =&gt; _FilterSelectorState();
-}
-
-class _FilterSelectorState extends State&lt;FilterSelector&gt; {
-  static const _filtersPerScreen = 5;
-  static const _viewportFractionPerItem = 1.0 / _filtersPerScreen;
-
-  late final PageController _controller;
-  late int _page;
-
-  int get filterCount =&gt; widget.filters.length;
-
-  Color itemColor(int index) =&gt; widget.filters[index % filterCount];
-
-  @override
-  void initState() {
-    super.initState();
-    _page = 0;
-    _controller = PageController(
-      initialPage: _page,
-      viewportFraction: _viewportFractionPerItem,
-    );
-    _controller.addListener(_onPageChanged);
-  }
-
-  void _onPageChanged() {
-    final page = (_controller.page ?? 0).round();
-    if (page != _page) {
-      _page = page;
-      widget.onFilterChanged(widget.filters[page]);
-    }
-  }
-
-  void _onFilterTapped(int index) {
-    _controller.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 450),
-      curve: Curves.ease,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scrollable(
-      controller: _controller,
-      axisDirection: AxisDirection.right,
-      physics: const PageScrollPhysics(),
-      viewportBuilder: (context, viewportOffset) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final itemSize = constraints.maxWidth * _viewportFractionPerItem;
-            viewportOffset
-              ..applyViewportDimension(constraints.maxWidth)
-              ..applyContentDimensions(0.0, itemSize * (filterCount - 1));
-
-            return Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                _buildShadowGradient(itemSize),
-                _buildCarousel(
-                  viewportOffset: viewportOffset,
-                  itemSize: itemSize,
-                ),
-                _buildSelectionRing(itemSize),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildShadowGradient(double itemSize) {
-    return SizedBox(
-      height: itemSize * 2 + widget.padding.vertical,
-      child: const DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black,
-            ],
-          ),
-        ),
-        child: SizedBox.expand(),
-      ),
-    );
-  }
-
-  Widget _buildCarousel({
-    required ViewportOffset viewportOffset,
-    required double itemSize,
-  }) {
-    return Container(
-      height: itemSize,
-      margin: widget.padding,
-      child: Flow(
-        delegate: CarouselFlowDelegate(
-          viewportOffset: viewportOffset,
-          filtersPerScreen: _filtersPerScreen,
-        ),
-        children: [
-          for (int i = 0; i &lt; filterCount; i++)
-            FilterItem(
-              onFilterSelected: () =&gt; _onFilterTapped(i),
-              color: itemColor(i),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSelectionRing(double itemSize) {
-    return IgnorePointer(
-      child: Padding(
-        padding: widget.padding,
-        child: SizedBox(
-          width: itemSize,
-          height: itemSize,
-          child: const DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.fromBorderSide(
-                BorderSide(width: 6, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 3: Buat widget photo filter carousel</strong></h2>
-<p>Buat file baru di folder widget dengan kode seperti berikut.</p>
-<p><strong>lib/widget/filter_carousel.dart</strong></p>
-<pre><code>@immutable
-class PhotoFilterCarousel extends StatefulWidget {
-  const PhotoFilterCarousel({super.key});
-
-  @override
-  State&lt;PhotoFilterCarousel&gt; createState() =&gt; _PhotoFilterCarouselState();
-}
-
-class _PhotoFilterCarouselState extends State&lt;PhotoFilterCarousel&gt; {
-  final _filters = [
-    Colors.white,
-    ...List.generate(
-      Colors.primaries.length,
-      (index) =&gt; Colors.primaries[(index * 4) % Colors.primaries.length],
-    )
-  ];
-
-  final _filterColor = ValueNotifier&lt;Color&gt;(Colors.white);
-
-  void _onFilterChanged(Color value) {
-    _filterColor.value = value;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.black,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: _buildPhotoWithFilter(),
-          ),
-          Positioned(
-            left: 0.0,
-            right: 0.0,
-            bottom: 0.0,
-            child: _buildFilterSelector(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPhotoWithFilter() {
-    return ValueListenableBuilder(
-      valueListenable: _filterColor,
-      builder: (context, color, child) {
-        // Anda bisa ganti dengan foto Anda sendiri
-        return Image.network(
-          &#39;https://docs.flutter.dev/cookbook/img-files&#39;
-          &#39;/effects/instagram-buttons/millennial-dude.jpg&#39;,
-          color: color.withOpacity(0.5),
-          colorBlendMode: BlendMode.color,
-          fit: BoxFit.cover,
-        );
-      },
-    );
-  }
-
-  Widget _buildFilterSelector() {
-    return FilterSelector(
-      onFilterChanged: _onFilterChanged,
-      filters: _filters,
-    );
-  }
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 4: Membuat filter warna - bagian 1</strong></h2>
-<p>Buat file baru di folder widget seperti kode berikut.</p>
-<p><strong>lib/widget/carousel_flowdelegate.dart</strong></p>
-<pre><code>class CarouselFlowDelegate extends FlowDelegate {
-  CarouselFlowDelegate({
-    required this.viewportOffset,
-    required this.filtersPerScreen,
-  }) : super(repaint: viewportOffset);
-
-  final ViewportOffset viewportOffset;
-  final int filtersPerScreen;
-
-  @override
-  void paintChildren(FlowPaintingContext context) {
-    final count = context.childCount;
-
-    // All available painting width
-    final size = context.size.width;
-
-    // The distance that a single item &#34;page&#34; takes up from the perspective
-    // of the scroll paging system. We also use this size for the width and
-    // height of a single item.
-    final itemExtent = size / filtersPerScreen;
-
-    // The current scroll position expressed as an item fraction, e.g., 0.0,
-    // or 1.0, or 1.3, or 2.9, etc. A value of 1.3 indicates that item at
-    // index 1 is active, and the user has scrolled 30% towards the item at
-    // index 2.
-    final active = viewportOffset.pixels / itemExtent;
-
-    // Index of the first item we need to paint at this moment.
-    // At most, we paint 3 items to the left of the active item.
-    final min = math.max(0, active.floor() - 3).toInt();
-
-    // Index of the last item we need to paint at this moment.
-    // At most, we paint 3 items to the right of the active item.
-    final max = math.min(count - 1, active.ceil() + 3).toInt();
-
-    // Generate transforms for the visible items and sort by distance.
-    for (var index = min; index &lt;= max; index++) {
-      final itemXFromCenter = itemExtent * index - viewportOffset.pixels;
-      final percentFromCenter = 1.0 - (itemXFromCenter / (size / 2)).abs();
-      final itemScale = 0.5 + (percentFromCenter * 0.5);
-      final opacity = 0.25 + (percentFromCenter * 0.75);
-
-      final itemTransform = Matrix4.identity()
-        ..translate((size - itemExtent) / 2)
-        ..translate(itemXFromCenter)
-        ..translate(itemExtent / 2, itemExtent / 2)
-        ..multiply(Matrix4.diagonal3Values(itemScale, itemScale, 1.0))
-        ..translate(-itemExtent / 2, -itemExtent / 2);
-
-      context.paintChild(
-        index,
-        transform: itemTransform,
-        opacity: opacity,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CarouselFlowDelegate oldDelegate) {
-    return oldDelegate.viewportOffset != viewportOffset;
-  }
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 5: Membuat filter warna</strong></h2>
-<p>Buat file baru di folder widget seperti kode berikut ini.</p>
-<p><strong>lib/widget/filter_item.dart</strong></p>
-<pre><code>@immutable
-class FilterItem extends StatelessWidget {
-  const FilterItem({
-    super.key,
-    required this.color,
-    this.onFilterSelected,
-  });
-
-  final Color color;
-  final VoidCallback? onFilterSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onFilterSelected,
-      child: AspectRatio(
-        aspectRatio: 1.0,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ClipOval(
-            child: Image.network(
-              &#39;https://docs.flutter.dev/cookbook/img-files&#39;
-              &#39;/effects/instagram-buttons/millennial-texture.jpg&#39;,
-              color: color.withOpacity(0.5),
-              colorBlendMode: BlendMode.hardLight,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 6: Implementasi filter carousel</strong></h2>
-<p>Terakhir, kita impor widget <code>PhotoFilterCarousel</code> ke <code>main</code> seperti kode berikut ini.</p>
-<p><strong>lib/main.dart</strong></p>
-<pre><code>void main() {
-  runApp(
-    const MaterialApp(
-      home: PhotoFilterCarousel(),
-      debugShowCheckedModeBanner: false,
-    ),
+Future&lt;bool&gt; requestNotificationPermission() async {
+  final settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true, badge: true, sound: true,
+    announcement: false, carPlay: false, criticalAlert: false,
   );
+  return settings.authorizationStatus == AuthorizationStatus.authorized ||
+      settings.authorizationStatus == AuthorizationStatus.provisional;
+}
+
+Future&lt;void&gt; initLocalNotifications() async {
+  const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const ios = DarwinInitializationSettings();
+  await _local.initialize(
+    const InitializationSettings(android: android, iOS: ios),
+    onDidReceiveNotificationResponse: (response) {
+      // Klik banner foreground -&gt; teruskan payload ke router.
+      pendingDeepLink = response.payload;
+    },
+  );
+}
+
+String? pendingDeepLink;</code></pre>
+<h2 is-upgraded>3. Token lifecycle: ambil, kirim ke backend, pantau perubahan</h2>
+<pre><code>Future&lt;void&gt; initFcmToken({required Future&lt;void&gt; Function(String token) onToken}) async {
+  // 1. Ambil token saat ini dan kirim ke backend.
+  final token = await FirebaseMessaging.instance.getToken();
+  if (token != null) await onToken(token);
+
+  // 2. Token bisa berubah (reinstall, clear data, rotasi keamanan).
+  //    Listener ini WAJIB ada, jika tidak backend menyimpan token basi.
+  FirebaseMessaging.instance.onTokenRefresh.listen(onToken);
+
+  // 3. Langganan topik kampus (mis. semua mahasiswa angkatan).
+  await FirebaseMessaging.instance.subscribeToTopic('pengumuman-kampus');
 }</code></pre>
-<h2 is-upgraded><strong>Troubleshoot</strong></h2>
-<p>Jika diperlukan, beberapa widget yang telah Anda buat sebelumnya, memerlukan kode import berikut ini.</p>
-<pre><code>import &#39;dart:math&#39; as math;
+<p>Contoh pengiriman token ke backend Anda (ganti URL dengan API kampus):</p>
+<pre><code>await initFcmToken(onToken: (token) async {
+  await dio.post('/devices', data: {'fcm_token': token, 'platform': 'android'});
+});</code></pre>
+<aside class="warning"><p><strong>Wajib dibuktikan:</strong> tampilkan token di halaman Debug (terpotong, mis. 12 karakter pertama + <code>...</code>), hapus data aplikasi / reinstall, dan tunjukkan bahwa <code>onTokenRefresh</code> memperbarui token di backend. Jangan pernah menampilkan token penuh di screenshot laporan.</p></aside>
+<h2 is-upgraded>4. Uji kirim pertama dari Firebase Console</h2>
+<ol type="1"><li>Buka Firebase Console -&gt; Messaging -&gt; buat campaign notifikasi percobaan.</li><li>Masukkan <code>title</code> dan <code>body</code>, targetkan aplikasi Android Anda.</li><li>Kirim saat aplikasi dalam state <strong>background</strong>: banner sistem harus muncul. Klik banner: aplikasi terbuka.</li><li>Catat hasilnya sebagai bukti <code>screenshots/fcm-console-test.png</code>.</li></ol>
+</google-codelab-step>
 
-import &#39;package:flutter/material.dart&#39;;
-import &#39;package:flutter/rendering.dart&#39; show ViewportOffset;</code></pre>
+<google-codelab-step label="Praktikum 3: Payload, tiga app state, klik dan topik" duration="25">
+<h2 is-upgraded>1. Background handler wajib top-level</h2>
+<p>Handler background harus fungsi top-level (bukan method kelas) karena berjalan di isolate terpisah:</p>
+<pre><code>@pragma('vm:entry-point')
+Future&lt;void&gt; firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Jangan akses BuildContext / Riverpod di sini.
+  // Tugasnya: catat / simpan ringan saja. Navigasi dilakukan saat klik.
+}
 
+void registerBackgroundHandler() {
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+}</code></pre>
+<h2 is-upgraded>2. Tiga handler + contoh payload gabungan</h2>
+<p>Payload yang dikirim backend (contoh JSON via FCM HTTP v1):</p>
+<pre><code>{
+  "message": {
+    "topic": "pengumuman-kampus",
+    "notification": {
+      "title": "Jadwal kuliah berubah",
+      "body": "Kelas Mobile pindah ke Ruang A2 jam 13.00"
+    },
+    "data": {
+      "route": "/pengumuman/3",
+      "id": "3"
+    }
+  }
+}</code></pre>
+<pre><code>void listenForeground(void Function(String route) go) {
+  // Foreground: sistem TIDAK menampilkan banner otomatis,
+  // jadi tampilkan manual via local notification.
+  FirebaseMessaging.onMessage.listen((message) async {
+    final route = message.data['route'] ?? '/';
+    const androidDetails = AndroidNotificationDetails(
+      'pengumuman', 'Pengumuman Kampus',
+      importance: Importance.high, priority: Priority.high,
+    );
+    await _local.show(
+      message.hashCode,
+      message.notification?.title ?? 'Pengumuman',
+      message.notification?.body ?? '',
+      const NotificationDetails(android: androidDetails),
+      payload: route,
+    );
+  });
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Praktikum" duration="60">
-        <ol type="1" start="1">
-<li>Selesaikan Praktikum 1 dan 2, lalu dokumentasikan dan push ke repository Anda berupa screenshot setiap hasil pekerjaan beserta penjelasannya di file <code>README.md</code>! Jika terdapat error atau kode yang tidak dapat berjalan, silakan Anda perbaiki sesuai tujuan aplikasi dibuat!</li>
-<li>Gabungkan hasil praktikum 1 dengan hasil praktikum 2 sehingga setelah melakukan pengambilan foto, dapat dibuat filter carouselnya!</li>
-<li>Jelaskan maksud <code>void async</code> pada praktikum 1?</li>
-<li>Jelaskan fungsi dari anotasi <code>@immutable</code> dan <code>@override</code> ?</li>
-<li>Kumpulkan link commit repository GitHub Anda kepada dosen yang telah disepakati!</li>
-</ol>
+  // Background -&gt; diklik.
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    go(message.data['route'] ?? '/');
+  });
+}
 
+Future&lt;void&gt; handleTerminated(void Function(String route) go) async {
+  // Terminated -&gt; dibuka dari notifikasi.
+  final initial = await FirebaseMessaging.instance.getInitialMessage();
+  if (initial != null) go(initial.data['route'] ?? '/');
+  if (pendingDeepLink != null) go(pendingDeepLink!);
+}</code></pre>
+<h2 is-upgraded>3. Matriks pengujian wajib</h2>
+<p>Uji ketiga state dengan payload yang sama dan isi tabel ini di README:</p>
+<table><tr><th>State</th><th>Yang diharapkan</th><th>Cara uji</th></tr><tr><td>Foreground</td><td>Banner lokal muncul, klik masuk ke <code>/pengumuman/3</code></td><td>Aplikasi terbuka, kirim dari console/backend</td></tr><tr><td>Background</td><td>Banner sistem muncul, klik masuk ke rute yang benar</td><td>Tekan Home, kirim, klik banner</td></tr><tr><td>Terminated</td><td>Aplikasi terbuka ke rute yang benar via <code>getInitialMessage</code></td><td>Swipe-close aplikasi, kirim, klik banner</td></tr></table>
+<h2 is-upgraded>4. Topic messaging</h2>
+<pre><code>// Berlangganan / berhenti dari kode:
+await FirebaseMessaging.instance.subscribeToTopic('pengumuman-kampus');
+await FirebaseMessaging.instance.unsubscribeFromTopic('pengumuman-kampus');</code></pre>
+<p>Aturan topik: nama tanpa spasi, gunakan untuk broadcast (semua mahasiswa, satu kelas, satu UKM). Untuk pesan personal (nilai, tagihan) selalu gunakan <strong>token perangkat</strong>, bukan topik.</p>
+<aside class="special"><p><strong>Perbedaan penting:</strong> pesan berisi <code>notification</code> ditampilkan sistem secara otomatis saat background/terminated. Pesan <strong>hanya-data</strong> tidak ditampilkan otomatis dan di Android harus diproses manual. Itulah alasan Campus Notification App selalu memakai gabungan keduanya.</p></aside>
+</google-codelab-step>
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Selamat!" duration="0">
-        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari tentang kamera di Flutter.</p>
-<p>Pada codelab berikutnya, Anda akan mempelajari tentang dasar <em>state management</em> di Flutter.</p>
-<h2 is-upgraded><strong>Referensi</strong></h2>
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>Peran AI pada codelab ini</h2><p>AI boleh membuat draf awal service FCM dan boilerplate auth, tetapi <strong>Anda yang membuktikan perilakunya</strong>. Bug FCM yang paling mahal (token basi, klik nyasar, banner ganda) tidak terlihat dari membaca kode saja.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Minta AI coding assistant dengan prompt berikut:</p>
+<pre><code>Aplikasi Flutter Campus Notification App.
+Stack: firebase_messaging, flutter_local_notifications,
+flutter_secure_storage, go_router, Riverpod.
+Buatkan PushService dengan:
+- requestPermission + getToken + onTokenRefresh (kirim ke POST /devices)
+- onMessage (tampilkan local notification manual)
+- onMessageOpenedApp + getInitialMessage (navigasi ke data.route)
+- subscribe/unsubscribe topic pengumuman-kampus
+- background handler top-level dengan @pragma('vm:entry-point')
+Tandai bagian yang BERBEDA untuk Android 13+ vs iOS,
+dan bagian yang tidak boleh mengakses BuildContext.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Sebelum draf AI diterima, verifikasi dan catat temuan di README/docs:</p>
+<ul><li>Apakah background handler berupa fungsi top-level dengan <code>@pragma('vm:entry-point')</code>? (tolak jika berupa method kelas).</li><li>Apakah <code>onTokenRefresh</code> benar-benar mengirim token baru ke backend, bukan hanya dicetak ke log?</li><li>Apakah foreground memakai local notification manual? (tanpa ini banner tidak muncul saat aplikasi terbuka).</li><li>Apakah klik dari ketiga state (foreground/background/terminated) masuk ke rute yang benar? Buktikan dengan tabel pengujian.</li><li>Apakah token/secret tidak di-hardcode dan tidak di-log penuh? Perbaiki bila AI melanggarnya.</li><li>Keputusan final dan alasan teknis Anda, boleh berbeda dari saran AI selama berargumen.</li></ul>
+<aside class="special"><p><strong>Tanggung jawab teknis:</strong> simpan prompt, output awal AI, daftar perbaikan manual, dan tabel hasil uji tiga app state pada folder <code>docs/</code>. Saat demo Anda harus mampu menjelaskan lifecycle token tanpa membaca catatan.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, dan error umum" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<ol type="1"><li>Pindahkan semua string rute (<code>/login</code>, <code>/pengumuman/:id</code>) ke satu file <code>lib/routes.dart</code> agar deep link dari FCM dan GoRouter memakai konstanta yang sama.</li><li>Ekstrak parsing <code>RemoteMessage -&gt; route</code> ke fungsi murni <code>routeFromMessage(Map&lt;String, dynamic&gt; data)</code> agar bisa diunit-test tanpa Firebase.</li><li>Pindahkan pemetaan <code>DioException -&gt; pesan ramah pengguna</code> (401, timeout, offline) ke <code>lib/data/api_errors.dart</code> agar UI hanya menerima pesan, bukan exception mentah.</li></ol>
+<h2 is-upgraded>Testing: unit test tanpa Firebase sungguhan</h2>
+<p>Buat <code>test/auth_push_test.dart</code>. Firebase tidak diuji langsung; yang diuji adalah logika di sekitarnya:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+String routeFromMessage(Map&lt;String, String&gt; data) {
+  final route = data['route'] ?? '/';
+  return route.startsWith('/') ? route : '/$route';
+}
+
+class FakeTokenStore {
+  String? access;
+  String? refresh;
+}
+
+void main() {
+  test('routeFromMessage menangani route kosong dan tanpa slash', () {
+    expect(routeFromMessage({}), '/');
+    expect(routeFromMessage({'route': 'pengumuman/3'}), '/pengumuman/3');
+    expect(routeFromMessage({'route': '/pengumuman/3'}), '/pengumuman/3');
+  });
+
+  test('data payload membawa id pengumuman', () {
+    const data = {'route': '/pengumuman/3', 'id': '3'};
+    expect(data['id'], '3');
+    expect(routeFromMessage(data), '/pengumuman/3');
+  });
+
+  test('provider auth membaca status login dari token', () async {
+    final store = FakeTokenStore()..access = 'mock-access';
+    expect(store.access != null, isTrue);
+    store.access = null;
+    expect(store.access != null, isFalse);
+  });
+
+  test('refresh gagal -&gt; sesi dibersihkan (paksa login ulang)', () async {
+    final store = FakeTokenStore()..refresh = '';
+    final needsLogin = (store.refresh ?? '').isEmpty;
+    expect(needsLogin, isTrue);
+  });
+}</code></pre>
+<p>Jalankan:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<h2 is-upgraded>Error umum dan solusinya</h2>
+<table><tr><th>Gejala</th><th>Penyebab umum</th><th>Solusi</th></tr><tr><td>Token null di emulator</td><td>Emulator tanpa Google Play Services</td><td>Pakai emulator dengan ikon Play Store atau perangkat fisik</td></tr><tr><td>Banner tidak muncul saat foreground</td><td>Mengandalkan banner otomatis sistem</td><td>Tampilkan manual via <code>flutter_local_notifications</code> di <code>onMessage</code></td></tr><tr><td>Klik notifikasi tidak navigasi (terminated)</td><td><code>getInitialMessage</code> tidak dipanggil saat startup</td><td>Panggil <code>handleTerminated</code> setelah router siap, teruskan <code>data.route</code></td></tr><tr><td>401 berulang meski sudah login</td><td>Interceptor refresh tidak mengulang request / refresh ikut kedaluwarsa</td><td>Ulangi request sekali setelah refresh; bila gagal, <code>clear()</code> dan arahkan ke <code>/login</code></td></tr><tr><td><code>MissingPluginException</code> secure storage / messaging</td><td>Hot reload setelah tambah plugin</td><td>Hentikan penuh lalu <code>flutter run</code> ulang</td></tr><tr><td>Notifikasi iOS tidak muncul</td><td>Belum ada APNs key / capability push</td><td>Konfigurasi APNs di Firebase Console + aktifkan Push di Xcode</td></tr></table>
+<h2 is-upgraded>Checklist verifikasi mandiri</h2>
+<ul><li>Token hanya di <code>flutter_secure_storage</code>, tidak di SharedPreferences/log/screenshot penuh.</li><li>401 memicu refresh sekali lalu retry; refresh mati memaksa login ulang.</li><li>Ketiga app state teruji dengan tabel bukti; klik masuk ke rute yang benar.</li><li>Topik untuk broadcast, token untuk pesan personal.</li><li><code>flutter analyze</code> bersih dan semua test lulus.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Tugas, refleksi, dan referensi" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Bangun <strong>Campus Notification App</strong> (kembangkan project codelab atau buat baru):</p>
+<ol type="1"><li>Login (mock/Firebase Auth) dengan guard route: belum login selalu diarahkan ke <code>/login</code>.</li><li>Token disimpan di secure storage; Dio otomatis refresh sekali saat 401 dan logout bila refresh mati.</li><li>FCM terintegrasi: permission, <code>getToken</code> + <code>onTokenRefresh</code> terkirim ke backend (atau didokumentasikan endpoint <code>POST /devices</code>), dan subscribe topik <code>pengumuman-kampus</code>.</li><li>Notifikasi gabungan <code>notification + data</code>; klik membuka <code>/pengumuman/:id</code> pada ketiga app state. Isi tabel pengujian foreground/background/terminated di README.</li><li>Screenshot bukti (token terpotong, banner tiap state, halaman tujuan deep link) di folder <code>screenshots/</code>.</li><li>Sertakan minimal 2 test yang lulus (parsing route + logika sesi/refresh).</li><li>Kerjakan AI Challenge dan dokumentasikan prompt, output awal AI, perbaikan manual, dan alasan teknis di <code>docs/</code>.</li><li>Push ke repository portfolio pada folder <code>06-week-6-authentication-security-fcm/</code> dengan struktur <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, dan <code>screenshots/</code>. README menjelaskan tujuan, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai.</li></ol>
+<h2 is-upgraded>Refleksi</h2>
+<ul><li>Mengapa refresh token tidak boleh disimpan di SharedPreferences? Apa risikonya bila bocor?</li><li>Apa yang rusak bila <code>onTokenRefresh</code> diabaikan selama satu semester perkuliahan?</li><li>Kapan memakai topik dan kapan memakai token perangkat? Beri contoh pesan kampus untuk masing-masing.</li><li>Bagian mana dari draf AI yang Anda tolak atau perbaiki, dan mengapa?</li></ul>
+<h2 is-upgraded>Referensi pendukung</h2>
 <ul>
-<li><a href="https://docs.flutter.dev/cookbook/plugins/picture-using-camera" target="_blank">https://docs.flutter.dev/cookbook/plugins/picture-using-camera</a> </li>
-<li><a href="https://docs.flutter.dev/cookbook/effects/photo-filter-carousel" target="_blank">https://docs.flutter.dev/cookbook/effects/photo-filter-carousel</a> </li>
+<li><a href="../00-slides/Week_06_Authentication_Security_FCM.html" target="_blank">Slide Week 6: Authentication, Security &amp; FCM</a></li>
+<li><a href="https://firebase.google.com/docs/cloud-messaging/flutter/client" target="_blank">FCM Flutter client (setup &amp; token)</a></li>
+<li><a href="https://firebase.google.com/docs/cloud-messaging/concept-options" target="_blank">FCM message types: notification vs data</a></li>
+<li><a href="https://firebase.google.com/docs/auth/flutter/start" target="_blank">Firebase Auth for Flutter</a></li>
+<li><a href="https://pub.dev/packages/flutter_secure_storage" target="_blank">flutter_secure_storage package</a></li>
+<li><a href="https://pub.dev/packages/flutter_local_notifications" target="_blank">flutter_local_notifications package</a></li>
+<li><a href="https://go_router.dev/" target="_blank">GoRouter: redirect &amp; deep linking</a></li>
+<li><a href="https://owasp.org/www-project-mobile-top-10/" target="_blank">OWASP Mobile Top 10</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
 </ul>
+</google-codelab-step>
 
-
-      </google-codelab-step>
-    
-  </google-codelab>
-
-  <script src="../assets/codelab-elements/native-shim.js"></script>
-  <script src="../assets/codelab-elements/custom-elements.min.js"></script>
-  <script src="../assets/codelab-elements/prettify.js"></script>
-  <script src="../assets/codelab-elements/codelab-elements.js"></script>
-  <script src="//support.google.com/inapp/api.js"></script>
-
-</body>
-</html>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>

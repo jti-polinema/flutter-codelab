@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2024-10-30T22:31:33Z",
-  "id": "09-kamera",
-  "duration": 250,
-  "title": "#09 | Kamera",
+  "updated": "2026-09-27T00:00:00Z",
+  "id": "06-minggu-6-authentication-security-fcm",
+  "duration": 140,
+  "title": "#06 | Authentication, Security & FCM",
   "authors": "Habibie Ed Dien",
-  "summary": "Mampu menggunakan plugin kamera di Flutter",
-  "source": "1qfSnybpiu_W50hUhxU9idZAirTM5Jw5DXoA1UT7P3dA",
+  "summary": "Login dengan secure storage dan token refresh otomatis, integrasi FCM (permission, token lifecycle, notification vs data payload), klik dan deep link pada tiga app state, termasuk AI Challenge dan testing.",
+  "source": "1Hq4lMnPH-tCH3ETo3G4PaeHR6l8b7cLVHcEOAutHtxk",
   "theme": "mobileflutter",
   "status": [
     "published"
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "09-kamera"
+  "url": "06-minggu-6-authentication-security-fcm"
 }

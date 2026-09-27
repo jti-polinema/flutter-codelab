@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#06 | Authentication, Security &amp; FCM</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="06-minggu-6-authentication-security-fcm" title="#06 | Authentication, Security &amp; FCM" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> September 27, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning Objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>explain authentication flows (Firebase Auth / JWT / OAuth / Google Login) and the difference between ID token, access token, and refresh token;</li><li>store tokens securely with secure storage and implement automatic token refresh;</li><li>explain the FCM architecture: app server, Firebase, and devices;</li><li>request notification permission and manage the token lifecycle (<code>getToken</code>, <code>onTokenRefresh</code>);</li><li>distinguish notification payload vs data payload and their behavior in foreground, background, and terminated states;</li><li>handle notification clicks (deep links with GoRouter) and topic messaging;</li><li>apply basic mobile security principles (no secrets in code, no token logging).</li></ul>
+<h2 is-upgraded>Prerequisites</h2><ul><li>A laptop/PC and the portfolio repository (GitHub/GitLab) from previous weeks.</li><li>Flutter SDK, VS Code (Flutter/Dart extensions), an Android emulator or a physical device (notifications are easiest to test on a physical device).</li><li>Week 3 knowledge (Riverpod, AsyncValue, GoRouter) and Week 4 (Dio, repository pattern).</li><li>A free Firebase account (Spark plan, no credit card required) for the console project.</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 6 is an advanced topic: AI may generate the initial FCM implementation and auth boilerplate, but you must manually validate the token lifecycle, payload types, and notification behavior in all three app states. Grading rewards proven real behavior (screenshots + logs), not AI-generated code volume.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Authentication, security, and FCM concepts" duration="15">
+<h2 is-upgraded>1. Authentication models used in this codelab</h2><p>Three common industry login patterns:</p>
+<table><tr><th>Pattern</th><th>How it works (brief)</th><th>When to use it</th></tr><tr><td><code>Firebase Auth</code> (email/Google)</td><td>The Firebase SDK exchanges credentials for a JWT ID token verified by the backend</td><td>Campus apps that need fast login without building their own auth server</td></tr><tr><td><code>JWT + refresh token</code> (own REST API)</td><td>The server issues a short-lived access token plus a long-lived refresh token</td><td>Your own campus backend</td></tr><tr><td><code>OAuth (Google Login)</code></td><td>The app receives an authorization code, exchanged for tokens via the provider</td><td>Social login / campus SSO</td></tr></table>
+<p>This codelab uses a <strong>mock auth provider + simulated JWT</strong> so it runs without a backend, and shows exactly where Firebase Auth plugs in. The repository and token-refresh patterns are identical, so migrating to Firebase Auth only replaces the token source.</p>
+<h2 is-upgraded>2. Tokens: access, refresh, and ID token</h2><ul><li><strong>ID token:</strong> proof of user identity (who they are). Verified by the backend on identity-sensitive requests.</li><li><strong>Access token:</strong> short-lived permission (e.g. 15 minutes). Sent as <code>Authorization: Bearer ...</code>.</li><li><strong>Refresh token:</strong> a long-lived ticket for requesting a new access token without re-login. <strong>Stored only in secure storage, never in SharedPreferences.</strong></li></ul>
+<pre><code>Login --&gt; access (15 min) + refresh (7 days) stored securely
+API request --Bearer access header--&gt; 401 expired?
+Yes --&gt; exchange refresh --&gt; new access --&gt; retry request once
+Refresh also expired --&gt; logout, back to /login</code></pre>
+<h2 is-upgraded>3. FCM architecture</h2>
+<pre><code>App Server (backend) --sends to--> Firebase Cloud Messaging
+FCM --pushes to--> Android / iOS devices
+App --registers token--> Backend (stores token per user)</code></pre>
+<p>The mandatory flow: (1) the app requests notification permission, (2) the app fetches a <strong>registration token</strong> via <code>FirebaseMessaging.instance.getToken()</code>, (3) the token is sent to the backend and stored per user, (4) the backend calls the FCM API to send messages to a token or topic.</p>
+<h2 is-upgraded>4. Notification payload vs data payload</h2><table><tr><th>Type</th><th>Content</th><th>System behavior</th></tr><tr><td><code>notification</code></td><td>Display <code>title</code> + <code>body</code></td><td>Android shows it automatically in background/terminated; foreground needs manual display</td></tr><tr><td><code>data</code></td><td>Free key-value pairs, e.g. <code>{route: /announcement/3}</code></td><td>Always delivered to the app handler; never shown automatically</td></tr></table>
+<p>Practical rule for the <strong>Campus Notification App</strong>: always send combined <code>notification + data</code>. <code>notification</code> carries human-readable text, <code>data.route</code> carries the click destination deep link.</p>
+<h2 is-upgraded>5. Three app states you must test</h2><table><tr><th>State</th><th>Meaning</th><th>Working handler</th></tr><tr><td>Foreground</td><td>App is open</td><td><code>FirebaseMessaging.onMessage</code> (display manually via local notification)</td></tr><tr><td>Background</td><td>App is minimized</td><td>Automatic system banner + <code>onMessageOpenedApp</code> on click</td></tr><tr><td>Terminated</td><td>App is killed</td><td><code>getInitialMessage()</code> when opened from the notification</td></tr></table>
+<aside class="special"><p><strong>Basic security principles.</strong> Never: store tokens/secrets in SharedPreferences or hardcode them in Dart, print tokens in production logs, or send refresh tokens via URL query. Refresh tokens travel only in an HTTPS POST body and live in <code>flutter_secure_storage</code> (Keychain/Keystore).</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 1: Login + secure storage + token refresh" duration="25">
+<h2 is-upgraded>Set up the project</h2>
+<pre><code>flutter create campus_notify
+cd campus_notify
+flutter pub add flutter_riverpod go_router dio flutter_secure_storage
+flutter pub add firebase_core firebase_messaging flutter_local_notifications</code></pre>
+<p>Folder structure:</p>
+<pre><code>lib/
+├── main.dart
+├── data/
+│   ├── auth_repository.dart
+│   ├── token_store.dart
+│   └── api_client.dart
+├── providers/
+│   └── auth_provider.dart
+├── messaging/
+│   └── push_service.dart
+└── pages/
+    ├── login_page.dart
+    ├── home_page.dart
+    └── announcement_page.dart</code></pre>
+<h2 is-upgraded>1. Secure token storage</h2>
+<p>Create <code>lib/data/token_store.dart</code>. All tokens enter and leave only through this class:</p>
+<pre><code>import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class TokenStore {
+  TokenStore({FlutterSecureStorage? storage})
+      : _storage = storage ?? const FlutterSecureStorage();
+
+  final FlutterSecureStorage _storage;
+  static const _accessKey = 'access_token';
+  static const _refreshKey = 'refresh_token';
+
+  Future&lt;void&gt; save({required String access, required String refresh}) async {
+    await _storage.write(key: _accessKey, value: access);
+    await _storage.write(key: _refreshKey, value: refresh);
+  }
+
+  Future&lt;String?&gt; readAccess() =&gt; _storage.read(key: _accessKey);
+  Future&lt;String?&gt; readRefresh() =&gt; _storage.read(key: _refreshKey);
+
+  Future&lt;void&gt; clear() =&gt; _storage.deleteAll();
+}</code></pre>
+<h2 is-upgraded>2. Auth repository (mock, ready to swap for Firebase Auth)</h2>
+<p>Create <code>lib/data/auth_repository.dart</code>:</p>
+<pre><code>class AuthSession {
+  const AuthSession({required this.access, required this.refresh});
+  final String access;
+  final String refresh;
+}
+
+class AuthRepository {
+  // REPLACE this point with FirebaseAuth.instance.signInWithEmailAndPassword
+  // or GoogleSignIn once your Firebase backend is ready.
+  Future&lt;AuthSession&gt; login(
+      {required String email, required String password}) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!email.contains('@') || password.length &lt; 6) {
+      throw Exception('Invalid email or password');
+    }
+    // Simulated JWT: header.payload.signature (never parse manually
+    // in production, use server-side verification).
+    return AuthSession(
+      access: 'mock-access-for-$email',
+      refresh: 'mock-refresh-for-$email',
+    );
+  }
+
+  Future&lt;String&gt; refresh(String refreshToken) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (refreshToken.isEmpty) throw Exception('Refresh token missing');
+    return 'mock-access-renewed-${DateTime.now().millisecondsSinceEpoch}';
+  }
+}</code></pre>
+<h2 is-upgraded>3. Dio with automatic refresh</h2>
+<p>Create <code>lib/data/api_client.dart</code>. The interceptor retries <strong>once</strong> after a 401 by refreshing, then replays the request:</p>
+<pre><code>import 'package:dio/dio.dart';
+import 'auth_repository.dart';
+import 'token_store.dart';
+
+Dio buildApiClient(TokenStore store, AuthRepository auth) {
+  final dio = Dio(BaseOptions(baseUrl: 'https://example-campus-api.test'));
+  dio.interceptors.add(InterceptorsWrapper(
+    onRequest: (options, handler) async {
+      final access = await store.readAccess();
+      if (access != null) {
+        options.headers['Authorization'] = 'Bearer $access';
+      }
+      handler.next(options);
+    },
+    onError: (e, handler) async {
+      if (e.response?.statusCode == 401) {
+        final refresh = await store.readRefresh();
+        if (refresh == null) return handler.next(e);
+        try {
+          final renewed = await auth.refresh(refresh);
+          await store.save(access: renewed, refresh: refresh);
+          final retry = await dio.fetch(
+            e.requestOptions..headers['Authorization'] = 'Bearer $renewed',
+          );
+          return handler.resolve(retry);
+        } catch (_) {
+          await store.clear(); // refresh dead too -&gt; force re-login
+        }
+      }
+      handler.next(e);
+    },
+  ));
+  return dio;
+}</code></pre>
+<h2 is-upgraded>4. Auth provider + route guard</h2>
+<p>Example <code>lib/providers/auth_provider.dart</code> and the GoRouter guard in <code>main.dart</code>:</p>
+<pre><code>final authStateProvider =
+    AsyncNotifierProvider&lt;AuthNotifier, bool&gt;(AuthNotifier.new);
+
+class AuthNotifier extends AsyncNotifier&lt;bool&gt; {
+  @override
+  Future&lt;bool&gt; build() async {
+    final token = await ref.watch(tokenStoreProvider).readAccess();
+    return token != null;
+  }
+
+  Future&lt;void&gt; login(String email, String password) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final session = await ref
+          .read(authRepositoryProvider)
+          .login(email: email, password: password);
+      await ref
+          .read(tokenStoreProvider)
+          .save(access: session.access, refresh: session.refresh);
+      return true;
+    });
+  }
+
+  Future&lt;void&gt; logout() async {
+    await ref.read(tokenStoreProvider).clear();
+    ref.invalidateSelf();
+  }
+}</code></pre>
+<pre><code>GoRouter(
+  redirect: (context, state) {
+    final loggedIn =
+        container.read(authStateProvider).value ?? false;
+    final goingLogin = state.matchedLocation == '/login';
+    if (!loggedIn &amp;&amp; !goingLogin) return '/login';
+    if (loggedIn &amp;&amp; goingLogin) return '/';
+    return null;
+  },
+  routes: [
+    GoRoute(path: '/login', builder: (_, __) =&gt; const LoginPage()),
+    GoRoute(path: '/', builder: (_, __) =&gt; const HomePage()),
+    GoRoute(
+      path: '/announcement/:id',
+      builder: (_, s) =&gt;
+          AnnouncementPage(id: s.pathParameters['id'] ?? ''),
+    ),
+  ],
+);</code></pre>
+<aside class="special"><p><strong>Common mistake:</strong> storing access/refresh tokens in SharedPreferences "to keep it simple". That is a security bug because SharedPreferences is not encrypted. Always use <code>flutter_secure_storage</code> for tokens.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 2: FCM, permission, and token lifecycle" duration="30">
+<h2 is-upgraded>1. Register the app with Firebase</h2>
+<ol type="1"><li>Create a project in the <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> and add an Android app with the package name matching your <code>applicationId</code>.</li><li>Download <code>google-services.json</code> into <code>android/app/</code> and follow the <a href="https://firebase.google.com/docs/cloud-messaging/flutter/client" target="_blank">FCM Flutter client guide</a> (apply the <code>google-services</code> plugin and dependencies). For iOS add <code>GoogleService-Info.plist</code>.</li><li>Make sure <code>firebase_core</code> is initialized before <code>runApp</code>: <code>await Firebase.initializeApp()</code>.</li></ol>
+<h2 is-upgraded>2. Request notification permission</h2>
+<p>Android 13+ and iOS require runtime permission. Create <code>lib/messaging/push_service.dart</code>:</p>
+<pre><code>import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final _local = FlutterLocalNotificationsPlugin();
+
+Future&lt;bool&gt; requestNotificationPermission() async {
+  final settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true, badge: true, sound: true,
+    announcement: false, carPlay: false, criticalAlert: false,
+  );
+  return settings.authorizationStatus == AuthorizationStatus.authorized ||
+      settings.authorizationStatus == AuthorizationStatus.provisional;
+}
+
+Future&lt;void&gt; initLocalNotifications() async {
+  const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const ios = DarwinInitializationSettings();
+  await _local.initialize(
+    const InitializationSettings(android: android, iOS: ios),
+    onDidReceiveNotificationResponse: (response) {
+      // Foreground banner click -&gt; forward payload to the router.
+      pendingDeepLink = response.payload;
+    },
+  );
+}
+
+String? pendingDeepLink;</code></pre>
+<h2 is-upgraded>3. Token lifecycle: fetch, send to backend, watch for rotation</h2>
+<pre><code>Future&lt;void&gt; initFcmToken({required Future&lt;void&gt; Function(String token) onToken}) async {
+  // 1. Fetch the current token and send it to the backend.
+  final token = await FirebaseMessaging.instance.getToken();
+  if (token != null) await onToken(token);
+
+  // 2. Tokens can change (reinstall, data wipe, security rotation).
+  //    This listener is MANDATORY, otherwise the backend keeps a stale token.
+  FirebaseMessaging.instance.onTokenRefresh.listen(onToken);
+
+  // 3. Subscribe to the campus topic (e.g. all students of a cohort).
+  await FirebaseMessaging.instance.subscribeToTopic('campus-announcement');
+}</code></pre>
+<p>Example of sending the token to your backend (replace the URL with the campus API):</p>
+<pre><code>await initFcmToken(onToken: (token) async {
+  await dio.post('/devices', data: {'fcm_token': token, 'platform': 'android'});
+});</code></pre>
+<aside class="warning"><p><strong>Must be proven:</strong> show the token on a Debug page (truncated, e.g. first 12 characters + <code>...</code>), wipe app data / reinstall, and show that <code>onTokenRefresh</code> updates the token on the backend. Never show the full token in report screenshots.</p></aside>
+<h2 is-upgraded>4. First send test from the Firebase Console</h2>
+<ol type="1"><li>Open Firebase Console -&gt; Messaging -&gt; create a trial notification campaign.</li><li>Enter a <code>title</code> and <code>body</code>, targeting your Android app.</li><li>Send while the app is in the <strong>background</strong>: the system banner must appear. Tap the banner: the app opens.</li><li>Record the result as <code>screenshots/fcm-console-test.png</code>.</li></ol>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 3: Payloads, three app states, clicks and topics" duration="25">
+<h2 is-upgraded>1. Background handler must be top-level</h2>
+<p>The background handler must be a top-level function (not a class method) because it runs in a separate isolate:</p>
+<pre><code>@pragma('vm:entry-point')
+Future&lt;void&gt; firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Do not touch BuildContext / Riverpod here.
+  // Job: log / persist lightly. Navigation happens on click.
+}
+
+void registerBackgroundHandler() {
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+}</code></pre>
+<h2 is-upgraded>2. Three handlers + combined payload example</h2>
+<p>Backend payload (example JSON via FCM HTTP v1):</p>
+<pre><code>{
+  "message": {
+    "topic": "campus-announcement",
+    "notification": {
+      "title": "Schedule changed",
+      "body": "Mobile class moved to Room A2 at 1:00 PM"
+    },
+    "data": {
+      "route": "/announcement/3",
+      "id": "3"
+    }
+  }
+}</code></pre>
+<pre><code>void listenForeground(void Function(String route) go) {
+  // Foreground: the system shows NO banner automatically,
+  // so display one manually via a local notification.
+  FirebaseMessaging.onMessage.listen((message) async {
+    final route = message.data['route'] ?? '/';
+    const androidDetails = AndroidNotificationDetails(
+      'announcement', 'Campus Announcements',
+      importance: Importance.high, priority: Priority.high,
+    );
+    await _local.show(
+      message.hashCode,
+      message.notification?.title ?? 'Announcement',
+      message.notification?.body ?? '',
+      const NotificationDetails(android: androidDetails),
+      payload: route,
+    );
+  });
+
+  // Background -&gt; tapped.
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    go(message.data['route'] ?? '/');
+  });
+}
+
+Future&lt;void&gt; handleTerminated(void Function(String route) go) async {
+  // Terminated -&gt; opened from a notification.
+  final initial = await FirebaseMessaging.instance.getInitialMessage();
+  if (initial != null) go(initial.data['route'] ?? '/');
+  if (pendingDeepLink != null) go(pendingDeepLink!);
+}</code></pre>
+<h2 is-upgraded>3. Mandatory test matrix</h2>
+<p>Test all three states with the same payload and fill in this table in the README:</p>
+<table><tr><th>State</th><th>Expected</th><th>How to test</th></tr><tr><td>Foreground</td><td>Local banner appears, tap routes to <code>/announcement/3</code></td><td>App open, send from console/backend</td></tr><tr><td>Background</td><td>System banner appears, tap routes correctly</td><td>Press Home, send, tap banner</td></tr><tr><td>Terminated</td><td>App opens to the right route via <code>getInitialMessage</code></td><td>Swipe-close the app, send, tap banner</td></tr></table>
+<h2 is-upgraded>4. Topic messaging</h2>
+<pre><code>// Subscribe / unsubscribe from code:
+await FirebaseMessaging.instance.subscribeToTopic('campus-announcement');
+await FirebaseMessaging.instance.unsubscribeFromTopic('campus-announcement');</code></pre>
+<p>Topic rules: names contain no spaces; use them for broadcasts (all students, one class, one club). For personal messages (grades, bills) always use a <strong>device token</strong>, never a topic.</p>
+<aside class="special"><p><strong>Key distinction:</strong> messages containing <code>notification</code> are displayed automatically by the system in background/terminated states. <strong>Data-only</strong> messages are never shown automatically and must be handled manually on Android. That is why the Campus Notification App always uses the combined form.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>The role of AI in this codelab</h2><p>AI may draft the initial FCM service and auth boilerplate, but <strong>you prove the behavior</strong>. The most expensive FCM bugs (stale tokens, misrouted clicks, duplicate banners) are invisible from reading code alone.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Ask your AI coding assistant with this prompt:</p>
+<pre><code>Flutter Campus Notification App.
+Stack: firebase_messaging, flutter_local_notifications,
+flutter_secure_storage, go_router, Riverpod.
+Generate a PushService with:
+- requestPermission + getToken + onTokenRefresh (send to POST /devices)
+- onMessage (show a local notification manually)
+- onMessageOpenedApp + getInitialMessage (navigate to data.route)
+- subscribe/unsubscribe topic campus-announcement
+- top-level background handler with @pragma('vm:entry-point')
+Mark which parts DIFFER for Android 13+ vs iOS,
+and which parts must never touch BuildContext.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Before accepting the AI draft, verify and record your findings in the README/docs:</p>
+<ul><li>Is the background handler a top-level function with <code>@pragma('vm:entry-point')</code>? (reject it if it is a class method).</li><li>Does <code>onTokenRefresh</code> actually send the new token to the backend, not just print it to the log?</li><li>Does foreground use a manual local notification? (without it, no banner appears while the app is open).</li><li>Do clicks from all three states (foreground/background/terminated) land on the correct route? Prove it with the test table.</li><li>Are tokens/secrets free from hardcoding and full logging? Fix it if the AI violates this.</li><li>Your final decision and technical rationale; you may disagree with the AI as long as you argue your case.</li></ul>
+<aside class="special"><p><strong>Technical accountability:</strong> keep the prompt, the initial AI output, the manual fix list, and the three-state test table in the <code>docs/</code> folder. During the demo you must be able to explain the token lifecycle without reading notes.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, and common errors" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<ol type="1"><li>Move all route strings (<code>/login</code>, <code>/announcement/:id</code>) into one <code>lib/routes.dart</code> file so FCM deep links and GoRouter share the same constants.</li><li>Extract <code>RemoteMessage -&gt; route</code> parsing into a pure function <code>routeFromMessage(Map&lt;String, dynamic&gt; data)</code> so it can be unit-tested without Firebase.</li><li>Move <code>DioException -&gt; user-friendly message</code> mapping (401, timeout, offline) into <code>lib/data/api_errors.dart</code> so the UI only receives messages, never raw exceptions.</li></ol>
+<h2 is-upgraded>Testing: unit tests without real Firebase</h2>
+<p>Create <code>test/auth_push_test.dart</code>. Firebase itself is not tested; the logic around it is:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+String routeFromMessage(Map&lt;String, String&gt; data) {
+  final route = data['route'] ?? '/';
+  return route.startsWith('/') ? route : '/$route';
+}
+
+class FakeTokenStore {
+  String? access;
+  String? refresh;
+}
+
+void main() {
+  test('routeFromMessage handles empty and slash-less routes', () {
+    expect(routeFromMessage({}), '/');
+    expect(routeFromMessage({'route': 'announcement/3'}), '/announcement/3');
+    expect(routeFromMessage({'route': '/announcement/3'}), '/announcement/3');
+  });
+
+  test('data payload carries the announcement id', () {
+    const data = {'route': '/announcement/3', 'id': '3'};
+    expect(data['id'], '3');
+    expect(routeFromMessage(data), '/announcement/3');
+  });
+
+  test('auth provider reads login status from token', () async {
+    final store = FakeTokenStore()..access = 'mock-access';
+    expect(store.access != null, isTrue);
+    store.access = null;
+    expect(store.access != null, isFalse);
+  });
+
+  test('failed refresh -&gt; session cleared (force re-login)', () async {
+    final store = FakeTokenStore()..refresh = '';
+    final needsLogin = (store.refresh ?? '').isEmpty;
+    expect(needsLogin, isTrue);
+  });
+}</code></pre>
+<p>Run:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<h2 is-upgraded>Common errors and fixes</h2>
+<table><tr><th>Symptom</th><th>Common cause</th><th>Fix</th></tr><tr><td>Null token on emulator</td><td>Emulator without Google Play Services</td><td>Use a Play Store emulator image or a physical device</td></tr><tr><td>No banner in foreground</td><td>Relying on the automatic system banner</td><td>Show one manually via <code>flutter_local_notifications</code> in <code>onMessage</code></td></tr><tr><td>Tap does nothing (terminated)</td><td><code>getInitialMessage</code> never called at startup</td><td>Call <code>handleTerminated</code> after the router is ready, forwarding <code>data.route</code></td></tr><tr><td>Repeated 401 after login</td><td>Refresh interceptor never replays the request / refresh also expired</td><td>Replay once after refresh; on failure <code>clear()</code> and route to <code>/login</code></td></tr><tr><td><code>MissingPluginException</code> for secure storage / messaging</td><td>Hot reload after adding a plugin</td><td>Stop fully, then <code>flutter run</code> again</td></tr><tr><td>No notifications on iOS</td><td>Missing APNs key / push capability</td><td>Configure APNs in the Firebase Console + enable Push in Xcode</td></tr></table>
+<h2 is-upgraded>Self-verification checklist</h2>
+<ul><li>Tokens live only in <code>flutter_secure_storage</code>, never in SharedPreferences/logs/full screenshots.</li><li>A 401 triggers exactly one refresh + retry; a dead refresh forces re-login.</li><li>All three app states tested with evidence; taps land on the correct route.</li><li>Topics for broadcasts, device tokens for personal messages.</li><li><code>flutter analyze</code> is clean and all tests pass.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, and references" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Build a <strong>Campus Notification App</strong> (extend the codelab project or start fresh):</p>
+<ol type="1"><li>Login (mock/Firebase Auth) with a route guard: unauthenticated users are always redirected to <code>/login</code>.</li><li>Tokens in secure storage; Dio auto-refreshes once on 401 and logs out when the refresh dies.</li><li>FCM integrated: permission, <code>getToken</code> + <code>onTokenRefresh</code> delivered to the backend (or a documented <code>POST /devices</code> endpoint), plus a <code>campus-announcement</code> topic subscription.</li><li>Combined <code>notification + data</code> messages; taps open <code>/announcement/:id</code> in all three app states. Fill in the foreground/background/terminated test table in the README.</li><li>Screenshot evidence (truncated token, banner per state, deep-link destination page) under <code>screenshots/</code>.</li><li>At least 2 passing tests (route parsing + session/refresh logic).</li><li>Complete the AI Challenge and document the prompt, initial AI output, manual fixes, and technical rationale in <code>docs/</code>.</li><li>Push to the portfolio repository under <code>06-week-6-authentication-security-fcm/</code> with <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, and <code>screenshots/</code>. The README explains the objective, main features, tech stack, how to run, and the result achieved.</li></ol>
+<h2 is-upgraded>Reflection</h2>
+<ul><li>Why must refresh tokens never live in SharedPreferences? What is the risk if one leaks?</li><li>What breaks if <code>onTokenRefresh</code> is ignored for a whole semester?</li><li>When do you use a topic vs a device token? Give one campus message example for each.</li><li>Which part of the AI draft did you reject or fix, and why?</li></ul>
+<h2 is-upgraded>Supporting references</h2>
+<ul>
+<li><a href="../00-slides/Week_06_Authentication_Security_FCM_Inter.html" target="_blank">Week 6 Slides: Authentication, Security &amp; FCM</a></li>
+<li><a href="https://firebase.google.com/docs/cloud-messaging/flutter/client" target="_blank">FCM Flutter client (setup &amp; tokens)</a></li>
+<li><a href="https://firebase.google.com/docs/cloud-messaging/concept-options" target="_blank">FCM message types: notification vs data</a></li>
+<li><a href="https://firebase.google.com/docs/auth/flutter/start" target="_blank">Firebase Auth for Flutter</a></li>
+<li><a href="https://pub.dev/packages/flutter_secure_storage" target="_blank">flutter_secure_storage package</a></li>
+<li><a href="https://pub.dev/packages/flutter_local_notifications" target="_blank">flutter_local_notifications package</a></li>
+<li><a href="https://go_router.dev/" target="_blank">GoRouter: redirect &amp; deep linking</a></li>
+<li><a href="https://owasp.org/www-project-mobile-top-10/" target="_blank">OWASP Mobile Top 10</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
