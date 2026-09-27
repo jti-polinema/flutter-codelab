@@ -1,703 +1,390 @@
-
 <!doctype html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#07 | Clean Architecture</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="07-minggu-7-clean-architecture" title="#07 | Clean Architecture" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
 
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <meta name="theme-color" content="#4F7DC9">
-  <meta charset="UTF-8">
-  <title>#10 | Dasar State Management</title>
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
-  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
-  <style>
-    .success {
-      color: #1e8e3e;
-    }
-    .error {
-      color: red;
-    }
-  </style>
-</head>
-<body>
-  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab codelab-gaid="G-H7507PFEJB"
-                  id="10-basic-state"
-                  title="#10 | Dasar State Management"
-                  environment="web"
-                  feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
-    
-      <google-codelab-step label="Dasar Manajemen State di Flutter" duration="0">
-        <p><strong>Terakhir diperbarui:</strong> 07 November 2024</p>
-<p><strong>Penulis:</strong> Habibie Ed Dien</p>
-<p>Pada codelab ini, Anda akan mempelajari tentang dasar manajemen state di Flutter beserta contoh penggunaannya. Cara kerja, manfaat, dan cara mengelola state di multi screen.</p>
-<p>Video berikut menjelaskan tentang apa itu state dan bagaimana manfaatnya. Silakan simak dan pahami!</p>
-<iframe class="youtube-video" src="https://www.youtube.com/embed/vU9xDLdEZtU?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<h2 is-upgraded><strong>Tujuan Praktikum</strong></h2>
-<p>Setelah menyelesaikan codelab ini Anda akan mampu untuk:</p>
-<ul>
-<li>menjelaskan konsep arsitektur model-view</li>
-<li>mengelola data layer dengan InheritedWidget dan InheritedNotifier</li>
-<li>membuat app state di multiple screens</li>
-</ul>
-<aside class="special"><p><strong>Catatan:</strong> Materi ini diadaptasi dari Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023).</p>
-</aside>
-<h2 is-upgraded><strong>Sumber Daya yang Dibutuhkan</strong></h2>
-<p>Berikut merupakan sumber daya yang diperlukan untuk menyelesaikan praktikum ini:</p>
-<ul>
-<li>PC atau Laptop dengan spesifikasi minimum RAM 8GB Processor Core i3</li>
-<li>Koneksi internet minimal kecepatan 1 Mbps</li>
-<li>Chrome Browser</li>
-<li>Perangkat mobile (Android/iOS)</li>
-</ul>
-<h2 is-upgraded><strong>Pengetahuan yang Anda harus Miliki</strong></h2>
-<ul>
-<li>Algoritma dan Pemrograman Dasar</li>
-<li>Pemrograman Berorientasi Objek</li>
-<li>Bahasa Pemrograman Dart</li>
-</ul>
+<google-codelab-step label="Selamat datang" duration="5">
+<p><strong>Terakhir diperbarui:</strong> 27 September 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Tujuan pembelajaran</h2><p>Setelah menyelesaikan codelab ini, mahasiswa mampu:</p><ul>
+<li>menjelaskan prinsip SOLID dan separation of concerns dengan contoh kode Flutter;</li><li>membedakan struktur feature-first vs layer-first beserta trade-off-nya;</li><li>menjelaskan tiga layer (presentation, domain, data) dan aturan dependensi (dependensi mengarah ke dalam);</li><li>membedakan entity vs model serta peran repository, use case, dan dependency injection;</li><li>merefactor project Minggu 5/6 menjadi struktur feature-first yang terpisah layer-nya;</li><li>menguji use case dengan repository palsu tanpa database atau jaringan sungguhan.</li></ul>
+<h2 is-upgraded>Persiapan</h2><ul><li>Laptop/PC dan repository portfolio (GitHub/GitLab) berisi project Minggu 5 (<code>week5_offline_notes</code>) atau Minggu 6 (<code>campus_notify</code>). Codelab ini merefactor project tersebut, bukan membuat dari nol.</li><li>Flutter SDK, VS Code (ekstensi Flutter/Dart), emulator atau perangkat fisik.</li><li>Pemahaman Minggu 3 (Riverpod, AsyncValue, GoRouter), Minggu 4 (repository pattern, Dio), dan Minggu 5–6 (SQLite, secure storage).</li></ul>
+<aside class="warning"><p><strong>Kebijakan AI.</strong> Minggu 7 adalah materi lanjutan: AI boleh mengusulkan reorganisasi project, tetapi Anda wajib menilai trade-off-nya (mis. over-engineering untuk fitur kecil), memutuskan struktur final sendiri, dan menjelaskan setiap keputusan. Nilai ada pada justifikasi arsitektur, bukan pada kerapian folder hasil AI.</p></aside>
+</google-codelab-step>
 
+<google-codelab-step label="Konsep SOLID dan Clean Architecture" duration="15">
+<h2 is-upgraded>1. SOLID dalam satu contoh Flutter</h2><p>Lima prinsip, masing-masing satu kalimat plus gejala pelanggarannya:</p>
+<table><tr><th>Prinsip</th><th>Arti praktis</th><th>Gejala pelanggaran di Flutter</th></tr><tr><td><strong>S</strong>ingle Responsibility</td><td>Satu kelas punya satu alasan berubah</td><td>Widget 400 baris yang sekaligus fetch API, parsing JSON, dan formatting tanggal</td></tr><tr><td><strong>O</strong>pen/Closed</td><td>Tambah perilaku lewat ekstensi, bukan edit kode lama</td><td>Setiap sumber data baru memaksa edit widget yang sudah jalan</td></tr><tr><td><strong>L</strong>iskov Substitution</td><td>Pengganti harus bisa menggantikan aslinya tanpa merusak</td><td>Repository palsu untuk test malah melempar error yang tak pernah dilempar repository asli</td></tr><tr><td><strong>I</strong>nterface Segregation</td><td>Jangan paksa klien bergantung pada yang tak dipakai</td><td>Satu interface raksasa <code>AppRepository</code> untuk auth + notes + push sekaligus</td></tr><tr><td><strong>D</strong>ependency Inversion</td><td>Bergantung pada abstraksi, bukan concretion</td><td>Notifier memanggil <code>Dio</code> / <code>sqflite</code> langsung alih-alih repository</td></tr></table>
+<h2 is-upgraded>2. Tiga layer dan aturan dependensi</h2>
+<pre><code>presentation (widget, notifier, router)
+      |
+      v  bergantung ke
+domain (entity, repository interface, use case, failure)
+      ^
+      |  diimplementasikan oleh
+data (model, repository impl, Dio, SQLite, secure storage)</code></pre>
+<p>Aturan emas (<strong>dependency rule</strong>): dependensi hanya mengarah ke dalam. <code>domain</code> tidak tahu apa pun tentang Flutter, Dio, atau SQLite — sehingga logika bisnis bisa diunit-test murni.</p>
+<h2 is-upgraded>3. Feature-first vs layer-first</h2><table><tr><th>Struktur</th><th>Bentuk</th><th>Kapan dipakai</th></tr><tr><td><code>feature-first</code></td><td><code>lib/features/notes/{data,domain,presentation}</code></td><td>Project multi-fitur (pilihan codelab ini): satu fitur bisa dipahami/dihapus tanpa menyentuh fitur lain</td></tr><tr><td><code>layer-first</code></td><td><code>lib/{data,domain,presentation}</code> global</td><td>Project kecil satu fitur; cepat tapi berantakan saat fitur bertambah</td></tr></table>
+<h2 is-upgraded>4. Kosakata peran</h2><ul><li><strong>Entity:</strong> objek bisnis murni (tanpa <code>toMap/fromMap/toJson</code>). Hidup di <code>domain</code>.</li><li><strong>Model:</strong> representasi data luar (JSON/SQLite) + mapping ke entity. Hidup di <code>data</code>.</li><li><strong>Repository interface:</strong> kontrak yang dibutuhkan domain (mis. <code>fetchNotes()</code>). Hidup di <code>domain</code>.</li><li><strong>Repository impl:</strong> cara memenuhi kontrak memakai Dio/SQLite. Hidup di <code>data</code>.</li><li><strong>Use case:</strong> satu operasi bisnis (mis. <code>GetNotes</code>, <code>SyncNotes</code>). Hidup di <code>domain</code>, dipanggil presentation.</li><li><strong>DI:</strong> penyuntikan dependensi lewat provider Riverpod (atau <code>get_it</code>). Widget tidak pernah <code>new Repository()</code> sendiri.</li></ul>
+<aside class="special"><p><strong>Bukan sekadar pindah folder.</strong> Memindahkan file tanpa memutus dependensi terlarang (widget → Dio, notifier → SQLite) bukan Clean Architecture. Yang dinilai adalah arah panah dependensi, bukan kedalaman folder.</p></aside>
+</google-codelab-step>
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Manajemen State" duration="10">
-        <p>Seiring berkembangnya aplikasi, pengelolaan aliran data melalui aplikasi tersebut menjadi lebih kompleks dan penting. Komunitas Flutter telah merancang beberapa solusi untuk menangani pengelolaan state. <strong>Semua solusi ini memiliki satu aspek yang sama: pemisahan UI dan logika bisnis</strong>.</p>
-<p>Sebelum mendalami bagaimana manajemen state itu bekerja, pada codelab ini Anda akan praktik menggunakan state ke tingkat yang lebih tinggi.</p>
-<p>Dalam codelab ini, Anda akan membuat aplikasi pencatatan tugas. Dalam aplikasi ini, pengguna</p>
-<p>akan dapat membuat daftar tugas yang berisi banyak tugas. Pengguna akan dapat menambah dan melengkapi tugasnya.</p>
-<p>Beberapa topik pembahasan di codelab ini terdiri dari:</p>
-<ul>
-<li>Pemisahan Model-View</li>
-<li>Mengelola data layer dengan <code>InheritedWidget</code> dan <code>InheritedNotifier</code></li>
-<li>Membuat <em>state </em>aplikasi dapat diakses pada <em>multi screens</em></li>
-</ul>
-<h2 is-upgraded><strong>Konsep Model-View</strong></h2>
-<p>Model dan View merupakan konsep yang sangat penting dalam arsitektur aplikasi flutter. <strong>Model </strong>adalah kelas yang menangani dengan data untuk suatu aplikasi, sedangkan View adalah kelas yang menampilkan data tersebut di layar.</p>
-<p>Di Flutter, View dibuat dari <code>widget</code>. Selanjutnya, model akan menjadi kelas dasar Dart itu yang tidak mewarisi apa pun dari Framework Flutter. Masing-masing kelas ini bertanggung jawab</p>
-<p>untuk satu dan hanya satu pekerjaan. <strong>Model </strong>berkaitan dengan penanganan data untuk aplikasi Anda. <strong>View </strong>fokus untuk menampilkan UI di layar HP. Ketika Anda konsisten dengan konsep arsitektur model dan view, kode Anda akan menjadi lebih sederhana dan mudah dibaca.</p>
-<p>Dalam codelab ini, kita akan membangun aplikasi<strong> master_plan</strong> dengan membuat kelas model dan view.</p>
+<google-codelab-step label="Praktikum 1: Audit layer project lama" duration="25">
+<h2 is-upgraded>1. Petakan file ke layer</h2>
+<p>Buka project Minggu 5 atau 6 Anda dan isi tabel ini di README (contoh untuk <code>campus_notify</code>):</p>
+<table><tr><th>File</th><th>Layer saat ini</th><th>Masalah</th></tr><tr><td><code>pages/home_page.dart</code></td><td>presentation</td><td>memanggil Dio langsung? memformat tanggal + parsing JSON di widget?</td></tr><tr><td><code>data/api_client.dart</code></td><td>data</td><td>OK bila hanya dipakai repository, bukan widget</td></tr><tr><td><code>providers/auth_provider.dart</code></td><td>presentation (state)</td><td>OK bila hanya memanggil repository/use case</td></tr><tr><td><code>data/auth_repository.dart</code></td><td>data (+kontrak tercampur)</td><td>interface dan implementasi masih satu kelas</td></tr></table>
+<h2 is-upgraded>2. Tandai tiga pelanggaran klasik</h2>
+<p>Cari dengan grep di project Anda:</p>
+<pre><code># Widget yang menyentuh jaringan / database langsung
+rg "Dio\(|http\.|openDatabase|SharedPreferences\.getInstance|FlutterSecureStorage" lib/pages lib/widgets
 
+# Logika bisnis di dalam build()
+rg "DateFormat|jsonDecode|\.toIso8601String" lib/pages lib/widgets
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 1: Dasar State dengan Model-View" duration="60">
-        <p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil melakukan setup environment Flutter SDK, VS Code, Flutter Plugin, dan Android SDK pada pertemuan pertama.</p>
-</aside>
-<h2 is-upgraded><strong>Langkah 1: Buat Project Baru</strong></h2>
-<p>Buatlah sebuah project flutter baru dengan nama <strong>master_plan</strong> di folder <strong>src week-10</strong> repository GitHub Anda atau sesuai style laporan praktikum yang telah disepakati. Lalu buatlah susunan folder dalam project seperti gambar berikut ini.</p>
-<p class="image-container"><img style="width: 142.00px" src="img\\59cfd690dfef3866.png"></p>
-<h2 is-upgraded>Langkah 2: Membuat model <strong><code>task.dart</code></strong></h2>
-<p>Praktik terbaik untuk memulai adalah pada lapisan data (<em>data layer</em>). Ini akan memberi Anda gambaran yang jelas tentang aplikasi Anda, tanpa masuk ke detail antarmuka pengguna Anda. Di folder model, buat file bernama <code>task.dart</code> dan buat <code>class Task</code>. Class ini memiliki atribut <code>description</code> dengan tipe data String dan <code>complete</code> dengan tipe data Boolean, serta ada konstruktor. Kelas ini akan menyimpan data tugas untuk aplikasi kita. Tambahkan kode berikut:</p>
-<pre><code>class Task {
-  final String description;
-  final bool complete;
-  
-  const Task({
-    this.complete = false,
-    this.description = &#39;&#39;,
+# Instansiasi manual (DI bocor)
+rg "Repository\(|Dio\(BaseOptions" lib/pages lib/providers</code></pre>
+<p>Setiap temuan adalah satu item refactor. Target: ketiga pencarian di atas <strong>nol hasil</strong> di folder presentation setelah Praktikum 3.</p>
+<h2 is-upgraded>3. Gambar struktur target</h2>
+<p>Untuk satu fitur (<code>notes</code> atau <code>announcements</code>):</p>
+<pre><code>lib/
+├── core/
+│   ├── failures.dart        # Failure domain (murni Dart)
+│   └── providers.dart       # (opsional) provider lintas fitur
+├── features/
+│   └── notes/
+│       ├── domain/
+│       │   ├── entities/note.dart
+│       │   ├── repositories/note_repository.dart  # interface!
+│       │   └── usecases/get_notes.dart
+│       │   └── usecases/add_note.dart
+│       ├── data/
+│       │   ├── models/note_model.dart
+│       │   └── repositories/note_repository_impl.dart
+│       └── presentation/
+│           ├── providers/notes_providers.dart     # notifier + DI
+│           └── pages/notes_page.dart
+└── routes.dart              # GoRouter + konstanta rute</code></pre>
+<aside class="warning"><p><strong>Jangan buat fitur baru.</strong> Praktikum ini memindahkan dan memisahkan kode yang sudah ada dan sudah jalan. Commit sebelum refactor (<code>git commit -m "chore: snapshot before clean architecture"</code>) agar bisa dibandingkan dan di-rollback.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum 2: Domain dan data per fitur" duration="30">
+<h2 is-upgraded>1. Entity murni (domain)</h2>
+<p>Buat <code>lib/features/notes/domain/entities/note.dart</code>. Tanpa import Flutter, tanpa mapping:</p>
+<pre><code>class Note {
+  const Note({
+    this.id,
+    required this.title,
+    this.body = '',
+    required this.updatedAt,
+    this.dirty = false,
+  });
+
+  final int? id;
+  final String title;
+  final String body;
+  final DateTime updatedAt;
+  final bool dirty;
+}</code></pre>
+<h2 is-upgraded>2. Failure dan kontrak repository (domain)</h2>
+<p>Buat <code>lib/core/failures.dart</code> dan <code>lib/features/notes/domain/repositories/note_repository.dart</code>:</p>
+<pre><code>sealed class Failure {
+  const Failure(this.message);
+  final String message;
+}
+
+class LocalFailure extends Failure {
+  const LocalFailure(super.message);
+}
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}</code></pre>
+<pre><code>import '../../domain/entities/note.dart';
+import '../../../../core/failures.dart';
+
+abstract class NoteRepository {
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; fetchNotes();
+  Future&lt;({Note? note, Failure? failure})&gt; addNote({
+    required String title,
+    String body = '',
   });
 }</code></pre>
-<h2 is-upgraded>Langkah 3: Buat file <strong><code>plan.dart</code></strong></h2>
-<p>Kita juga perlu sebuah List untuk menyimpan daftar rencana dalam aplikasi to-do ini. Buat file <code>plan.dart</code> di dalam folder <strong>models </strong>dan isi kode seperti berikut.</p>
-<pre><code>import &#39;./task.dart&#39;;
+<p>Contoh memakai <em>record</em> Dart agar sukses/gagal eksplisit tanpa exception bocor ke presentation. Alternatif industri: package <code>fpdart</code>/<code>dartz</code> (<code>Either&lt;Failure, T&gt;</code>) — pola kontraknya sama.</p>
+<h2 is-upgraded>3. Model dan implementasi (data)</h2>
+<p>Buat <code>lib/features/notes/data/models/note_model.dart</code> (mapping hanya di sini) dan <code>note_repository_impl.dart</code>:</p>
+<pre><code>import '../../domain/entities/note.dart';
 
-class Plan {
-  final String name;
-  final List&lt;Task&gt; tasks;
-  
-  const Plan({this.name = &#39;&#39;, this.tasks = const []});
-}</code></pre>
-<h2 is-upgraded>Langkah 4: Buat file <strong><code>data_layer.dart</code></strong></h2>
-<p>Kita dapat membungkus beberapa data layer ke dalam sebuah file yang nanti akan mengekspor kedua model tersebut. Dengan begitu, proses impor akan lebih ringkas seiring berkembangnya aplikasi. Buat file bernama <code>data_layer.dart</code> di folder <strong>models</strong>. Kodenya hanya berisi <code>export</code> seperti berikut.</p>
-<pre><code>export &#39;plan.dart&#39;;
-export &#39;task.dart&#39;;</code></pre>
-<h2 is-upgraded>Langkah 5: Pindah ke file <strong><code>main.dart</code></strong></h2>
-<p>Ubah isi kode <code>main.dart</code> sebagai berikut.</p>
-<pre><code>import &#39;package:flutter/material.dart&#39;;
-import &#39;./views/plan_screen.dart&#39;;
+class NoteModel extends Note {
+  const NoteModel({
+    super.id,
+    required super.title,
+    super.body = '',
+    required super.updatedAt,
+    super.dirty = false,
+  });
 
-void main() =&gt; runApp(MasterPlanApp());
+  Map&lt;String, Object?&gt; toMap() =&gt; {
+        'id': id,
+        'title': title,
+        'body': body,
+        'updated_at': updatedAt.toIso8601String(),
+        'dirty': dirty ? 1 : 0,
+      };
 
-class MasterPlanApp extends StatelessWidget {
-  const MasterPlanApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-     theme: ThemeData(primarySwatch: Colors.purple),
-     home: PlanScreen(),
+  factory NoteModel.fromMap(Map&lt;String, Object?&gt; map) {
+    return NoteModel(
+      id: (map['id'] as num?)?.toInt(),
+      title: map['title'] as String? ?? '',
+      body: map['body'] as String? ?? '',
+      updatedAt: DateTime.tryParse(map['updated_at'] as String? ?? '') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+      dirty: ((map['dirty'] as num?)?.toInt() ?? 0) == 1,
     );
   }
-}</code></pre>
-<h2 is-upgraded>Langkah 6: buat <strong><code>plan_screen.dart</code></strong></h2>
-<p>Pada folder <code>views</code>, buatlah sebuah file <code>plan_screen.dart</code> dan gunakan templat <code>StatefulWidget</code> untuk membuat <code>class PlanScreen</code>. Isi kodenya adalah sebagai berikut. Gantilah teks <strong>‘Namaku&#39; </strong>dengan nama panggilan Anda pada <code>title AppBar</code>.</p>
-<pre><code>import &#39;../models/data_layer.dart&#39;;
-import &#39;package:flutter/material.dart&#39;;
 
-class PlanScreen extends StatefulWidget {
-  const PlanScreen({super.key});
-
-  @override
-  State createState() =&gt; _PlanScreenState();
-}
-
-class _PlanScreenState extends State&lt;PlanScreen&gt; {
-  Plan plan = const Plan();
-
-  @override
-  Widget build(BuildContext context) {
-   return Scaffold(
-    // ganti ‘Namaku&#39; dengan Nama panggilan Anda
-    appBar: AppBar(title: const Text(&#39;Master Plan Namaku&#39;)),
-    body: _buildList(),
-    floatingActionButton: _buildAddTaskButton(),
-   );
-  }
-}</code></pre>
-<h2 is-upgraded>Langkah 7: buat method <strong><code>_buildAddTaskButton()</code></strong></h2>
-<p>Anda akan melihat beberapa error di langkah 6, karena method yang belum dibuat. Ayo kita buat mulai dari yang paling mudah yaitu tombol <strong>Tambah Rencana</strong>. Tambah kode berikut di bawah method <code>build</code> di dalam <code>class _PlanScreenState</code>.</p>
-<pre><code>Widget _buildAddTaskButton() {
-  return FloatingActionButton(
-   child: const Icon(Icons.add),
-   onPressed: () {
-     setState(() {
-      plan = Plan(
-       name: plan.name,
-       tasks: List&lt;Task&gt;.from(plan.tasks)
-       ..add(const Task()),
-     );
-    });
-   },
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 8: buat widget <strong><code>_buildList()</code></strong></h2>
-<p>Kita akan buat widget berupa <code>List</code> yang dapat dilakukan scroll, yaitu <code>ListView.builder</code>. Buat widget <code>ListView</code> seperti kode berikut ini.</p>
-<pre><code>Widget _buildList() {
-  return ListView.builder(
-   itemCount: plan.tasks.length,
-   itemBuilder: (context, index) =&gt;
-   _buildTaskTile(plan.tasks[index], index),
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 9: buat widget <strong><code>_buildTaskTile</code></strong></h2>
-<p>Dari langkah 8, kita butuh <code>ListTile</code> untuk menampilkan setiap nilai dari <code>plan.tasks</code>. Kita buat dinamis untuk setiap <code>index</code> data, sehingga membuat <code>view</code> menjadi lebih mudah. Tambahkan kode berikut ini.</p>
-<pre><code> Widget _buildTaskTile(Task task, int index) {
-    return ListTile(
-      leading: Checkbox(
-          value: task.complete,
-          onChanged: (selected) {
-            setState(() {
-              plan = Plan(
-                name: plan.name,
-                tasks: List&lt;Task&gt;.from(plan.tasks)
-                  ..[index] = Task(
-                    description: task.description,
-                    complete: selected ?? false,
-                  ),
-              );
-            });
-          }),
-      title: TextFormField(
-        initialValue: task.description,
-        onChanged: (text) {
-          setState(() {
-            plan = Plan(
-              name: plan.name,
-              tasks: List&lt;Task&gt;.from(plan.tasks)
-                ..[index] = Task(
-                  description: text,
-                  complete: task.complete,
-                ),
-            );
-          });
-        },
-      ),
-    );
-  }</code></pre>
-<p><strong>Run </strong>atau tekan <strong>F5 </strong>untuk melihat hasil aplikasi yang Anda telah buat. Capture hasilnya untuk soal praktikum nomor 4.</p>
-<h2 is-upgraded><strong>Langkah 10: Tambah Scroll Controller</strong></h2>
-<p>Anda dapat menambah tugas sebanyak-banyaknya, menandainya jika sudah beres, dan melakukan scroll jika sudah semakin banyak isinya. Namun, ada salah satu fitur tertentu di iOS perlu kita tambahkan. Ketika keyboard tampil, Anda akan kesulitan untuk mengisi yang paling bawah. Untuk mengatasi itu, Anda dapat menggunakan <code>ScrollController</code> untuk menghapus focus dari semua <code>TextField</code> selama event scroll dilakukan. Pada file <code>plan_screen.dart</code>, tambahkan variabel scroll controller di class State tepat setelah variabel <code>plan</code>.</p>
-<pre><code>late ScrollController scrollController;</code></pre>
-<h2 is-upgraded><strong>Langkah 11: Tambah Scroll Listener</strong></h2>
-<p>Tambahkan method <code>initState()</code> setelah deklarasi variabel <code>scrollController</code> seperti kode berikut.</p>
-<pre><code>@override
-void initState() {
-  super.initState();
-  scrollController = ScrollController()
-    ..addListener(() {
-      FocusScope.of(context).requestFocus(FocusNode());
-    });
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 12: Tambah controller dan keyboard behavior</strong></h2>
-<p>Tambahkan controller dan keyboard behavior pada ListView di method <code>_buildList</code> seperti kode berikut ini.</p>
-<pre><code>return ListView.builder(
-  controller: scrollController,
- keyboardDismissBehavior: Theme.of(context).platform ==
- TargetPlatform.iOS
-          ? ScrollViewKeyboardDismissBehavior.onDrag
-          : ScrollViewKeyboardDismissBehavior.manual,</code></pre>
-<h2 is-upgraded><strong>Langkah 13: Terakhir, tambah method dispose()</strong></h2>
-<p>Terakhir, tambahkan method <code>dispose()</code> berguna ketika widget sudah tidak digunakan lagi.</p>
-<pre><code>@override
-void dispose() {
-  scrollController.dispose();
-  super.dispose();
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 14: Hasil</strong></h2>
-<p>Lakukan Hot restart (<strong>bukan</strong> hot reload) pada aplikasi Flutter Anda. Anda akan melihat tampilan akhir seperti gambar berikut. Jika masih terdapat error, silakan diperbaiki hingga bisa running.</p>
-<p class="image-container"><img style="width: 226.00px" src="img\\110c35948b40a145.png"></p>
-<aside class="special"><p><strong>Catatan:</strong> Kedua fitur hot reload dan hot restart memiliki performa lebih cepat dibanding melakukan build ulang secara keseluruhan aplikasi. Secara umum:</p>
-<ul>
-<li>Gunakan <em>hot reload </em>untuk melihat perubahan pada tampilan UI, jadi perubahan paling banyak terjadi di metode <em>build</em>. State pada aplikasi tetap dipertahankan dan Anda akan melihat perubahannya hampir secara instan.</li>
-<li>Gunakan <em>hot restart </em>untuk melihat perubahan pada state aplikasi, seperti memperbarui <strong>variabel global</strong>, <strong>static fields</strong>, atau metode <code>main()</code>. Kondisi app state akan reset (kembali seperti awal).</li>
-</ul>
-</aside>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Praktikum 1: Dasar State dengan Model-View" duration="90">
-        <ol type="1" start="1">
-<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki.</li>
-<li>Jelaskan maksud dari langkah 4 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
-<li>Mengapa perlu variabel plan di langkah 6 pada praktikum tersebut? Mengapa dibuat konstanta ?</li>
-<li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
-<li>Apa kegunaan method pada Langkah 11 dan 13 dalam <em>lifecyle state</em> ?</li>
-<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !</li>
-</ol>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 2: Mengelola Data Layer dengan InheritedWidget dan InheritedNotifier" duration="60">
-        <p>Bagaimana seharusnya Anda mengakses data pada aplikasi?</p>
-<p>Beberapa pilihan yang bisa dilakukan adalah meletakkan data dalam satu kelas yang sama sehingga menjadi bagian dari life cycle aplikasi Anda.</p>
-<p>Kemudian muncul pertanyaan, bagaimana meletakkan model dalam pohon widget ? sedangkan model bukanlah widget, sehingga tidak akan tampil pada screen.</p>
-<p>Solusi yang memungkinkan adalah menggunakan <code>InheritedWidget</code>. Sejauh ini kita hanya menggunakan dua jenis widget, yaitu <code>StatelessWidget</code> dan <code>StatefulWidget</code>. Kedua widget tersebut digunakan untuk layouting UI di screen. Di mana satu bersifat statis dan dinamis. Sedangkan <code>InheritedWidget</code> itu berbeda, ia dapat meneruskan data ke sub-widget turunannya (biasanya ketika Anda menerapkan <em>decomposition widget</em>). Jika dilihat dari perspektif user, itu tidak akan terlihat prosesnya (<em>invisible</em>). <code>InheritedWidget</code> dapat digunakan sebagai pintu untuk komunikasi antara <strong>view </strong>dan <strong>data </strong>layers.</p>
-<p>Pada codelab ini, kita akan memperbarui kode dari aplikasi Master Plan dengan memisahkan data todo list ke luar class view-nya.</p>
-<p>Setelah Anda menyelesaikan praktikum 1, Anda dapat melanjutkan praktikum 2 ini. Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan Praktikum 1 Model-View.</p>
-</aside>
-<h2 is-upgraded>Langkah 1: Buat file <strong><code>plan_provider.dart</code></strong></h2>
-<p>Buat folder baru <code>provider</code> di dalam folder <code>lib</code>, lalu buat file baru dengan nama <code>plan_provider.dart</code> berisi kode seperti berikut.</p>
-<pre><code>import &#39;package:flutter/material.dart&#39;;
-import &#39;../models/data_layer.dart&#39;;
-
-class PlanProvider extends InheritedNotifier&lt;ValueNotifier&lt;Plan&gt;&gt; {
-  const PlanProvider({super.key, required Widget child, required
-   ValueNotifier&lt;Plan&gt; notifier})
-  : super(child: child, notifier: notifier);
-
-  static ValueNotifier&lt;Plan&gt; of(BuildContext context) {
-   return context.
-    dependOnInheritedWidgetOfExactType&lt;PlanProvider&gt;()!.notifier!;
-  }
-}</code></pre>
-<h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
-<p>Gantilah pada bagian atribut <code>home</code> dengan <code>PlanProvider</code> seperti berikut. Jangan lupa sesuaikan bagian impor jika dibutuhkan.</p>
-<pre><code>return MaterialApp(
-  theme: ThemeData(primarySwatch: Colors.purple),
-  home: PlanProvider(
-    notifier: ValueNotifier&lt;Plan&gt;(const Plan()),
-    child: const PlanScreen(),
-   ),
-);</code></pre>
-<h2 is-upgraded>Langkah 3: Tambah method pada model <strong><code>plan.dart</code></strong></h2>
-<p>Tambahkan dua <em>method </em>di dalam model <code>class Plan</code> seperti kode berikut.</p>
-<pre><code>int get completedCount =&gt; tasks
-  .where((task) =&gt; task.complete)
-  .length;
-
-String get completenessMessage =&gt;
-  &#39;$completedCount out of ${tasks.length} tasks&#39;;
-</code></pre>
-<h2 is-upgraded><strong>Langkah 4: Pindah ke PlanScreen</strong></h2>
-<p>Edit <code>PlanScreen</code> agar menggunakan data dari <code>PlanProvider</code>. Hapus deklarasi variabel <code>plan</code> (ini akan membuat error). Kita akan perbaiki pada langkah 5 berikut ini.</p>
-<h2 is-upgraded>Langkah 5: Edit method <strong><code>_buildAddTaskButton</code></strong></h2>
-<p>Tambahkan <code>BuildContext</code> sebagai parameter dan gunakan <code>PlanProvider</code> sebagai sumber datanya. Edit bagian kode seperti berikut.</p>
-<pre><code>Widget _buildAddTaskButton(BuildContext context) {
-  ValueNotifier&lt;Plan&gt; planNotifier = PlanProvider.of(context);
-  return FloatingActionButton(
-    child: const Icon(Icons.add),
-    onPressed: () {
-      Plan currentPlan = planNotifier.value;
-      planNotifier.value = Plan(
-        name: currentPlan.name,
-        tasks: List&lt;Task&gt;.from(currentPlan.tasks)..add(const Task()),
+  Note toEntity() =&gt; Note(
+        id: id,
+        title: title,
+        body: body,
+        updatedAt: updatedAt,
+        dirty: dirty,
       );
-    },
-  );
 }</code></pre>
-<h2 is-upgraded>Langkah 6: Edit method <strong><code>_buildTaskTile</code></strong></h2>
-<p>Tambahkan parameter <code>BuildContext</code>, gunakan <code>PlanProvider</code> sebagai sumber data. Ganti <code>TextField</code> menjadi <code>TextFormField</code> untuk membuat inisial <code>data provider</code> menjadi lebih mudah.</p>
-<pre><code>Widget _buildTaskTile(Task task, int index, BuildContext context) {
-  ValueNotifier&lt;Plan&gt; planNotifier = PlanProvider.of(context);
-  return ListTile(
-    leading: Checkbox(
-       value: task.complete,
-       onChanged: (selected) {
-         Plan currentPlan = planNotifier.value;
-         planNotifier.value = Plan(
-           name: currentPlan.name,
-           tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-             ..[index] = Task(
-               description: task.description,
-               complete: selected ?? false,
-             ),
-         );
-       }),
-    title: TextFormField(
-      initialValue: task.description,
-      onChanged: (text) {
-        Plan currentPlan = planNotifier.value;
-        planNotifier.value = Plan(
-          name: currentPlan.name,
-          tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-            ..[index] = Task(
-              description: text,
-              complete: task.complete,
-            ),
-        );
-      },
-    ),
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 7: Edit <strong><code>_buildList</code></strong></h2>
-<p>Sesuaikan parameter pada bagian <code>_buildTaskTile</code> seperti kode berikut.</p>
-<pre><code>Widget _buildList(Plan plan) {
-   return ListView.builder(
-     controller: scrollController,
-     itemCount: plan.tasks.length,
-     itemBuilder: (context, index) =&gt;
-        _buildTaskTile(plan.tasks[index], index, context),
-   );
-}</code></pre>
-<h2 is-upgraded>Langkah 8: Tetap di <strong><code>class PlanScreen</code></strong></h2>
-<p>Edit method build sehingga bisa tampil progress pada bagian bawah (footer). Caranya, bungkus (wrap) _buildList dengan widget Expanded dan masukkan ke dalam widget Column seperti kode pada Langkah 9.</p>
-<h2 is-upgraded>Langkah 9: Tambah widget <strong><code>SafeArea</code></strong></h2>
-<p>Terakhir, tambahkan widget <code>SafeArea</code> dengan berisi <code>completenessMessage</code> pada akhir widget <code>Column</code>. Perhatikan kode berikut ini.</p>
-<pre><code>@override
-Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: AppBar(title: const Text(&#39;Master Plan&#39;)),
-     body: ValueListenableBuilder&lt;Plan&gt;(
-       valueListenable: PlanProvider.of(context),
-       builder: (context, plan, child) {
-         return Column(
-           children: [
-             Expanded(child: _buildList(plan)),
-             SafeArea(child: Text(plan.completenessMessage))
-           ],
-         );
-       },
-     ),
-     floatingActionButton: _buildAddTaskButton(context),
-   );
-}</code></pre>
-<p>Akhirnya, <strong>run </strong>atau tekan <strong>F5 </strong>jika aplikasi belum running. Tidak akan terlihat perubahan pada UI, namun dengan melakukan langkah-langkah di atas, Anda telah menerapkan cara memisahkan dengan baik antara <strong>view </strong>dan <strong>model</strong>. Ini merupakan hal terpenting dalam mengelola <strong>state </strong>di aplikasi Anda.</p>
+<pre><code>import 'package:sqflite/sqflite.dart';
+import '../../../../core/failures.dart';
+import '../../domain/entities/note.dart';
+import '../../domain/repositories/note_repository.dart';
+import '../models/note_model.dart';
 
+class NoteRepositoryImpl implements NoteRepository {
+  NoteRepositoryImpl({required Future&lt;Database&gt; Function() openDb})
+      : _openDb = openDb;
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Praktikum 2: InheritedWidget" duration="90">
-        <ol type="1" start="1">
-<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.</li>
-<li>Jelaskan mana yang dimaksud <code>InheritedWidget</code> pada langkah 1 tersebut! Mengapa yang digunakan <code>InheritedNotifier</code>?</li>
-<li>Jelaskan maksud dari method di langkah 3 pada praktikum tersebut! Mengapa dilakukan demikian?</li>
-<li>Lakukan capture hasil dari Langkah 9 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
-<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !</li>
-</ol>
+  final Future&lt;Database&gt; Function() _openDb;
 
+  @override
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; fetchNotes() async {
+    try {
+      final db = await _openDb();
+      final rows =
+          await db.query('notes', orderBy: 'updated_at DESC');
+      final notes =
+          rows.map((r) =&gt; NoteModel.fromMap(r).toEntity()).toList();
+      return (notes: notes, failure: null);
+    } catch (e) {
+      return (
+        notes: const &lt;Note&gt;[],
+        failure: LocalFailure('Gagal membaca catatan: $e'),
+      );
+    }
+  }
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Praktikum 3: Membuat State di Multiple Screens" duration="60">
-        <p>Satu kalimat populer atau viral yang beredar dalam komunitas Flutter adalah &#34;<strong>Lift State Up</strong>&#34;. Mantra ini merujuk ke sebuah ide di mana objek State seharusnya berada lebih tinggi dari pada widget yang membutuhkannya di dalam sebuah widget tree. <code>InheritedWidget</code> yang telah kita buat sebelumnya bekerja dengan sempurna pada satu screen, tapi apa yang akan terjadi jika kita tambah screen kedua ?</p>
-<p>Pada codelab ini, Anda akan menambah screen lain pada aplikasi Master Plan sehingga bisa membuat kelompok daftar plan lebih dari satu. </p>
-<p>Selesaikan langkah-langkah praktikum berikut ini menggunakan editor Visual Studio Code (VS Code) atau Android Studio atau code editor lain kesukaan Anda.</p>
-<aside class="warning"><p><strong>Perhatian:</strong> Diasumsikan Anda telah berhasil menyelesaikan praktikum 2.</p>
-</aside>
-<h2 is-upgraded>Langkah 1: Edit <strong><code>PlanProvider</code></strong></h2>
-<p>Perhatikan kode berikut, edit class <code>PlanProvider</code> sehingga dapat menangani List Plan.</p>
-<pre><code>class PlanProvider extends
-InheritedNotifier&lt;ValueNotifier&lt;List&lt;Plan&gt;&gt;&gt; {
-  const PlanProvider({super.key, required Widget child, required
-ValueNotifier&lt;List&lt;Plan&gt;&gt; notifier})
-     : super(child: child, notifier: notifier);
-
-  static ValueNotifier&lt;List&lt;Plan&gt;&gt; of(BuildContext context) {
-    return context.
-dependOnInheritedWidgetOfExactType&lt;PlanProvider&gt;()!.notifier!;
+  @override
+  Future&lt;({Note? note, Failure? failure})&gt; addNote({
+    required String title,
+    String body = '',
+  }) async {
+    try {
+      final db = await _openDb();
+      final now = DateTime.now();
+      final id = await db.insert(
+        'notes',
+        NoteModel(
+            title: title, body: body, updatedAt: now, dirty: true)
+            .toMap(),
+      );
+      return (
+        note: Note(id: id, title: title, body: body,
+            updatedAt: now, dirty: true),
+        failure: null,
+      );
+    } catch (e) {
+      return (note: null,
+          failure: LocalFailure('Gagal menyimpan catatan: $e'));
+    }
   }
 }</code></pre>
-<h2 is-upgraded>Langkah 2: Edit <strong><code>main.dart</code></strong></h2>
-<p>Langkah sebelumnya dapat menyebabkan error pada <code>main.dart</code> dan <code>plan_screen.dart</code>. Pada method <code>build</code>, gantilah menjadi kode seperti ini.</p>
-<pre><code>@override
-Widget build(BuildContext context) {
-  return PlanProvider(
-    notifier: ValueNotifier&lt;List&lt;Plan&gt;&gt;(const []),
-    child: MaterialApp(
-      title: &#39;State management app&#39;,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+<h2 is-upgraded>4. Use case: satu operasi bisnis</h2>
+<p>Buat <code>lib/features/notes/domain/usecases/get_notes.dart</code>:</p>
+<pre><code>import '../../../../core/failures.dart';
+import '../entities/note.dart';
+import '../repositories/note_repository.dart';
+
+class GetNotes {
+  const GetNotes(this._repository);
+  final NoteRepository _repository;
+
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; call() {
+    return _repository.fetchNotes();
+  }
+}</code></pre>
+<aside class="special"><p><strong>Kapan use case perlu?</strong> Bila operasi menggabungkan &gt;1 repository atau punya aturan bisnis (validasi, sorting, sync). CRUD satu-baris boleh langsung repository → notifier; use case menjadi wajib saat logika tumbuh. Keputusan ini bagian dari AI Challenge.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum 3: Presentation, DI, dan verifikasi" duration="20">
+<h2 is-upgraded>1. Dependency injection dengan Riverpod</h2>
+<p>Buat <code>lib/features/notes/presentation/providers/notes_providers.dart</code>. Inilah satu-satunya tempat wiring:</p>
+<pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/repositories/note_repository_impl.dart';
+import '../../domain/repositories/note_repository.dart';
+import '../../domain/usecases/get_notes.dart';
+import '../../domain/entities/note.dart';
+
+// Data layer: database opener disuntikkan (mudah diganti fake saat test)
+final noteRepositoryProvider = Provider&lt;NoteRepository&gt;((ref) {
+  return NoteRepositoryImpl(openDb: openNotesDb);
+});
+
+// Domain layer: use case menerima abstraksi, bukan implementasi
+final getNotesProvider = Provider&lt;GetNotes&gt;((ref) {
+  return GetNotes(ref.watch(noteRepositoryProvider));
+});
+
+// Presentation layer: state untuk UI
+final notesProvider = FutureProvider&lt;List&lt;Note&gt;&gt;((ref) async {
+  final result = await ref.watch(getNotesProvider).call();
+  if (result.failure != null) throw Exception(result.failure!.message);
+  return result.notes;
+});</code></pre>
+<h2 is-upgraded>2. Halaman hanya membaca state</h2>
+<p><code>notes_page.dart</code> versi bersih tidak mengandung SQL, Dio, JSON, atau formatting tanggal mentah:</p>
+<pre><code>class NotesPage extends ConsumerWidget {
+  const NotesPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(notesProvider);
+    return state.when(
+      loading: () =&gt;
+          const Center(child: CircularProgressIndicator()),
+      error: (e, _) =&gt; ErrorView(
+        message: '$e',
+        onRetry: () =&gt; ref.invalidate(notesProvider),
       ),
-      home: const PlanScreen(),
-    ),
-  );
+      data: (notes) =&gt; notes.isEmpty
+          ? const Center(child: Text('Belum ada catatan.'))
+          : NotesList(notes),
+    );
+  }
 }</code></pre>
-<h2 is-upgraded><strong>Langkah 3: Edit plan_screen.dart</strong></h2>
-<p>Tambahkan variabel <code>plan</code> dan atribut pada <em>constructor</em>-nya seperti berikut.</p>
-<pre><code>final Plan plan;
-const PlanScreen({super.key, required this.plan});</code></pre>
-<h2 is-upgraded><strong>Langkah 4: Error</strong></h2>
-<p>Itu akan terjadi error setiap kali memanggil <code>PlanProvider.of(context)</code>. Itu terjadi karena screen saat ini hanya menerima tugas-tugas untuk satu kelompok <code>Plan</code>, tapi sekarang <code>PlanProvider</code> menjadi list dari objek plan tersebut.</p>
-<h2 is-upgraded>Langkah 5: Tambah <strong><code>getter Plan</code></strong></h2>
-<p>Tambahkan getter pada <code>_PlanScreenState</code> seperti kode berikut.</p>
-<pre><code>class _PlanScreenState extends State&lt;PlanScreen&gt; {
-  late ScrollController scrollController;
-  Plan get plan =&gt; widget.plan;</code></pre>
-<h2 is-upgraded>Langkah 6: Method <strong><code>initState()</code></strong></h2>
-<p>Pada bagian ini kode tetap seperti berikut.</p>
-<pre><code>@override
-void initState() {
-   super.initState();
-   scrollController = ScrollController()
-    ..addListener(() {
-      FocusScope.of(context).requestFocus(FocusNode());
-    });
-}</code></pre>
-<h2 is-upgraded>Langkah 7: Widget <strong><code>build</code></strong></h2>
-<p>Pastikan Anda telah merubah ke <code>List<Plan></code> dan mengubah nilai pada <code>currentPlan</code> seperti kode berikut ini.</p>
-<pre><code>  @override
-  Widget build(BuildContext context) {
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; plansNotifier = PlanProvider.of(context);
+<h2 is-upgraded>3. Verifikasi dependency rule</h2>
+<p>Jalankan tiga pemeriksaan ini; semuanya harus lolos:</p>
+<pre><code># 1. Presentation steril dari data mentah (harus NOL hasil)
+rg "Dio\(|openDatabase|getDatabasesPath|FlutterSecureStorage|SharedPreferences\.getInstance|jsonDecode" lib/features/*/presentation lib/pages
 
-    return Scaffold(
-      appBar: AppBar(title: Text(_plan.name)),
-      body: ValueListenableBuilder&lt;List&lt;Plan&gt;&gt;(
-        valueListenable: plansNotifier,
-        builder: (context, plans, child) {
-          Plan currentPlan = plans.firstWhere((p) =&gt; p.name == plan.
-name);
-          return Column(
-            children: [
-              Expanded(child: _buildList(currentPlan)),
-              SafeArea(child: Text(currentPlan.
-completenessMessage)),
-            ],);},),
-      floatingActionButton: _buildAddTaskButton(context,)
-  ,);
- }
+# 2. Domain steril dari framework &amp; package (harus NOL hasil)
+rg "import 'package:flutter|import 'package:dio|import 'package:sqflite|import 'package:firebase" lib/features/*/domain lib/core
 
-  Widget _buildAddTaskButton(BuildContext context) {
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.
-of(context);
-    return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () {
-        Plan currentPlan = plan;
-        int planIndex =
-            planNotifier.value.indexWhere((p) =&gt; p.name == currentPlan.name);
-        List&lt;Task&gt; updatedTasks = List&lt;Task&gt;.from(currentPlan.tasks)
-          ..add(const Task());
-        planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
-          ..[planIndex] = Plan(
-            name: currentPlan.name,
-            tasks: updatedTasks,
-          );
-        plan = Plan(
-          name: currentPlan.name,
-          tasks: updatedTasks,
-        );},);
-  }</code></pre>
-<h2 is-upgraded>Langkah 8: Edit <strong><code>_buildTaskTile</code></strong></h2>
-<p>Pastikan ubah ke <code>List<Plan></code> dan variabel <code>planNotifier</code> seperti kode berikut ini.</p>
-<pre><code>  Widget _buildTaskTile(Task task, int index, BuildContext context)
-{
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.
-of(context);
+# 3. Static analysis + test
+flutter analyze
+flutter test</code></pre>
+<aside class="warning"><p><strong>Definisi selesai.</strong> Refactor dinyatakan selesai bila: aplikasi berjalan sama seperti sebelum refactor (uji manual 5 menit tiap fitur), tiga grep di atas nol hasil, <code>flutter analyze</code> bersih, dan test hijau. Screenshot before/after (UI sama, struktur beda) masuk folder <code>screenshots/</code>.</p></aside>
+</google-codelab-step>
 
-    return ListTile(
-      leading: Checkbox(
-         value: task.complete,
-         onChanged: (selected) {
-           Plan currentPlan = plan;
-           int planIndex = planNotifier.value
-              .indexWhere((p) =&gt; p.name == currentPlan.name);
-           planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
-             ..[planIndex] = Plan(
-               name: currentPlan.name,
-               tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-                 ..[index] = Task(
-                   description: task.description,
-                   complete: selected ?? false,
-                 ),);
-         }),
-      title: TextFormField(
-        initialValue: task.description,
-        onChanged: (text) {
-          Plan currentPlan = plan;
-          int planIndex =
-             planNotifier.value.indexWhere((p) =&gt; p.name ==
-currentPlan.name);
-          planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)
-            ..[planIndex] = Plan(
-              name: currentPlan.name,
-              tasks: List&lt;Task&gt;.from(currentPlan.tasks)
-                ..[index] = Task(
-                  description: text,
-                  complete: task.complete,
-                ),
-            );
-},),);}</code></pre>
-<h2 is-upgraded><strong>Langkah 9: Buat screen baru</strong></h2>
-<p>Pada folder <strong>view</strong>, buatlah file baru dengan nama <code>plan_creator_screen.dart</code> dan deklarasikan dengan <code>StatefulWidget</code> bernama <code>PlanCreatorScreen</code>. Gantilah di <code>main.dart</code> pada atribut home menjadi seperti berikut.</p>
-<pre><code>home: const PlanCreatorScreen(),</code></pre>
-<h2 is-upgraded><strong>Langkah 10: Pindah ke class _PlanCreatorScreenState</strong></h2>
-<p>Kita perlu tambahkan variabel <code>TextEditingController</code> sehingga bisa membuat <code>TextField</code> sederhana untuk menambah Plan baru. Jangan lupa tambahkan dispose ketika widget unmounted seperti kode berikut.</p>
-<pre><code>final textController = TextEditingController();
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>Peran AI pada codelab ini</h2><p>AI boleh mengusulkan reorganisasi folder, tetapi <strong>Anda yang menilai trade-off-nya</strong>. Arsitektur yang salah (over-engineering untuk CRUD sederhana, atau under-engineering untuk fitur kompleks) lebih mahal daripada kode yang jelek.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Minta AI coding assistant dengan prompt berikut:</p>
+<pre><code>Project Flutter saya: campus_notify (auth + FCM + daftar pengumuman).
+Kondisi kini: folder lib/{data, providers, pages, messaging},
+repository tercampur dengan implementasi, widget memanggil Dio langsung.
+Tugas:
+1. Usulkan struktur feature-first Clean Architecture
+   (presentation/domain/data) untuk fitur auth + announcements.
+2. Untuk tiap file lama, sebutkan tujuan barunya (pindah/pecah/hapus).
+3. Tandai bagian yang over-engineering bila diterapkan ke CRUD sederhana,
+   dan kapan use case benar-benar dibutuhkan vs repository langsung.
+4. Tunjukkan wiring DI dengan Riverpod (tanpa package DI tambahan).
+Jelaskan trade-off setiap keputusan.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Sebelum usulan AI diterima, verifikasi dan catat temuan di README/docs:</p>
+<ul><li>Apakah interface repository tinggal di <code>domain</code> dan implementasi di <code>data</code>? (tolak bila AI menaruh keduanya di satu folder).</li><li>Apakah <code>domain</code> bebas import Flutter/Dio/SQLite/Firebase? Periksa dengan grep, bukan dengan membaca sekilas.</li><li>Apakah AI membuat use case untuk tiap CRUD satu-baris? (itu over-engineering: cukup repository langsung ke notifier, dengan alasan tertulis).</li><li>Apakah entity bebas mapping (<code>toMap/fromMap/toJson</code> hanya di model)?</li><li>Apakah wiring DI terpusat di provider dan widget tidak <code>new Repository()</code> sendiri?</li><li>Keputusan final dan alasan teknis Anda, boleh berbeda dari saran AI selama berargumen.</li></ul>
+<aside class="special"><p><strong>Tanggung jawab teknis:</strong> simpan prompt, output awal AI, tabel usulan-vs-keputusan-final, dan hasil tiga grep verifikasi pada folder <code>docs/</code>. Saat demo Anda harus mampu menggambar arah panah dependensi tanpa membuka catatan.</p></aside>
+</google-codelab-step>
 
-@override
-void dispose() {
-  textController.dispose();
-  super.dispose();
-}</code></pre>
-<h2 is-upgraded><strong>Langkah 11: Pindah ke method build</strong></h2>
-<p>Letakkan method Widget <code>build</code> berikut di atas <code>void dispose</code>. Gantilah ‘<strong>Namaku</strong>&#39; dengan nama panggilan Anda.</p>
-<pre><code>@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    // ganti ‘Namaku&#39; dengan nama panggilan Anda
-    appBar: AppBar(title: const Text(&#39;Master Plans Namaku&#39;)),
-    body: Column(children: [
-      _buildListCreator(),
-      Expanded(child: _buildMasterPlans())
-    ]),
-  );
-}</code></pre>
-<h2 is-upgraded>Langkah 12: Buat widget <strong><code>_buildListCreator</code></strong></h2>
-<p>Buatlah widget berikut setelah widget build.</p>
-<pre><code>Widget _buildListCreator() {
-  return Padding(
-     padding: const EdgeInsets.all(20.0),
-     child: Material(
-       color: Theme.of(context).cardColor,
-       elevation: 10,
-       child: TextField(
-          controller: textController,
-          decoration: const InputDecoration(
-             labelText: &#39;Add a plan&#39;,
-             contentPadding: EdgeInsets.all(20)),
-          onEditingComplete: addPlan),
-     ));
-}</code></pre>
-<h2 is-upgraded>Langkah 13: Buat <strong><code>void addPlan()</code></strong></h2>
-<p>Tambahkan method berikut untuk menerima inputan dari user berupa text plan.</p>
-<pre><code>void addPlan() {
-  final text = textController.text;
-    if (text.isEmpty) {
-      return;
+<google-codelab-step label="Refactoring, testing, dan error umum" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<ol type="1"><li>Terapkan pola yang sama ke fitur kedua (<code>auth</code> atau <code>announcements</code>): entity + repository interface + impl + 1 use case + provider wiring. Jangan biarkan satu fitur bersih dan sisanya kotor.</li><li>Ekstrak formatting tanggal dan parsing rute ke fungsi murni di <code>lib/core/format.dart</code> agar bisa diuji tanpa widget.</li><li>Pindahkan semua exception mentah menjadi <code>Failure</code> yang ramah pengguna sebelum mencapai UI; UI hanya menerima <code>message</code>.</li></ol>
+<h2 is-upgraded>Testing: use case dengan repository palsu</h2>
+<p>Buat <code>test/get_notes_test.dart</code>. Domain diuji murni — tanpa SQLite, tanpa Dio, tanpa Firebase:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+
+class FakeNoteRepository implements NoteRepository {
+  FakeNoteRepository({this.items = const [], this.fail = false});
+
+  final List&lt;Note&gt; items;
+  final bool fail;
+
+  @override
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; fetchNotes() async {
+    if (fail) {
+      return (
+        notes: const &lt;Note&gt;[],
+        failure: const LocalFailure('db locked (simulasi)'),
+      );
     }
-    final plan = Plan(name: text, tasks: []);
-    ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier =
-PlanProvider.of(context);
-    planNotifier.value = List&lt;Plan&gt;.from(planNotifier.value)..
-add(plan);
-    textController.clear();
-    FocusScope.of(context).requestFocus(FocusNode());
-    setState(() {});
-}</code></pre>
-<h2 is-upgraded>Langkah 14: Buat <strong><code>widget _buildMasterPlans()</code></strong></h2>
-<p>Tambahkan widget seperti kode berikut.</p>
-<pre><code>Widget _buildMasterPlans() {
-  ValueNotifier&lt;List&lt;Plan&gt;&gt; planNotifier = PlanProvider.of(context);
-    List&lt;Plan&gt; plans = planNotifier.value;
+    return (notes: items, failure: null);
+  }
 
-    if (plans.isEmpty) {
-      return Column(
-         mainAxisAlignment: MainAxisAlignment.center,
-         children: &lt;Widget&gt;[
-           const Icon(Icons.note, size: 100, color: Colors.grey),
-           Text(&#39;Anda belum memiliki rencana apapun.&#39;,
-              style: Theme.of(context).textTheme.headlineSmall)
-         ]);
-    }
-    return ListView.builder(
-        itemCount: plans.length,
-        itemBuilder: (context, index) {
-          final plan = plans[index];
-          return ListTile(
-              title: Text(plan.name),
-              subtitle: Text(plan.completenessMessage),
-              onTap: () {
-                Navigator.of(context).push(
-                   MaterialPageRoute(builder: (_) =&gt;
-PlanScreen(plan: plan,)));
-              });
-        });
+  @override
+  Future&lt;({Note? note, Failure? failure})&gt; addNote({
+    required String title,
+    String body = '',
+  }) {
+    throw UnimplementedError();
+  }
 }
-</code></pre>
-<p>Terakhir, <strong>run </strong>atau tekan <strong>F5 </strong>untuk melihat hasilnya jika memang belum running. Bisa juga lakukan<strong> hot restart</strong> jika aplikasi sudah running. Maka hasilnya akan seperti gambar berikut ini.</p>
-<p class="image-container"><img style="width: 260.50px" src="img\\918beb8a139abc7c.png"></p>
 
+void main() {
+  test('GetNotes meneruskan daftar dari repository', () async {
+    final repo = FakeNoteRepository(items: [
+      Note(title: 'A', updatedAt: DateTime(2026, 9, 27)),
+    ]);
+    final result = await GetNotes(repo).call();
+    expect(result.failure, isNull);
+    expect(result.notes.length, 1);
+    expect(result.notes.first.title, 'A');
+  });
 
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Praktikum 3: State di Multiple Screens" duration="90">
-        <ol type="1" start="1">
-<li>Selesaikan langkah-langkah praktikum tersebut, lalu dokumentasikan berupa GIF hasil akhir praktikum beserta penjelasannya di file <code>README.md</code>! Jika Anda menemukan ada yang error atau tidak berjalan dengan baik, silakan diperbaiki sesuai dengan tujuan aplikasi tersebut dibuat.</li>
-<li>Berdasarkan Praktikum 3 yang telah Anda lakukan, jelaskan maksud dari gambar diagram berikut ini!</li>
-</ol>
-<p class="image-container"><img style="width: 460.50px" src="img\\9ce81bcd2817adc8.png"></p>
-<ol type="1" start="3">
-<li>Lakukan capture hasil dari Langkah 14 berupa GIF, kemudian jelaskan apa yang telah Anda buat!</li>
-<li>Kumpulkan laporan praktikum Anda berupa link commit atau repository GitHub ke dosen yang telah disepakati !</li>
-</ol>
+  test('GetNotes meneruskan failure tanpa melempar', () async {
+    final repo = FakeNoteRepository(fail: true);
+    final result = await GetNotes(repo).call();
+    expect(result.failure, isA&lt;LocalFailure&gt;());
+    expect(result.notes, isEmpty);
+  });
+}</code></pre>
+<p>Jalankan:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<h2 is-upgraded>Error umum dan solusinya</h2>
+<table><tr><th>Gejala</th><th>Penyebab umum</th><th>Solusi</th></tr><tr><td>Import cycle / file saling mengimpor</td><td>Presentation diimpor oleh domain/data, atau feature mengimpor antar-presentation</td><td>Periksa arah panah: hanya presentation → domain ← data; fitur berkomunikasi via rute, bukan import widget</td></tr><tr><td><code>The argument type 'NoteModel' can't be assigned to 'Note'</code></td><td>Repository impl mengembalikan model, kontrak meminta entity</td><td>Selalu konversi <code>.toEntity()</code> di batas data → domain</td></tr><tr><td>Provider <code>ref.watch</code> di luar widget/provider</td><td>Wiring DI ditulis di fungsi biasa atau constructor</td><td>Wiring hanya di dalam <code>Provider/Notifier</code> atau widget via <code>ConsumerWidget</code></td></tr><tr><td>Test butuh database sungguhan</td><td>Use case diuji dengan <code>NoteRepositoryImpl</code> asli</td><td>Uji domain selalu dengan fake yang mengimplementasikan interface</td></tr><tr><td>Refactor merusak fitur yang sudah jalan</td><td>Tidak ada snapshot commit + tidak ada uji manual per fitur</td><td>Commit snapshot dulu; setelah refactor uji tiap fitur ±5 menit dan bandingkan screenshot</td></tr></table>
+<h2 is-upgraded>Checklist verifikasi mandiri</h2>
+<ul><li>Tiga grep sterilitas (presentation &amp; domain) nol hasil.</li><li>Interface di domain, implementasi di data, mapping hanya di model.</li><li>Widget tidak menginstansiasi repository; semua lewat provider.</li><li>Aplikasi berjalan identik sebelum/sesudah refactor (bukti screenshot).</li><li><code>flutter analyze</code> bersih dan semua test lulus.</li></ul>
+</google-codelab-step>
 
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Tugas Kelompok PBL" duration="90">
-        <ol type="1" start="1">
-<li>Tambahkan <em>class model </em>yang dibutuhkan sesuai aplikasi PBL kelompok Anda! Bagilah tugas dengan anggota kelompok Anda untuk merancang proses state yang akan dilakukan pada aplikasi kelompok Anda. Lalu terapkan <em>state management</em> pada project kelompok yang telah Anda pelajari melalui praktikum ini.</li>
-<li>Anda boleh menggunakan plugin/library pihak ketiga seperti riverpod, BLoC, provider atau lainnya untuk mengelola state pada project kelompok PBL.</li>
-<li>Jika telah berhasil sesuai kebutuhan, maka push hasil kontribusi masing-masing anggota kelompok ke repository project PBL. Beri keterangan commit dengan jelas fitur apa saja yang ditambahkan, tiap screen/fitur untuk setiap commit itu lebih baik.</li>
-</ol>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Selamat!" duration="0">
-        <p>Selamat Anda telah menyelesaikan Codelab ini. Anda telah mempelajari terkait state management dan contoh penggunaannya.</p>
-<p>Pada codelab berikutnya, Anda akan mempelajari tentang Pemrograman Asynchronous di Flutter.</p>
-<p>Jangan sungkan jika Anda menemukan kesalahan pada codelab ini untuk merevisi atau sekedar melaporkan issue melalui tautan di pojok kiri bawah (<a href="https://github.com/jti-polinema/flutter-codelab/issues" target="_blank">Report a mistake</a>).</p>
-<h2 is-upgraded><strong>Apa selanjutnya?</strong></h2>
-<p>Silakan cek beberapa sumber belajar lainnya...</p>
+<google-codelab-step label="Tugas, refleksi, dan referensi" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Refactor project Minggu 5 atau 6 Anda menjadi <strong>Clean Architecture feature-first</strong> (lanjutkan repository yang sama, bukan project baru):</p>
+<ol type="1"><li>Minimal 1 fitur penuh (<code>notes</code> atau <code>announcements</code>) terpisah menjadi <code>domain/</code> (entity, repository interface, use case, failure) + <code>data/</code> (model, repository impl) + <code>presentation/</code> (provider wiring, pages).</li><li>Dependency rule terbukti: sertakan hasil tiga grep sterilitas di README.</li><li>Behavior identik: screenshot before/after tiap fitur di folder <code>screenshots/</code>.</li><li>Sertakan minimal 2 test yang lulus (use case sukses + failure dengan repository palsu).</li><li>Kerjakan AI Challenge dan dokumentasikan prompt, tabel usulan-vs-keputusan-final, dan alasan teknis di <code>docs/</code>.</li><li>Push ke repository portfolio pada folder <code>07-week-7-clean-architecture/</code> (atau lanjutkan folder minggu asal + catat refactor di README) dengan struktur <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, dan <code>screenshots/</code>. README menjelaskan tujuan, diagram layer + arah dependensi, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai.</li></ol>
+<h2 is-upgraded>Refleksi</h2>
+<ul><li>Mengapa interface repository harus tinggal di domain, bukan di data? Apa yang rusak bila dibalik?</li><li>Kapan use case benar-benar dibutuhkan, dan kapan repository langsung ke notifier sudah cukup?</li><li>Apa biaya over-engineering (use case per CRUD satu-baris) bagi tim kecil? Kapan biayanya sepadan?</li><li>Bagian mana dari usulan AI yang Anda tolak atau sederhanakan, dan mengapa?</li></ul>
+<h2 is-upgraded>Referensi pendukung</h2>
 <ul>
-<li><a href="https://www.youtube.com/watch?v=YZkRIHXhdGo" target="_blank">Konsep State Management Flutter : Definisi dan Kegunaannya</a></li>
-<li><a href="https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html" target="_blank">InheritedWidget class documentation API official</a></li>
-<li><a href="https://riverpod.dev/" target="_blank">https://riverpod.dev/</a> </li>
-<li><a href="https://pub.dev/packages/provider" target="_blank">https://pub.dev/packages/provider</a> </li>
+<li><a href="../00-slides/Week_07_Clean_Architecture.html" target="_blank">Slide Week 7: Clean Architecture</a></li>
+<li><a href="https://docs.flutter.dev/app-architecture/guide" target="_blank">Flutter: App architecture guide</a></li>
+<li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank">The Clean Architecture (Robert C. Martin)</a></li>
+<li><a href="https://riverpod.dev/docs/concepts/providers" target="_blank">Riverpod: Providers &amp; dependency injection</a></li>
+<li><a href="https://dart.dev/language/records" target="_blank">Dart: Records (return ganda sukses/gagal)</a></li>
+<li><a href="https://pub.dev/packages/fpdart" target="_blank">fpdart package (alternatif Either)</a></li>
+<li><a href="https://go_router.dev/" target="_blank">GoRouter: redirect &amp; deep linking</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
 </ul>
-<h2 is-upgraded><strong>Referensi</strong></h2>
-<ul>
-<li><a href="https://drive.google.com/file/d/1W9uSLC9wlf9fFudmCWFHTx9dan5SXII0/view?usp=sharing" target="_blank">Buku &#34;Flutter Cookbook, 100+ step-by-step recipes for building cross-platform, professional grade apps with Flutter 3.10.x and Dart 3.x - Second Edition&#34; oleh Simone Alessandria (2023)</a></li>
-<li><a href="https://drive.google.com/file/d/1hJbctx-_O3B6kUeG70bJD5xfbnsWwBXY/view?usp=sharing" target="_blank">Flutter for Beginners Second Edition</a></li>
-<li><a href="https://www.youtube.com/flutterdev" target="_blank">https://www.youtube.com/flutterdev</a> </li>
-<li><a href="https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition" target="_blank">https://github.com/PacktPublishing/Flutter-for-Beginners-Second-Edition</a></li>
-</ul>
+</google-codelab-step>
 
-
-      </google-codelab-step>
-    
-  </google-codelab>
-
-  <script src="../assets/codelab-elements/native-shim.js"></script>
-  <script src="../assets/codelab-elements/custom-elements.min.js"></script>
-  <script src="../assets/codelab-elements/prettify.js"></script>
-  <script src="../assets/codelab-elements/codelab-elements.js"></script>
-  <script src="//support.google.com/inapp/api.js"></script>
-
-</body>
-</html>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>

@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2024-11-07T02:24:22Z",
-  "id": "10-basic-state",
-  "duration": 550,
-  "title": "#10 | Dasar State Management",
+  "updated": "2026-09-27T00:00:00Z",
+  "id": "07-minggu-7-clean-architecture",
+  "duration": 135,
+  "title": "#07 | Clean Architecture",
   "authors": "Habibie Ed Dien",
-  "summary": "Mampu mengelola state di Flutter",
-  "source": "1DNQSaymqUZCsgXhNrsnwaAsUaWxll5_FQpGckhcMkA0",
+  "summary": "Merefactor project Minggu 5/6 menjadi feature-first Clean Architecture: SOLID, entity vs model, repository interface + impl, use case, DI Riverpod, termasuk AI Challenge dan testing.",
+  "source": "1Hq4lMnPH-tCH3ETo3G4PaeHR6l8b7cLVHcEOAutHtxk",
   "theme": "mobileflutter",
   "status": [
     "published"
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "10-basic-state"
+  "url": "07-minggu-7-clean-architecture"
 }

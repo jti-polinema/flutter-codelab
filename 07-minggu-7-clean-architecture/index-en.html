@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#07 | Clean Architecture</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="07-minggu-7-clean-architecture" title="#07 | Clean Architecture" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> September 27, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning Objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>explain SOLID principles and separation of concerns with Flutter code examples;</li><li>distinguish feature-first vs layer-first structures and their trade-offs;</li><li>explain the three layers (presentation, domain, data) and the dependency rule (dependencies point inward);</li><li>distinguish entities vs models and the roles of repository, use case, and dependency injection;</li><li>refactor the Week 5/6 project into a feature-first, layer-separated structure;</li><li>test use cases with a fake repository, with no real database or network.</li></ul>
+<h2 is-upgraded>Prerequisites</h2><ul><li>A laptop/PC and the portfolio repository (GitHub/GitLab) containing the Week 5 (<code>week5_offline_notes</code>) or Week 6 (<code>campus_notify</code>) project. This codelab refactors that project, it does not start from scratch.</li><li>Flutter SDK, VS Code (Flutter/Dart extensions), an emulator or physical device.</li><li>Week 3 knowledge (Riverpod, AsyncValue, GoRouter), Week 4 (repository pattern, Dio), and Weeks 5–6 (SQLite, secure storage).</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 7 is an advanced topic: AI may propose a project reorganization, but you must assess the trade-offs (e.g. over-engineering a small feature), decide the final structure yourself, and explain every decision. Grading rewards architectural justification, not AI-generated folder tidiness.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="SOLID and Clean Architecture concepts" duration="15">
+<h2 is-upgraded>1. SOLID in one Flutter example</h2><p>Five principles, one sentence each plus the smell of violating them:</p>
+<table><tr><th>Principle</th><th>Practical meaning</th><th>Violation smell in Flutter</th></tr><tr><td><strong>S</strong>ingle Responsibility</td><td>One class has one reason to change</td><td>A 400-line widget that fetches an API, parses JSON, and formats dates at once</td></tr><tr><td><strong>O</strong>pen/Closed</td><td>Add behavior by extension, not by editing old code</td><td>Every new data source forces edits to already-working widgets</td></tr><tr><td><strong>L</strong>iskov Substitution</td><td>A replacement must substitute the original without breaking</td><td>A fake test repository throwing errors the real one never throws</td></tr><tr><td><strong>I</strong>nterface Segregation</td><td>Do not force clients to depend on what they never use</td><td>One giant <code>AppRepository</code> interface for auth + notes + push at once</td></tr><tr><td><strong>D</strong>ependency Inversion</td><td>Depend on abstractions, not concretions</td><td>A notifier calling <code>Dio</code> / <code>sqflite</code> directly instead of a repository</td></tr></table>
+<h2 is-upgraded>2. Three layers and the dependency rule</h2>
+<pre><code>presentation (widgets, notifiers, router)
+      |
+      v  depends on
+domain (entities, repository interfaces, use cases, failures)
+      ^
+      |  implemented by
+data (models, repository impls, Dio, SQLite, secure storage)</code></pre>
+<p>The golden rule (<strong>dependency rule</strong>): dependencies only point inward. <code>domain</code> knows nothing about Flutter, Dio, or SQLite — so business logic can be purely unit-tested.</p>
+<h2 is-upgraded>3. Feature-first vs layer-first</h2><table><tr><th>Structure</th><th>Shape</th><th>When to use it</th></tr><tr><td><code>feature-first</code></td><td><code>lib/features/notes/{data,domain,presentation}</code></td><td>Multi-feature projects (this codelab's choice): one feature can be understood/removed without touching others</td></tr><tr><td><code>layer-first</code></td><td><code>lib/{data,domain,presentation}</code> globally</td><td>Tiny single-feature projects; fast but messy as features grow</td></tr></table>
+<h2 is-upgraded>4. Role vocabulary</h2><ul><li><strong>Entity:</strong> a pure business object (no <code>toMap/fromMap/toJson</code>). Lives in <code>domain</code>.</li><li><strong>Model:</strong> an external data representation (JSON/SQLite) plus mapping to the entity. Lives in <code>data</code>.</li><li><strong>Repository interface:</strong> the contract the domain needs (e.g. <code>fetchNotes()</code>). Lives in <code>domain</code>.</li><li><strong>Repository impl:</strong> how the contract is fulfilled using Dio/SQLite. Lives in <code>data</code>.</li><li><strong>Use case:</strong> one business operation (e.g. <code>GetNotes</code>, <code>SyncNotes</code>). Lives in <code>domain</code>, called by presentation.</li><li><strong>DI:</strong> dependency injection via Riverpod providers (or <code>get_it</code>). Widgets never <code>new</code> a repository themselves.</li></ul>
+<aside class="special"><p><strong>Not just moving folders.</strong> Moving files without breaking forbidden dependencies (widget → Dio, notifier → SQLite) is not Clean Architecture. What is graded is the direction of dependency arrows, not folder depth.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 1: Audit the old project layers" duration="25">
+<h2 is-upgraded>1. Map files to layers</h2>
+<p>Open your Week 5 or 6 project and fill in this table in the README (example for <code>campus_notify</code>):</p>
+<table><tr><th>File</th><th>Current layer</th><th>Problem</th></tr><tr><td><code>pages/home_page.dart</code></td><td>presentation</td><td>calls Dio directly? formats dates + parses JSON in the widget?</td></tr><tr><td><code>data/api_client.dart</code></td><td>data</td><td>OK if only used by repositories, not widgets</td></tr><tr><td><code>providers/auth_provider.dart</code></td><td>presentation (state)</td><td>OK if it only calls repositories/use cases</td></tr><tr><td><code>data/auth_repository.dart</code></td><td>data (+mixed contract)</td><td>interface and implementation still one class</td></tr></table>
+<h2 is-upgraded>2. Flag three classic violations</h2>
+<p>Search your project with grep:</p>
+<pre><code># Widgets touching network / database directly
+rg "Dio\(|http\.|openDatabase|SharedPreferences\.getInstance|FlutterSecureStorage" lib/pages lib/widgets
+
+# Business logic inside build()
+rg "DateFormat|jsonDecode|\.toIso8601String" lib/pages lib/widgets
+
+# Manual instantiation (leaking DI)
+rg "Repository\(|Dio\(BaseOptions" lib/pages lib/providers</code></pre>
+<p>Each hit is one refactor item. Goal: all three searches return <strong>zero hits</strong> in the presentation folders after Lab 3.</p>
+<h2 is-upgraded>3. Sketch the target structure</h2>
+<p>For one feature (<code>notes</code> or <code>announcements</code>):</p>
+<pre><code>lib/
+├── core/
+│   ├── failures.dart        # Domain failures (pure Dart)
+│   └── providers.dart       # (optional) cross-feature providers
+├── features/
+│   └── notes/
+│       ├── domain/
+│       │   ├── entities/note.dart
+│       │   ├── repositories/note_repository.dart  # interface!
+│       │   └── usecases/get_notes.dart
+│       │   └── usecases/add_note.dart
+│       ├── data/
+│       │   ├── models/note_model.dart
+│       │   └── repositories/note_repository_impl.dart
+│       └── presentation/
+│           ├── providers/notes_providers.dart     # notifiers + DI
+│           └── pages/notes_page.dart
+└── routes.dart              # GoRouter + route constants</code></pre>
+<aside class="warning"><p><strong>Do not build a new feature.</strong> This lab moves and separates code that already exists and already works. Commit before refactoring (<code>git commit -m "chore: snapshot before clean architecture"</code>) so it can be compared and rolled back.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 2: Domain and data per feature" duration="30">
+<h2 is-upgraded>1. Pure entity (domain)</h2>
+<p>Create <code>lib/features/notes/domain/entities/note.dart</code>. No Flutter import, no mapping:</p>
+<pre><code>class Note {
+  const Note({
+    this.id,
+    required this.title,
+    this.body = '',
+    required this.updatedAt,
+    this.dirty = false,
+  });
+
+  final int? id;
+  final String title;
+  final String body;
+  final DateTime updatedAt;
+  final bool dirty;
+}</code></pre>
+<h2 is-upgraded>2. Failures and the repository contract (domain)</h2>
+<p>Create <code>lib/core/failures.dart</code> and <code>lib/features/notes/domain/repositories/note_repository.dart</code>:</p>
+<pre><code>sealed class Failure {
+  const Failure(this.message);
+  final String message;
+}
+
+class LocalFailure extends Failure {
+  const LocalFailure(super.message);
+}
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}</code></pre>
+<pre><code>import '../../domain/entities/note.dart';
+import '../../../../core/failures.dart';
+
+abstract class NoteRepository {
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; fetchNotes();
+  Future&lt;({Note? note, Failure? failure})&gt; addNote({
+    required String title,
+    String body = '',
+  });
+}</code></pre>
+<p>This example uses Dart <em>records</em> to make success/failure explicit without exceptions leaking into presentation. Industry alternative: the <code>fpdart</code>/<code>dartz</code> packages (<code>Either&lt;Failure, T&gt;</code>) — the contract pattern is the same.</p>
+<h2 is-upgraded>3. Model and implementation (data)</h2>
+<p>Create <code>lib/features/notes/data/models/note_model.dart</code> (mapping only here) and <code>note_repository_impl.dart</code>:</p>
+<pre><code>import '../../domain/entities/note.dart';
+
+class NoteModel extends Note {
+  const NoteModel({
+    super.id,
+    required super.title,
+    super.body = '',
+    required super.updatedAt,
+    super.dirty = false,
+  });
+
+  Map&lt;String, Object?&gt; toMap() =&gt; {
+        'id': id,
+        'title': title,
+        'body': body,
+        'updated_at': updatedAt.toIso8601String(),
+        'dirty': dirty ? 1 : 0,
+      };
+
+  factory NoteModel.fromMap(Map&lt;String, Object?&gt; map) {
+    return NoteModel(
+      id: (map['id'] as num?)?.toInt(),
+      title: map['title'] as String? ?? '',
+      body: map['body'] as String? ?? '',
+      updatedAt: DateTime.tryParse(map['updated_at'] as String? ?? '') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
+      dirty: ((map['dirty'] as num?)?.toInt() ?? 0) == 1,
+    );
+  }
+
+  Note toEntity() =&gt; Note(
+        id: id,
+        title: title,
+        body: body,
+        updatedAt: updatedAt,
+        dirty: dirty,
+      );
+}</code></pre>
+<pre><code>import 'package:sqflite/sqflite.dart';
+import '../../../../core/failures.dart';
+import '../../domain/entities/note.dart';
+import '../../domain/repositories/note_repository.dart';
+import '../models/note_model.dart';
+
+class NoteRepositoryImpl implements NoteRepository {
+  NoteRepositoryImpl({required Future&lt;Database&gt; Function() openDb})
+      : _openDb = openDb;
+
+  final Future&lt;Database&gt; Function() _openDb;
+
+  @override
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; fetchNotes() async {
+    try {
+      final db = await _openDb();
+      final rows =
+          await db.query('notes', orderBy: 'updated_at DESC');
+      final notes =
+          rows.map((r) =&gt; NoteModel.fromMap(r).toEntity()).toList();
+      return (notes: notes, failure: null);
+    } catch (e) {
+      return (
+        notes: const &lt;Note&gt;[],
+        failure: LocalFailure('Failed to read notes: $e'),
+      );
+    }
+  }
+
+  @override
+  Future&lt;({Note? note, Failure? failure})&gt; addNote({
+    required String title,
+    String body = '',
+  }) async {
+    try {
+      final db = await _openDb();
+      final now = DateTime.now();
+      final id = await db.insert(
+        'notes',
+        NoteModel(
+            title: title, body: body, updatedAt: now, dirty: true)
+            .toMap(),
+      );
+      return (
+        note: Note(id: id, title: title, body: body,
+            updatedAt: now, dirty: true),
+        failure: null,
+      );
+    } catch (e) {
+      return (note: null,
+          failure: LocalFailure('Failed to save note: $e'));
+    }
+  }
+}</code></pre>
+<h2 is-upgraded>4. Use case: one business operation</h2>
+<p>Create <code>lib/features/notes/domain/usecases/get_notes.dart</code>:</p>
+<pre><code>import '../../../../core/failures.dart';
+import '../entities/note.dart';
+import '../repositories/note_repository.dart';
+
+class GetNotes {
+  const GetNotes(this._repository);
+  final NoteRepository _repository;
+
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; call() {
+    return _repository.fetchNotes();
+  }
+}</code></pre>
+<aside class="special"><p><strong>When is a use case needed?</strong> When an operation combines &gt;1 repository or owns business rules (validation, sorting, sync). One-line CRUD may go repository → notifier directly; a use case becomes mandatory as logic grows. This decision is part of the AI Challenge.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 3: Presentation, DI, and verification" duration="20">
+<h2 is-upgraded>1. Dependency injection with Riverpod</h2>
+<p>Create <code>lib/features/notes/presentation/providers/notes_providers.dart</code>. This is the single wiring point:</p>
+<pre><code>import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/repositories/note_repository_impl.dart';
+import '../../domain/repositories/note_repository.dart';
+import '../../domain/usecases/get_notes.dart';
+import '../../domain/entities/note.dart';
+
+// Data layer: the database opener is injected (easy to fake in tests)
+final noteRepositoryProvider = Provider&lt;NoteRepository&gt;((ref) {
+  return NoteRepositoryImpl(openDb: openNotesDb);
+});
+
+// Domain layer: the use case receives an abstraction, not an impl
+final getNotesProvider = Provider&lt;GetNotes&gt;((ref) {
+  return GetNotes(ref.watch(noteRepositoryProvider));
+});
+
+// Presentation layer: state for the UI
+final notesProvider = FutureProvider&lt;List&lt;Note&gt;&gt;((ref) async {
+  final result = await ref.watch(getNotesProvider).call();
+  if (result.failure != null) throw Exception(result.failure!.message);
+  return result.notes;
+});</code></pre>
+<h2 is-upgraded>2. Pages only read state</h2>
+<p>The clean <code>notes_page.dart</code> contains no SQL, Dio, JSON, or raw date formatting:</p>
+<pre><code>class NotesPage extends ConsumerWidget {
+  const NotesPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(notesProvider);
+    return state.when(
+      loading: () =&gt;
+          const Center(child: CircularProgressIndicator()),
+      error: (e, _) =&gt; ErrorView(
+        message: '$e',
+        onRetry: () =&gt; ref.invalidate(notesProvider),
+      ),
+      data: (notes) =&gt; notes.isEmpty
+          ? const Center(child: Text('No notes yet.'))
+          : NotesList(notes),
+    );
+  }
+}</code></pre>
+<h2 is-upgraded>3. Verify the dependency rule</h2>
+<p>Run these three checks; all must pass:</p>
+<pre><code># 1. Presentation free of raw data (must return ZERO hits)
+rg "Dio\(|openDatabase|getDatabasesPath|FlutterSecureStorage|SharedPreferences\.getInstance|jsonDecode" lib/features/*/presentation lib/pages
+
+# 2. Domain free of frameworks &amp; packages (must return ZERO hits)
+rg "import 'package:flutter|import 'package:dio|import 'package:sqflite|import 'package:firebase" lib/features/*/domain lib/core
+
+# 3. Static analysis + tests
+flutter analyze
+flutter test</code></pre>
+<aside class="warning"><p><strong>Definition of done.</strong> The refactor is done when: the app behaves exactly as before (5-minute manual test per feature), the three greps above return zero hits, <code>flutter analyze</code> is clean, and tests are green. Before/after screenshots (same UI, different structure) go into <code>screenshots/</code>.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>The role of AI in this codelab</h2><p>AI may propose a folder reorganization, but <strong>you assess the trade-offs</strong>. Wrong architecture (over-engineering simple CRUD, or under-engineering complex features) costs more than ugly code.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Ask your AI coding assistant with this prompt:</p>
+<pre><code>My Flutter project: campus_notify (auth + FCM + announcement list).
+Current state: lib/{data, providers, pages, messaging} folders,
+repositories mixed with implementations, widgets calling Dio directly.
+Tasks:
+1. Propose a feature-first Clean Architecture structure
+   (presentation/domain/data) for the auth + announcements features.
+2. For each old file, state its new destination (move/split/delete).
+3. Flag what would be over-engineering if applied to simple CRUD,
+   and when a use case is truly needed vs repository straight to notifier.
+4. Show the Riverpod DI wiring (no extra DI package).
+Explain the trade-off of every decision.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Before accepting the AI proposal, verify and record your findings in the README/docs:</p>
+<ul><li>Does the repository interface live in <code>domain</code> and the implementation in <code>data</code>? (reject it if the AI puts both in one folder).</li><li>Is <code>domain</code> free of Flutter/Dio/SQLite/Firebase imports? Check with grep, not by skimming.</li><li>Did the AI create a use case for every one-line CRUD? (that is over-engineering: repository straight to notifier suffices, with a written reason).</li><li>Is the entity mapping-free (<code>toMap/fromMap/toJson</code> only in the model)?</li><li>Is DI wiring centralized in providers, with widgets never calling <code>new Repository()</code> themselves?</li><li>Your final decision and technical rationale; you may disagree with the AI as long as you argue your case.</li></ul>
+<aside class="special"><p><strong>Technical accountability:</strong> keep the prompt, the initial AI output, the proposal-vs-final-decision table, and the three grep verification results in <code>docs/</code>. During the demo you must be able to draw the dependency arrows without opening notes.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, and common errors" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<ol type="1"><li>Apply the same pattern to a second feature (<code>auth</code> or <code>announcements</code>): entity + repository interface + impl + 1 use case + provider wiring. Do not leave one feature clean and the rest dirty.</li><li>Extract date formatting and route parsing into pure functions in <code>lib/core/format.dart</code> so they can be tested without widgets.</li><li>Convert all raw exceptions into user-friendly <code>Failure</code> objects before they reach the UI; the UI only ever receives a <code>message</code>.</li></ol>
+<h2 is-upgraded>Testing: use cases with a fake repository</h2>
+<p>Create <code>test/get_notes_test.dart</code>. The domain is tested purely — no SQLite, no Dio, no Firebase:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+
+class FakeNoteRepository implements NoteRepository {
+  FakeNoteRepository({this.items = const [], this.fail = false});
+
+  final List&lt;Note&gt; items;
+  final bool fail;
+
+  @override
+  Future&lt;({List&lt;Note&gt; notes, Failure? failure})&gt; fetchNotes() async {
+    if (fail) {
+      return (
+        notes: const &lt;Note&gt;[],
+        failure: const LocalFailure('db locked (simulated)'),
+      );
+    }
+    return (notes: items, failure: null);
+  }
+
+  @override
+  Future&lt;({Note? note, Failure? failure})&gt; addNote({
+    required String title,
+    String body = '',
+  }) {
+    throw UnimplementedError();
+  }
+}
+
+void main() {
+  test('GetNotes forwards the repository list', () async {
+    final repo = FakeNoteRepository(items: [
+      Note(title: 'A', updatedAt: DateTime(2026, 9, 27)),
+    ]);
+    final result = await GetNotes(repo).call();
+    expect(result.failure, isNull);
+    expect(result.notes.length, 1);
+    expect(result.notes.first.title, 'A');
+  });
+
+  test('GetNotes forwards failure without throwing', () async {
+    final repo = FakeNoteRepository(fail: true);
+    final result = await GetNotes(repo).call();
+    expect(result.failure, isA&lt;LocalFailure&gt;());
+    expect(result.notes, isEmpty);
+  });
+}</code></pre>
+<p>Run:</p>
+<pre><code>flutter analyze
+flutter test</code></pre>
+<h2 is-upgraded>Common errors and fixes</h2>
+<table><tr><th>Symptom</th><th>Common cause</th><th>Fix</th></tr><tr><td>Import cycles / files importing each other</td><td>Domain/data importing presentation, or features importing each other's presentation</td><td>Check arrow direction: only presentation → domain ← data; features talk via routes, not widget imports</td></tr><tr><td><code>The argument type 'NoteModel' can't be assigned to 'Note'</code></td><td>The impl returns a model where the contract demands an entity</td><td>Always convert with <code>.toEntity()</code> at the data → domain boundary</td></tr><tr><td><code>ref.watch</code> outside widgets/providers</td><td>DI wiring written in plain functions or constructors</td><td>Wire only inside <code>Provider/Notifier</code> or widgets via <code>ConsumerWidget</code></td></tr><tr><td>Tests need a real database</td><td>The use case tested with the real <code>NoteRepositoryImpl</code></td><td>Always test the domain with a fake implementing the interface</td></tr><tr><td>Refactor breaks working features</td><td>No snapshot commit + no per-feature manual test</td><td>Commit a snapshot first; after refactoring test each feature ±5 minutes and compare screenshots</td></tr></table>
+<h2 is-upgraded>Self-verification checklist</h2>
+<ul><li>The three sterility greps (presentation &amp; domain) return zero hits.</li><li>Interfaces in domain, implementations in data, mapping only in models.</li><li>Widgets never instantiate repositories; everything goes through providers.</li><li>The app behaves identically before/after refactoring (screenshot evidence).</li><li><code>flutter analyze</code> is clean and all tests pass.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, and references" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Refactor your Week 5 or 6 project into <strong>feature-first Clean Architecture</strong> (continue the same repository, not a new project):</p>
+<ol type="1"><li>At least 1 complete feature (<code>notes</code> or <code>announcements</code>) split into <code>domain/</code> (entity, repository interface, use case, failure) + <code>data/</code> (model, repository impl) + <code>presentation/</code> (provider wiring, pages).</li><li>Dependency rule proven: include the three sterility grep results in the README.</li><li>Identical behavior: before/after screenshots per feature under <code>screenshots/</code>.</li><li>At least 2 passing tests (success + failure use case with a fake repository).</li><li>Complete the AI Challenge and document the prompt, the proposal-vs-final-decision table, and the technical rationale in <code>docs/</code>.</li><li>Push to the portfolio repository under <code>07-week-7-clean-architecture/</code> (or continue the source week's folder + note the refactor in the README) with <code>lib/</code>, <code>test/</code>, <code>docs/</code>, <code>README.md</code>, and <code>screenshots/</code>. The README explains the objective, the layer diagram + dependency direction, main features, tech stack, how to run, and the result achieved.</li></ol>
+<h2 is-upgraded>Reflection</h2>
+<ul><li>Why must the repository interface live in domain, not in data? What breaks if it is reversed?</li><li>When is a use case truly needed, and when is repository straight to notifier enough?</li><li>What does over-engineering (a use case per one-line CRUD) cost a small team? When is the cost worth it?</li><li>Which part of the AI proposal did you reject or simplify, and why?</li></ul>
+<h2 is-upgraded>Supporting references</h2>
+<ul>
+<li><a href="../00-slides/Week_07_Clean_Architecture_Inter.html" target="_blank">Week 7 Slides: Clean Architecture</a></li>
+<li><a href="https://docs.flutter.dev/app-architecture/guide" target="_blank">Flutter: App architecture guide</a></li>
+<li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html" target="_blank">The Clean Architecture (Robert C. Martin)</a></li>
+<li><a href="https://riverpod.dev/docs/concepts/providers" target="_blank">Riverpod: Providers &amp; dependency injection</a></li>
+<li><a href="https://dart.dev/language/records" target="_blank">Dart: Records (paired success/failure returns)</a></li>
+<li><a href="https://pub.dev/packages/fpdart" target="_blank">fpdart package (Either alternative)</a></li>
+<li><a href="https://go_router.dev/" target="_blank">GoRouter: redirect &amp; deep linking</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
