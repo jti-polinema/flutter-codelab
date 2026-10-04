@@ -97,6 +97,10 @@ section.fit {
   flex-direction: column;
   justify-content: center;
 }
+section.fit h1 { font-size: 30px; margin: 0.25em 0; }
+section.fit p, section.fit ul, section.fit ol { margin: 0.25em 0; }
+section.fit pre { margin: 0.3em 0; line-height: 1.35; }
+section.fit pre, section.fit code { font-size: 15px; }
 </style>
 
 <!-- _class: lead -->
@@ -486,37 +490,24 @@ cukup repo langsung → CRUD satu-baris
 
 ---
 
-# Bagian 4
-## Presentation, DI & Verifikasi
+<!-- _class: fit -->
 
 # Wiring DI dengan Riverpod
 
-Satu-satunya tempat wiring:
+*Bagian 4 - Presentation, DI & Verifikasi: satu-satunya tempat wiring:*
 
 ```dart
-final noteRepositoryProvider =
-    Provider<NoteRepository>((ref) {
-  return NoteRepositoryImpl(
-      openDb: openNotesDb);
+final noteRepositoryProvider = Provider<NoteRepository>((ref) {
+  return NoteRepositoryImpl(openDb: openNotesDb);
 });
-
-final getNotesProvider =
-    Provider<GetNotes>((ref) {
-  return GetNotes(
-      ref.watch(noteRepositoryProvider));
+final getNotesProvider = Provider<GetNotes>((ref) {
+  return GetNotes(ref.watch(noteRepositoryProvider));
 });
-
-final notesProvider =
-    FutureProvider<List<Note>>(
-  (ref) async {
-    final result = await ref
-        .watch(getNotesProvider).call();
-    if (result.failure != null) {
-      throw Exception(
-          result.failure!.message);
-    }
-    return result.notes;
-  });
+final notesProvider = FutureProvider<List<Note>>((ref) async {
+  final result = await ref.watch(getNotesProvider).call();
+  if (result.failure != null) throw Exception(result.failure!.message);
+  return result.notes;
+});
 ```
 
 ---
