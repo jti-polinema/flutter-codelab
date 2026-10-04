@@ -1,0 +1,26 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2026-10-04T00:00:00Z",
+  "id": "08-minggu-8-mid-project-review-code-review",
+  "duration": 125,
+  "title": "#08 | Mid Project Review & Code Review",
+  "authors": "Habibie Ed Dien",
+  "summary": "Menilai kesiapan project tengah semester lewat Git Flow, commit dan Pull Request berkualitas, peer code review, static analysis, termasuk AI Challenge dan tindak lanjut review.",
+  "source": "1Hq4lMnPH-tCH3ETo3G4PaeHR6l8b7cLVHcEOAutHtxk",
+  "theme": "mobileflutter",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "mobileflutter"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
+  "ga": "G-H7507PFEJB",
+  "url": "08-minggu-8-mid-project-review-code-review"
+}

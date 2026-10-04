@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#08 | Mid Project Review & Code Review</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="08-minggu-8-mid-project-review-code-review" title="#08 | Mid Project Review & Code Review" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> October 4, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>explain Git Flow and the branching strategy (<code>main</code>, <code>develop</code>, <code>feature/*</code>, <code>fix/*</code>);</li><li>write quality commits and pull requests that are easy to review;</li><li>perform constructive peer code reviews with a structured checklist;</li><li>run static analysis and formatters (<code>flutter analyze</code>, <code>dart format</code>) until clean;</li><li>assess mid-semester project readiness and follow up on review results;</li><li>verify AI-generated review suggestions before applying them.</li></ul>
+<h2 is-upgraded>Preparation</h2><ul><li>A laptop/PC and a portfolio repository containing the Week 5–7 project (<code>week5_offline_notes</code>, <code>campus_notify</code>, or the Week 7 Clean Architecture refactor). This codelab reviews that project; it does not start a new one.</li><li>Flutter SDK, VS Code (Flutter/Dart extensions), and configured Git (<code>user.name</code> and <code>user.email</code>).</li><li>Understanding of Week 3 (Riverpod), Week 4 (repositories), Week 6 (auth/FCM), and Week 7 (Clean Architecture, dependency rule).</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 8 is about professional collaboration: AI may act as an initial reviewer (findings plus code proposals), but the final decision stays with you. Grades reward judgment, follow-up, and rationale — not the volume of pasted AI comments.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Git Flow and collaboration concepts" duration="15">
+<h2 is-upgraded>1. Branching model</h2><p>One branch, one purpose:</p>
+<table><tr><th>Branch</th><th>Role</th><th>Rule</th></tr><tr><td><code>main</code></td><td>Always releasable, protected</td><td>No direct commits; release only</td></tr><tr><td><code>develop</code></td><td>Weekly feature integration</td><td>Default target of all pull requests</td></tr><tr><td><code>feature/*</code></td><td>Daily single-feature work</td><td>Short-lived (&lt; 3 days), branched from <code>develop</code></td></tr><tr><td><code>fix/*</code></td><td>Quick fixes + tests</td><td>Include reproduction steps in the issue</td></tr></table>
+<pre><code>main      -&gt; always releasable, protected
+develop   -&gt; weekly feature integration
+feature/* -&gt; daily work, short-lived
+fix/*     -&gt; quick fixes + tests</code></pre>
+<h2 is-upgraded>2. Quality commits</h2><p>One commit = one logical change that can be reviewed and reverted:</p>
+<pre><code>good: feat(notes): validate empty title + test
+good: fix(auth): refresh token before one retry
+bad: fix bug / update / final fix for real</code></pre>
+<p>Use the <code>type(scope): short description</code> format with types <code>feat</code>, <code>fix</code>, <code>refactor</code>, <code>test</code>, <code>docs</code>, <code>chore</code>.</p>
+<h2 is-upgraded>3. Anatomy of a pull request</h2><p>Small PRs get reviewed fast; huge PRs scare reviewers. A review-ready PR must have:</p><ul><li>A single-feature title plus problem → solution → test steps → screenshot in the body.</li><li>Under 300 changed lines and under 3 days of work.</li><li><code>flutter analyze</code> clean and <code>flutter test</code> green before requesting a reviewer.</li></ul>
+<h2 is-upgraded>4. Issue tracking</h2><p>Every PR starts from a clear issue and closes it automatically:</p>
+<pre><code>issue #42 -&gt; branch fix/42-login-crash
+  -&gt; small commits -&gt; PR "Closes #42"
+  -&gt; review -&gt; merge -&gt; issue closed</code></pre>
+<aside class="special"><p><strong>Discipline, not tooling.</strong> Branches, commits, PRs, and issues are a team contract. Without this discipline, even the Week 7 Clean Architecture will decay within two weeks.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 1: Branch and commit hygiene" duration="20">
+<h2 is-upgraded>1. Audit your history</h2>
+<p>Run inside your Week 5–7 project repository:</p>
+<pre><code>git log --oneline -15
+git branch -a
+git status</code></pre>
+<p>Flag problems: direct commits to <code>main</code>, <code>fix bug/update</code> messages, branches older than 1 week, or untracked files that should be committed or ignored.</p>
+<h2 is-upgraded>2. Create a proper working branch</h2>
+<pre><code>git checkout develop
+git pull origin develop
+git checkout -b feat/notes-validation
+# make one small change ...
+git add -p
+git commit -m "feat(notes): validate empty title + test"
+git push -u origin feat/notes-validation</code></pre>
+<p>Use <code>git add -p</code> so each commit holds exactly one logical change, not every touched file.</p>
+<h2 is-upgraded>3. Rewrite one bad commit (simulation)</h2>
+<p>Create a before/after table in <code>docs/review-checklist.md</code>: rewrite 3 of your old commit messages into the conventional format with reasons. Example: <code>fix bug</code> → <code>fix(notes): prevent saving empty titles + test</code> (clear what, where, and the proof).</p>
+<aside class="warning"><p><strong>Do not work on <code>main</code>.</strong> If <code>develop</code> does not exist yet, create it once from <code>main</code> (<code>git checkout -b develop</code>), push it, and make it the default PR target. Afterwards <code>main</code> is never touched directly.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 2: PRs and peer review" duration="25">
+<h2 is-upgraded>1. Open a small PR</h2>
+<p>From the <code>feat/notes-validation</code> branch, open a PR to <code>develop</code> with this template:</p>
+<pre><code>Title: feat(notes): validate empty title + test
+Problem: users can save notes without a title.
+Solution: validation in the use case + error in UI.
+Test steps: 1) add an empty note -&gt; error shows.
+  2) flutter test test/validate_note_test.dart
+Closes #12</code></pre>
+<h2 is-upgraded>2. Fifteen-minute peer review</h2>
+<p>Swap PRs with another pair. Each reviewer must produce at least:</p><ul><li>2 correctness findings (null, state, error paths, edge cases).</li><li>1 architecture finding (cross-layer import, leaking DI, models in UI).</li><li>1 test gap (missing success/failure case) and 1 readability suggestion.</li><li>A final decision: <strong>Approve</strong> or <strong>Request changes</strong>.</li></ul>
+<h2 is-upgraded>3. Good comments</h2>
+<p>Use the <strong>observation → impact → concrete proposal</strong> pattern:</p>
+<pre><code>Weak: "this code is bad, fix it"
+Good: "This build function is 60 lines with 3 jobs.
+  Suggestion: extract validation to core/validate.dart.
+  Reason: unit-testable without widgets."</code></pre>
+<p>Be tough on code and kind to humans. Every comment must be actionable without follow-up questions.</p>
+<h2 is-upgraded>4. Follow up and merge</h2>
+<p>Authors fix the findings, request re-review, then merge — squash when the intermediate commits are messy. Make sure the issue auto-closes and the branch is deleted after merging so the branch list stays short.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 3: Static analysis and mid review" duration="20">
+<h2 is-upgraded>1. Clean up with machines</h2>
+<p>Run these three commands in your project; all must be green before requesting review:</p>
+<pre><code>flutter analyze
+dart format --set-exit-if-changed .
+flutter test</code></pre>
+<p>Reading the output: <code>unused_import</code> → remove dead imports; <code>prefer_const</code> → use <code>const</code> for cheaper rebuilds; <code>must_be_immutable</code> → widgets must stay immutable. Fix errors first, then warnings, then info.</p>
+<h2 is-upgraded>2. Reject dirty PRs automatically (CI)</h2>
+<p>Create a minimal <code>.github/workflows/ci.yml</code> so machines reject dirty PRs before humans read them:</p>
+<pre><code>name: ci
+on: [pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - run: flutter analyze
+      - run: flutter test</code></pre>
+<h2 is-upgraded>3. Assess mid-semester readiness</h2>
+<p>Fill in <code>docs/review-checklist.md</code>: proven feature-first structure (the three Week 7 sterility greps), clean analyze, green tests, small PRs + clear commits, a complete README + screenshots + run guide, and every review comment addressed. What counts is not feature quantity but a foundation trusted for part two.</p>
+<aside class="warning"><p><strong>Definition of done.</strong> The mid review passes when: the app behaves identically to the end of Week 7, all three machine checks are green, at least 1 small PR per pair is merged through review, and the README records the mid-semester status plus the issue/PR map.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>The AI role in this codelab</h2><p>AI may be a fast, thorough first reviewer, but <strong>you decide</strong>. A wrong AI review (flagging a non-existent bug, proposing an architecture-violating pattern) is more dangerous than no review.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Ask an AI coding assistant to review your PR with this prompt:</p>
+<pre><code>Review this Flutter PR as a senior Flutter dev.
+Context: feature-first Clean Architecture
+(presentation -&gt; domain &lt;- data),
+Riverpod, GoRouter, SQLite + Dio.
+Focus: correctness, architecture, tests. Ignore style.
+Give the top 5 findings + severity (blocker/suggestion)
++ rationale + proposed code fix.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Before applying any AI suggestion, verify and record it in <code>docs/ai-review-vs-decision.md</code>:</p>
+<ul><li>Does the finding really exist? Prove it with grep, a failing test, or manual reproduction.</li><li>Does the proposal violate the dependency rule (domain importing Flutter/Dio/SQLite)? Reject it if so.</li><li>Is the AI only nitpicking style that the formatter/CI should handle?</li><li>At least 2 AI findings proven correct with evidence, and at least 1 finding rejected with a written reason.</li><li>Your final decision and technical rationale, which may differ from the AI as long as it is argued.</li></ul>
+<aside class="special"><p><strong>Technical accountability:</strong> store the prompt, the raw AI output, the proposal-vs-final-decision table, and the test/analyze evidence under <code>docs/</code>. During the demo you must explain every finding without opening the AI notes.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, and common errors" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<ol type="1"><li>Apply every <em>request changes</em> comment from your peer reviewer, then request re-review until <em>approve</em>. Never merge a PR with pending requested changes.</li><li>Move every repeated style finding into automation: tidy up with <code>dart format</code> and make CI reject dirty PRs.</li><li>Split one oversized PR (&gt; 300 lines) into 2–3 small sequential PRs, each reviewable in &lt; 15 minutes.</li></ol>
+<h2 is-upgraded>Testing: an unrun review is invalid</h2>
+<p>Every behavior-changing PR must include test evidence:</p>
+<pre><code>flutter analyze
+flutter test
+# + 5-minute manual test per feature + screenshots</code></pre>
+<h2 is-upgraded>Common errors and fixes</h2>
+<table><tr><th>Symptom</th><th>Common cause</th><th>Fix</th></tr><tr><td>An 800-line PR never gets reviewed</td><td>Many features merged into one PR</td><td>Split per feature; one PR &lt; 300 lines</td></tr><tr><td>Repeated merge conflicts</td><td>Long-lived branches, rare syncs</td><td>Rebase/pull <code>develop</code> daily; branches &lt; 3 days</td></tr><tr><td>Reviews only debate spacing</td><td>No formatter/CI</td><td>Require <code>dart format</code> + analyze CI</td></tr><tr><td><code>Approved</code> but bugs slip through</td><td>Review without pulling + testing</td><td>Reviewers must check out, run, and test manually</td></tr><tr><td>AI advice breaks architecture</td><td>AI accepted raw without verification</td><td>Reject with reason + grep/test evidence</td></tr></table>
+<h2 is-upgraded>Self-verification checklist</h2>
+<ul><li>Branched from <code>develop</code>, small one-feature PR, issue closed via PR.</li><li>At least 3 meaningful review comments addressed through to approve.</li><li><code>flutter analyze</code> clean, <code>dart format</code> tidy, <code>flutter test</code> green.</li><li>AI proposal-vs-decision table documented in <code>docs/</code>.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, and references" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Continue your portfolio repository (extend the Week 5–7 project, not a new project) and prove collaboration discipline:</p>
+<ol type="1"><li>Create at least 1 issue + 1 small PR merged through peer review (<code>feature/*</code> → <code>develop</code>).</li><li>Include the complete PR template: problem, solution, test steps, and screenshots.</li><li>Green-machine evidence: <code>flutter analyze</code> + <code>flutter test</code> results in the README.</li><li>Document the AI prompt, the proposal-vs-final-decision table, and the rejection/acceptance evidence in <code>docs/</code>.</li><li>Push to the portfolio folder <code>08-week-8-mid-project-review/</code> with <code>docs/</code>, <code>README.md</code>, and <code>screenshots/</code>. The README explains the mid-semester status, the issue/PR map, main features, tech stack, how to run, and the result achieved.</li></ol>
+<h2 is-upgraded>Reflection</h2>
+<ul><li>What separates a blind LGTM from a responsible approve? What does it risk for the team?</li><li>When must a comment be <em>request changes</em>, and when is a suggestion enough?</li><li>Which part of the AI review did you reject or simplify, and why?</li><li>One concrete thing you fixed after peer review — what was its impact?</li></ul>
+<h2 is-upgraded>Supporting references</h2>
+<ul>
+<li><a href="../00-slides/Week_08_Mid_Project_Review_Code_Review_Inter.html" target="_blank">Week 8 Slides: Mid Project Review & Code Review</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow" target="_blank">Atlassian: GitFlow workflow</a></li>
+<li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews" target="_blank">GitHub: About pull request reviews</a></li>
+<li><a href="https://www.conventionalcommits.org/en/v1.0.0/" target="_blank">Conventional Commits</a></li>
+<li><a href="https://docs.flutter.dev/tools/using-ide" target="_blank">Flutter: Static analysis & IDE integration</a></li>
+<li><a href="https://dart.dev/tools/linter-rules" target="_blank">Dart: Linter rules</a></li>
+<li><a href="https://docs.github.com/en/actions" target="_blank">GitHub Actions documentation</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>

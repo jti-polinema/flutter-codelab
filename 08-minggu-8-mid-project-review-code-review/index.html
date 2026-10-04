@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#08 | Mid Project Review & Code Review</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="08-minggu-8-mid-project-review-code-review" title="#08 | Mid Project Review & Code Review" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Selamat datang" duration="5">
+<p><strong>Terakhir diperbarui:</strong> 4 Oktober 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Tujuan pembelajaran</h2><p>Setelah menyelesaikan codelab ini, mahasiswa mampu:</p><ul>
+<li>menjelaskan Git Flow dan strategi branching (<code>main</code>, <code>develop</code>, <code>feature/*</code>, <code>fix/*</code>);</li><li>menulis commit dan Pull Request yang berkualitas dan mudah direview;</li><li>melakukan peer code review yang konstruktif dengan checklist terstruktur;</li><li>menjalankan static analysis dan formatter (<code>flutter analyze</code>, <code>dart format</code>) hingga bersih;</li><li>menilai kesiapan project tengah semester dan menindaklanjuti hasil review;</li><li>memverifikasi saran review dari AI sebelum diterapkan.</li></ul>
+<h2 is-upgraded>Persiapan</h2><ul><li>Laptop/PC dan repository portfolio berisi project Minggu 5–7 (<code>week5_offline_notes</code>, <code>campus_notify</code>, atau hasil refactor Clean Architecture Minggu 7). Codelab ini mereview project tersebut, bukan membuat dari nol.</li><li>Flutter SDK, VS Code (ekstensi Flutter/Dart), Git terkonfigurasi (<code>user.name</code> dan <code>user.email</code>).</li><li>Pemahaman Minggu 3 (Riverpod), Minggu 4 (repository), Minggu 6 (auth/FCM), dan Minggu 7 (Clean Architecture, dependency rule).</li></ul>
+<aside class="warning"><p><strong>Kebijakan AI.</strong> Minggu 8 adalah materi kolaborasi profesional: AI boleh menjadi reviewer awal (memberi temuan dan usulan kode), tetapi keputusan final tetap milik Anda. Nilai ada pada kualitas penilaian, tindak lanjut, dan alasan keputusan — bukan pada banyaknya komentar AI yang ditempel.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Konsep Git Flow dan kolaborasi" duration="15">
+<h2 is-upgraded>1. Branching model</h2><p>Satu branch, satu tujuan:</p>
+<table><tr><th>Branch</th><th>Peran</th><th>Aturan</th></tr><tr><td><code>main</code></td><td>Selalu bisa dirilis, dilindungi</td><td>Tidak ada commit langsung; hanya via release</td></tr><tr><td><code>develop</code></td><td>Integrasi fitur mingguan</td><td>Target default semua Pull Request</td></tr><tr><td><code>feature/*</code></td><td>Kerja harian satu fitur</td><td>Pendek (&lt; 3 hari), dari <code>develop</code></td></tr><tr><td><code>fix/*</code></td><td>Perbaikan cepat + test</td><td>Sertakan langkah reproduksi di issue</td></tr></table>
+<pre><code>main      -&gt; selalu rilis, dilindungi
+develop   -&gt; integrasi fitur mingguan
+feature/* -&gt; kerja harian, pendek
+fix/*     -&gt; perbaikan cepat + test</code></pre>
+<h2 is-upgraded>2. Commit berkualitas</h2><p>Satu commit = satu perubahan logis yang bisa direview dan di-revert:</p>
+<pre><code>baik: feat(notes): validasi judul kosong + test
+baik: fix(auth): refresh token sebelum retry 1x
+jelek: fix bug / update / final fix beneran</code></pre>
+<p>Format <code>tipe(scope): deskripsi singkat</code> dengan tipe <code>feat</code>, <code>fix</code>, <code>refactor</code>, <code>test</code>, <code>docs</code>, <code>chore</code>.</p>
+<h2 is-upgraded>3. Anatomi Pull Request</h2><p>PR kecil direview cepat; PR besar ditakuti reviewer. Syarat PR siap review:</p><ul><li>Judul satu fitur, isi menjelaskan masalah → solusi → cara uji → screenshot.</li><li>Ukuran &lt; 300 baris perubahan dan &lt; 3 hari kerja.</li><li><code>flutter analyze</code> bersih dan <code>flutter test</code> hijau sebelum meminta reviewer.</li></ul>
+<h2 is-upgraded>4. Issue tracking</h2><p>Setiap PR berawal dari issue yang jelas, lalu ditutup otomatis oleh PR:</p>
+<pre><code>issue #42 -&gt; branch fix/42-login-crash
+  -&gt; commit kecil -&gt; PR "Closes #42"
+  -&gt; review -&gt; merge -&gt; issue tertutup</code></pre>
+<aside class="special"><p><strong>Bukan soal alat, soal disiplin.</strong> Branch, commit, PR, dan issue adalah kontrak kerja tim. Tanpa disiplin ini, Clean Architecture Minggu 7 pun akan rusak dalam dua minggu.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum 1: Hygiene branch dan commit" duration="20">
+<h2 is-upgraded>1. Audit riwayat Anda</h2>
+<p>Jalankan di repository project Minggu 5–7:</p>
+<pre><code>git log --oneline -15
+git branch -a
+git status</code></pre>
+<p>Tandai masalah: commit langsung ke <code>main</code>, pesan <code>fix bug/update</code>, branch berumur &gt; 1 minggu, atau file tak terlacak yang seharusnya di-commit/di-ignore.</p>
+<h2 is-upgraded>2. Buat branch kerja yang benar</h2>
+<pre><code>git checkout develop
+git pull origin develop
+git checkout -b feat/notes-validation
+# kerjakan satu perubahan kecil ...
+git add -p
+git commit -m "feat(notes): validasi judul kosong + test"
+git push -u origin feat/notes-validation</code></pre>
+<p>Gunakan <code>git add -p</code> agar satu commit hanya memuat satu perubahan logis, bukan semua file yang tersentuh.</p>
+<h2 is-upgraded>3. Perbaiki satu commit buruk (simulasi)</h2>
+<p>Buat tabel sebelum/sesudah di <code>docs/review-checklist.md</code>: tulis ulang 3 pesan commit lama Anda menjadi format konvensional beserta alasannya. Contoh: <code>fix bug</code> → <code>fix(notes): cegah simpan judul kosong + test</code> (jelas apa, di mana, dan buktinya).</p>
+<aside class="warning"><p><strong>Jangan kerjakan di <code>main</code>.</strong> Jika <code>develop</code> belum ada, buat dari <code>main</code> sekali (<code>git checkout -b develop</code>), push, lalu jadikan target default PR. Setelah itu <code>main</code> tidak disentuh langsung.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum 2: PR dan peer review" duration="25">
+<h2 is-upgraded>1. Buka PR kecil</h2>
+<p>Dari branch <code>feat/notes-validation</code>, buka PR ke <code>develop</code> dengan template:</p>
+<pre><code>Judul: feat(notes): validasi judul kosong + test
+Masalah: pengguna bisa menyimpan catatan tanpa judul.
+Solusi: validasi di use case + pesan error di UI.
+Cara uji: 1) tambah catatan kosong -&gt; error muncul.
+  2) flutter test test/validate_note_test.dart
+Closes #12</code></pre>
+<h2 is-upgraded>2. Review sejawat 15 menit</h2>
+<p>Tukar PR dengan pasangan. Reviewer wajib menghasilkan minimal:</p><ul><li>2 temuan kebenaran (null, state, error path, edge case).</li><li>1 temuan arsitektur (import lintas layer, DI bocor, model bocor ke UI).</li><li>1 temuan test (kasus sukses/gagal kurang) dan 1 saran keterbacaan.</li><li>Keputusan akhir: <strong>Approve</strong> atau <strong>Request changes</strong>.</li></ul>
+<h2 is-upgraded>3. Komentar yang baik</h2>
+<p>Gunakan pola <strong>observasi → dampak → usulan konkret</strong>:</p>
+<pre><code>Kurang: "kode ini jelek, perbaiki"
+Baik: "Fungsi build 60 baris + 3 tanggung jawab.
+  Usul: pecah validasi ke core/validate.dart.
+  Alasan: bisa diunit-test tanpa widget."</code></pre>
+<p>Bersikap keras pada kode, baik pada manusia. Setiap komentar harus bisa ditindaklanjuti tanpa bertanya ulang.</p>
+<h2 is-upgraded>4. Tindak lanjut dan merge</h2>
+<p>Author memperbaiki, me-request re-review, lalu merge dengan <em>squash</em> bila commit perantara berantakan. Pastikan issue tertutup otomatis dan branch dihapus setelah merge agar daftar branch tetap pendek.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Praktikum 3: Static analysis dan mid review" duration="20">
+<h2 is-upgraded>1. Bersihkan dengan mesin</h2>
+<p>Jalankan tiga perintah ini di project Anda; semuanya harus hijau sebelum PR diminta review:</p>
+<pre><code>flutter analyze
+dart format --set-exit-if-changed .
+flutter test</code></pre>
+<p>Contoh bacaan output: <code>unused_import</code> → hapus import mati; <code>prefer_const</code> → pakai <code>const</code> agar rebuild murah; <code>must_be_immutable</code> → widget tidak boleh mutable. Perbaiki dari error dulu, lalu warning, lalu info.</p>
+<h2 is-upgraded>2. Aktifkan penolakan otomatis (CI)</h2>
+<p>Buat <code>.github/workflows/ci.yml</code> minimal agar PR kotor ditolak mesin sebelum dibaca manusia:</p>
+<pre><code>name: ci
+on: [pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - run: flutter analyze
+      - run: flutter test</code></pre>
+<h2 is-upgraded>3. Nilai kesiapan tengah semester</h2>
+<p>Isi <code>docs/review-checklist.md</code>: struktur feature-first terbukti (hasil tiga grep sterilitas Minggu 7), analyze bersih, test hijau, PR kecil + commit jelas, README + screenshot + cara menjalankan lengkap, dan semua komentar review sudah ditindaklanjuti. Yang dinilai bukan banyaknya fitur, melainkan fondasi yang bisa dipercaya untuk paruh kedua.</p>
+<aside class="warning"><p><strong>Definisi selesai.</strong> Mid review lolos bila: aplikasi berjalan identik dengan akhir Minggu 7, tiga pemeriksaan mesin hijau, minimal 1 PR kecil per pasangan sudah di-merge via review, dan README memuat status paruh semester + peta issue/PR.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>Peran AI pada codelab ini</h2><p>AI boleh menjadi reviewer awal yang cepat dan teliti, tetapi <strong>Anda yang memutuskan</strong>. Review AI yang salah (menuduh bug yang tidak ada, menyarankan pola yang melanggar arsitektur) lebih berbahaya daripada tidak ada review.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2>
+<p>Minta AI coding assistant dengan prompt berikut pada PR Anda:</p>
+<pre><code>Review PR Flutter ini sebagai senior Flutter dev.
+Konteks: feature-first Clean Architecture (presentation -&gt; domain &lt;- data),
+Riverpod, GoRouter, SQLite + Dio.
+Fokus: kebenaran, arsitektur, dan test. Abaikan style.
+Berikan 5 temuan teratas + level (blocker/saran)
++ alasan + usulan potongan kode perbaikan.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2>
+<p>Sebelum saran AI diterapkan, verifikasi dan catat di <code>docs/ai-review-vs-keputusan.md</code>:</p>
+<ul><li>Apakah temuan benar-benar ada? Buktikan dengan grep, test gagal, atau reproduksi manual.</li><li>Apakah usulan melanggar dependency rule (domain mengimpor Flutter/Dio/SQLite)? Tolak bila ya.</li><li>Apakah AI hanya nitpick style yang seharusnya ditangani formatter/CI?</li><li>Minimal 2 temuan AI terbukti benar dengan bukti, dan minimal 1 temuan ditolak dengan alasan tertulis.</li><li>Keputusan final dan alasan teknis Anda, boleh berbeda dari saran AI selama berargumen.</li></ul>
+<aside class="special"><p><strong>Tanggung jawab teknis:</strong> simpan prompt, output awal AI, tabel usulan-vs-keputusan-final, dan bukti test/analyze pada folder <code>docs/</code>. Saat demo Anda harus mampu menjelaskan setiap temuan tanpa membuka catatan AI.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, dan error umum" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2>
+<ol type="1"><li>Terapkan seluruh komentar <em>request changes</em> dari reviewer sejawat, lalu minta re-review hingga <em>approve</em>. Jangan merge PR berstatus request changes.</li><li>Pindahkan semua temuan style berulang ke otomatisasi: rapikan <code>dart format</code> dan pastikan CI menolak PR kotor.</li><li>Perkecil satu PR besar (&gt; 300 baris) menjadi 2–3 PR kecil berurutan yang masing-masing bisa direview &lt; 15 menit.</li></ol>
+<h2 is-upgraded>Testing: review tanpa dijalankan tidak sah</h2>
+<p>Setiap PR yang mengubah perilaku wajib menyertakan bukti uji:</p>
+<pre><code>flutter analyze
+flutter test
+# + langkah manual 5 menit per fitur + screenshot</code></pre>
+<h2 is-upgraded>Error umum dan solusinya</h2>
+<table><tr><th>Gejala</th><th>Penyebab umum</th><th>Solusi</th></tr><tr><td>PR 800 baris tak kunjung direview</td><td>Banyak fitur digabung satu PR</td><td>Pecah per fitur; satu PR &lt; 300 baris</td></tr><tr><td>Konflik merge berulang</td><td>Branch berumur panjang, jarang sinkron</td><td>Rebase/pull <code>develop</code> harian; branch &lt; 3 hari</td></tr><tr><td>Review hanya debat spasi</td><td>Tidak ada formatter/CI</td><td>Wajibkan <code>dart format</code> + CI analyze</td></tr><tr><td><code>approve</code> tapi bug lolos</td><td>Review tanpa pull + test</td><td>Reviewer wajib checkout, jalankan, dan uji manual</td></tr><tr><td>Saran AI merusak arsitektur</td><td>AI diterima mentah tanpa verifikasi</td><td>Tolak dengan alasan + bukti grep/test</td></tr></table>
+<h2 is-upgraded>Checklist verifikasi mandiri</h2>
+<ul><li>Branch dari <code>develop</code>, PR kecil satu fitur, issue tertutup via PR.</li><li>Minimal 3 komentar review bermakna sudah ditindaklanjuti hingga approve.</li><li><code>flutter analyze</code> bersih, <code>dart format</code> rapi, <code>flutter test</code> hijau.</li><li>Tabel usulan AI vs keputusan final terdokumentasi di <code>docs/</code>.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Tugas, refleksi, dan referensi" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2>
+<p>Lanjutkan repository portfolio Anda (lanjutkan project Minggu 5–7, bukan project baru) dan buktikan disiplin kolaborasi:</p>
+<ol type="1"><li>Buat minimal 1 issue + 1 PR kecil yang di-merge via review sejawat (branch <code>feature/*</code> → <code>develop</code>).</li><li>Sertakan template PR lengkap: masalah, solusi, cara uji, dan screenshot.</li><li>Bukti mesin hijau: hasil <code>flutter analyze</code> + <code>flutter test</code> di README.</li><li>Dokumentasikan prompt AI, tabel usulan-vs-keputusan-final, dan bukti penolakan/penerimaan di <code>docs/</code>.</li><li>Push ke folder portfolio <code>08-week-8-mid-project-review/</code> dengan struktur <code>docs/</code>, <code>README.md</code>, dan <code>screenshots/</code>. README menjelaskan status paruh semester, peta issue/PR, fitur utama, stack teknologi, cara menjalankan, dan hasil yang dicapai.</li></ol>
+<h2 is-upgraded>Refleksi</h2>
+<ul><li>Apa beda LGTM buta dengan approve yang bertanggung jawab? Apa risikonya bagi tim?</li><li>Kapan komentar wajib berstatus <em>request changes</em>, dan kapan cukup saran?</li><li>Bagian mana dari review AI yang Anda tolak atau sederhanakan, dan mengapa?</li><li>Satu hal konkret yang Anda perbaiki setelah review sejawat — apa dampaknya?</li></ul>
+<h2 is-upgraded>Referensi pendukung</h2>
+<ul>
+<li><a href="../00-slides/Week_08_Mid_Project_Review_Code_Review.html" target="_blank">Slide Week 8: Mid Project Review & Code Review</a></li>
+<li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow" target="_blank">Atlassian: GitFlow workflow</a></li>
+<li><a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews" target="_blank">GitHub: About pull request reviews</a></li>
+<li><a href="https://www.conventionalcommits.org/en/v1.0.0/" target="_blank">Conventional Commits</a></li>
+<li><a href="https://docs.flutter.dev/tools/using-ide" target="_blank">Flutter: Static analysis & IDE integration</a></li>
+<li><a href="https://dart.dev/tools/linter-rules" target="_blank">Dart: Linter rules</a></li>
+<li><a href="https://docs.github.com/en/actions" target="_blank">GitHub Actions documentation</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
