@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#09 | AI-Assisted Development / Vibe Coding</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="09-minggu-9-ai-assisted-development-vibe-coding" title="#09 | AI-Assisted Development / Vibe Coding" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> October 18, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>explain the AI-assisted workflow (prompt, generate, verify, test, refactor, explain);</li><li>write effective prompts and context for a small Flutter feature;</li><li>recognize AI hallucination and limits in Flutter code;</li><li>debug and refactor AI-generated code toward Clean Architecture;</li><li>test AI-generated code with <code>flutter analyze</code> and tests;</li><li>document prompts, AI output, accept/reject decisions, and test evidence in <code>docs/ai-log.md</code>.</li></ul>
+<h2 is-upgraded>Preparation</h2><ul><li>A laptop/PC and the reviewed Week 5-8 project (for example <code>week5_offline_notes</code> or the Week 7 refactor of <code>campus_notify</code>). This codelab adds one small AI-built feature; it does not start a new project.</li><li>Flutter SDK, VS Code (Flutter/Dart extensions), Git, and one AI coding assistant (GitHub Copilot / Cursor / Claude Code / equivalent).</li><li>Understanding of Riverpod, repositories, and the Week 7 dependency rule.</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 9 permits AI when used wisely: AI may propose code, but you must read every line, verify APIs, test, refactor, and explain decisions without opening AI. Grades reward verification quality and rationale, not AI code volume.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="AI workflow and hallucination concepts" duration="15">
+<h2 is-upgraded>1. From generate to explain</h2><p>AI proposes, developers decide:</p>
+<pre><code>1. Prompt -&gt; instruction + project context
+2. Generate -&gt; AI proposes code
+3. Verify -&gt; read, grep, check real APIs
+4. Test -&gt; analyze + unit/widget tests
+5. Refactor -&gt; align with Clean Architecture
+6. Explain -&gt; explain without opening AI</code></pre>
+<p>Skipping steps 3-6 is <em>vibe coding</em>: fast at first, expensive later.</p>
+<h2 is-upgraded>2. What AI does well and not</h2><table><tr><th>Area</th><th>Example</th><th>Stance</th></tr><tr><td>Strong</td><td>Boilerplate, common patterns, test drafts, docs</td><td>Use it, still test</td></tr><tr><td>Weak</td><td>New APIs, package versions, custom business logic</td><td>Verify more</td></tr><tr><td>Risky</td><td>Auth tokens, SQL queries, security rules</td><td>No secrets; write manually</td></tr></table>
+<h2 is-upgraded>3. Three Flutter hallucination patterns</h2><ul><li><strong>Fictional method:</strong> for example <code>controller.searchFuzzy()</code>. Check IDE autocomplete and <code>pub.dev</code>.</li><li><strong>Outdated package:</strong> AI uses v1 API while <code>pubspec</code> uses v3. Check <code>pubspec.lock</code> and CHANGELOG.</li><li><strong>Confident but wrong:</strong> for example a case-sensitive filter hiding a bug. Prove it with one small test.</li></ul>
+<aside class="special"><p><strong>Verification rule:</strong> an AI claim is a hypothesis until there is <code>grep</code> evidence, clean <code>flutter analyze</code>, and green tests.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 1: Prompt and context engineering" duration="20">
+<h2 is-upgraded>1. Five-slot formula</h2>
+<pre><code>Role: senior Flutter dev
+Context: feature-first, Riverpod, SQLite+Dio
+Task: add notes title search + empty state
+Limits: keep architecture, max 80 lines
+Output: code + 3 test cases + how to test</code></pre>
+<h2 is-upgraded>2. Bad versus good</h2>
+<pre><code>bad: "make a cool notes search"
+good: "Add notes title search.
+  Architecture: presentation-&gt;domain&lt;-data.
+  No SQLite calls from widgets.
+  Empty state + 1 widget test."</code></pre>
+<h2 is-upgraded>3. Give context, not secrets</h2><ul><li>Include: folder structure, one repository/use-case contract, and package versions from <code>pubspec.yaml</code>.</li><li>Exclude: tokens, API keys, passwords, or a 500-file repo.</li><li>Paste relevant snippets, not blurry screenshots. State what must NOT change.</li></ul>
+<aside class="warning"><p><strong>Privacy:</strong> never paste FCM tokens, JWTs, or secrets into AI. Replace them with placeholders such as <code>TOKEN_PLACEHOLDER</code>.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 2: Generate and verify search" duration="25">
+<h2 is-upgraded>1. Generate one small feature</h2><p>Ask AI to build <strong>notes title search</strong> with an empty state. Keep it to one feature for easy verification. Save the raw prompt and AI output in <code>docs/ai-log.md</code>.</p>
+<h2 is-upgraded>2. Six-step verification</h2><ul><li>Read every line and mark what you do not understand.</li><li>Check imports: keep <code>domain/</code> free of Flutter/Dio/SQLite.</li><li>Check APIs: every method must exist (autocomplete + pub.dev).</li><li>Run <code>flutter analyze</code> until zero warnings.</li><li>Write at least 1 passing and 1 failing search test.</li><li>Test manually: empty query, match, and no-match empty state.</li></ul>
+<h2 is-upgraded>3. Example evidence tests</h2>
+<pre><code>test('filter ignores case', () {
+  expect(filterNotes(list, 'groceries'), hasLength(2));
+});
+test('no-match query returns empty', () {
+  expect(filterNotes(list, 'zzz-missing'), isEmpty);
+});</code></pre>
+<aside class="special"><p><strong>Required evidence:</strong> one bug/hallucination you found and how grep/tests proved it. Without this evidence, verification is incomplete.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Lab 3: Debug and refactor" duration="20">
+<h2 is-upgraded>1. Debug with a red test</h2>
+<pre><code>1. Reproduce: steps + input triggering bug
+2. Isolate: move filter to pure use case
+3. Red test: failing test proving bug
+4. Fix small, run tests + analyze
+5. Record root cause in docs/ai-log.md</code></pre>
+<h2 is-upgraded>2. Refactor to correct layers</h2>
+<pre><code>widget (UI only)
+  -&gt; notifier (state only)
+  -&gt; use case (filter/search rules)
+  -&gt; repository (SQLite / Dio)</code></pre>
+<p>Split functions over 40 lines and remove database calls from widgets.</p>
+<h2 is-upgraded>3. Final verification</h2>
+<pre><code>flutter analyze
+dart format --set-exit-if-changed .
+flutter test</code></pre>
+</google-codelab-step>
+
+Output: code + 3 test cases + how to test</code></pre>
+
+<google-codelab-step label="AI Challenge" duration="15">
+<h2 is-upgraded>AI role in this codelab</h2><p>AI may be a fast generator and initial reviewer, but <strong>you decide</strong> what to accept, reject, or simplify.</p>
+<h2 is-upgraded>AI Prompt Challenge</h2><p>Ask AI to review your search code:</p>
+<pre><code>Review this Flutter search code as a senior dev.
+Context: feature-first (presentation-&gt;domain&lt;-data),
+Riverpod, SQLite + Dio.
+Focus: correctness, architecture, tests. Ignore style.
+Give 3 findings + blocker/suggestion level + reasons.</code></pre>
+<h2 is-upgraded>AI Verification Checklist</h2><ul><li>At least 1 AI finding proven true (grep/test evidence), then fixed.</li><li>At least 1 AI finding rejected with written technical reasons.</li><li>Per-file decision: accept, accept + refactor, or reject + write manually.</li><li>Able to explain each decision without opening AI.</li></ul>
+<aside class="special"><p><strong>Technical ownership:</strong> keep prompts, AI output, proposal-vs-decision table, and analyze + test evidence in <code>docs/</code>.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Refactoring, testing, and common errors" duration="15">
+<h2 is-upgraded>Refactoring Challenge</h2><ol type="1"><li>Reduce AI output over 80 lines into small testable functions/use cases.</li><li>Move filter/search logic from widgets into a pure domain use case.</li><li>Remove cross-layer imports and keep analyze clean.</li></ol>
+<h2 is-upgraded>Testing</h2>
+<pre><code>flutter test test/search_filter_test.dart
+# + 1 widget test for empty state
+# + manual test of 3 queries + screenshots</code></pre>
+<h2 is-upgraded>Common errors and fixes</h2><table><tr><th>Symptom</th><th>Common cause</th><th>Fix</th></tr><tr><td>Missing method</td><td>API hallucination</td><td>Check pub.dev + autocomplete</td></tr><tr><td>Cross-layer import</td><td>Weak context</td><td>State limits + refactor</td></tr><tr><td>All tests red</td><td>Oversized prompt</td><td>Ask 1 small feature + 1 test</td></tr><tr><td>Repeated prompts</td><td>No reproduction</td><td>Write steps + red test</td></tr><tr><td>Cannot explain</td><td>Blind acceptance</td><td>Reread + simplify</td></tr></table>
+<h2 is-upgraded>Self-verification checklist</h2><ul><li>Five-slot prompt + context in <code>docs/ai-log.md</code>.</li><li><code>flutter analyze</code> clean, <code>flutter test</code> green.</li><li>1 AI finding proven true + 1 rejected with reasons.</li><li>Able to explain without opening AI.</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, and references" duration="10">
+<h2 is-upgraded>Mini project / Industry Challenge</h2><ol type="1"><li>Add one small AI-built feature (search/filter/sort) + empty state.</li><li>Include the core prompt, pasted context, and initial AI output in <code>docs/ai-log.md</code>.</li><li>Green-machine evidence: <code>flutter analyze</code> + <code>flutter test</code> in README.</li><li>Accept/reject table with technical reasons + grep/test evidence.</li><li>Push to <code>09-week-9-ai-assisted-development/</code> with <code>docs/</code>, <code>README.md</code>, <code>screenshots/</code>. The README explains the feature, prompt, stack, how to run, and result.</li></ol>
+<h2 is-upgraded>Reflection</h2><ul><li>Which AI hallucination did you find and how did you prove it?</li><li>Which prompt helped most and what did you change?</li><li>Which refactor did you make to AI code?</li><li>Which accept/reject decision was hardest?</li></ul>
+<h2 is-upgraded>Supporting references</h2><ul>
+<li><a href="../00-slides/Week_09_AI_Assisted_Development_Vibe_Coding_Inter.html" target="_blank">Week 9 Slides: AI-Assisted Development / Vibe Coding</a></li>
+<li><a href="https://docs.flutter.dev/tools/using-ide" target="_blank">Flutter: Using IDEs and static analysis</a></li>
+<li><a href="https://dart.dev/tools/linter-rules" target="_blank">Dart: Linter rules</a></li>
+<li><a href="https://riverpod.dev/docs/introduction/getting_started" target="_blank">Riverpod: Getting started</a></li>
+<li><a href="https://docs.github.com/en/copilot/using-github-copilot/best-practices" target="_blank">GitHub Copilot: Best practices</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">Dart Language Tour</a></li>
+</ul>
+</google-codelab-step>
+
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script><script src="../assets/codelab-elements/custom-elements.min.js"></script><script src="../assets/codelab-elements/prettify.js"></script><script src="../assets/codelab-elements/codelab-elements.js"></script><script src="//support.google.com/inapp/api.js"></script>
+</body></html>
