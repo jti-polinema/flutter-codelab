@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2024-11-14T02:58:50Z",
-  "id": "11-async",
-  "duration": 148,
-  "title": "#11 | Pemrograman Asynchronous",
+  "updated": "2026-10-26T00:00:00Z",
+  "id": "10-minggu-10-ai-feature-integration",
+  "duration": 80,
+  "title": "#10 | Integrasi Fitur AI",
   "authors": "Habibie Ed Dien",
-  "summary": "Mampu melakukan pemrograman asynchronous di Flutter",
-  "source": "1HIUdsb_aulXG44JjBvQaiTbUlQQvoP06Z2-KOAs0crk",
+  "summary": "Mengintegrasikan fitur AI (LLM API, OCR, Speech-to-Text, Image Understanding) ke aplikasi Flutter dengan prompt design, privasi, error handling, dan fallback design.",
+  "source": "10-ai-feature-integration",
   "theme": "mobileflutter",
   "status": [
     "published"
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "11-async"
+  "url": "10-minggu-10-ai-feature-integration"
 }

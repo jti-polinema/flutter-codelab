@@ -1,0 +1,175 @@
+<!doctype html>
+
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#10 | AI Feature Integration</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="10-minggu-10-ai-feature-integration" title="#10 | AI Feature Integration" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> October 26, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning objectives</h2><p>After completing this codelab, students will be able to:</p><ul>
+<li>understand LLM API integration concepts for mobile apps;</li>
+<li>design chat interfaces with streaming responses;</li>
+<li>integrate OCR, Speech-to-Text, and Image Understanding;</li>
+<li>apply safe and effective prompt design;</li>
+<li>handle privacy, cost, error handling, and fallback design;</li>
+<li>evaluate user experience on AI features.</li></ul>
+<h2 is-upgraded>Preparation</h2><ul>
+<li>A laptop/PC and the Week 5-9 project already completed (for example <code>campus_notify</code> or the Week 7 refactor). This codelab adds one AI feature to an existing project.</li>
+<li>Flutter SDK, VS Code (Flutter/Dart extensions), Git, and one AI coding assistant (GitHub Copilot / Cursor / Claude Code / equivalent).</li>
+<li>Understanding of Riverpod, repositories, and the Week 7 dependency rule.</li>
+<li>An AI API provider account (e.g., Google Gemini, OpenAI, Hugging Face) to get an API key.</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 10 is advanced material that permits AI when used wisely: AI may help design and implement AI features, but you must read every line, verify APIs, test, refactor, and explain decisions without relying on AI. Grades reward verification quality and rationale, not AI code volume.</p></aside>
+</google-codelab-step>
+
+
+<google-codelab-step label="AI feature integration concepts" duration="15">
+<h2 is-upgraded>1. What is AI Feature Integration?</h2><p>AI features enable mobile apps to communicate with cloud AI models to provide intelligent services to users:</p><ul>
+<li><strong>Chat assistant</strong> — real-time Q&A with LLM API</li>
+<li><strong>OCR</strong> — text extraction from images or documents</li>
+<li><strong>Speech-to-Text</strong> — convert voice input to text</li>
+<li><strong>Image Understanding</strong> — caption and image analysis via AI</li>
+<li><strong>Recommendation</strong> — personalized suggestions based on user data</li></ul>
+<h2 is-upgraded>2. AI Integration Architecture</h2><pre><code>+----------------+      HTTPS/wss      +----------------+
+|   Flutter UI   | &lt;-----------------&gt; |  AI API Layer  |
+|  (Chat, OCR,   |      (Dio/http)     |  (LLM, OCR,    |
+|   STT, Image)  |                     |   STT, Vision) |
++----------------+                     +----------------+
+        |                                      |
+        | API Key (secure storage)             | Response
+        v                                      v
++----------------+      Optional      +----------------+
+|  Local Cache   | &lt;-----------------&gt; |   Backend    |
+|  (Hive/SQLite) |     (batching)     |  (auth, log) |
++----------------+                     +----------------+
+</code></pre><ul>
+<li>API keys are never stored directly in source code</li>
+<li>Use <code>flutter_secure_storage</code> to store tokens/keys</li>
+<li>Consider cost per request and rate limits</li>
+<li>Apply local caching to reduce repeated AI API calls</li></ul>
+<h2 is-upgraded>3. Prompt Design for Mobile</h2><table><tr><th>Component</th><th>Example</th><th>Purpose</th></tr>
+<tr><td>System prompt</td><td>"You are a friendly campus assistant, answer in Indonesian, max 2 sentences"</td><td>Set persona and boundaries</td></tr>
+<tr><td>User prompt</td><td>"Class schedule on Monday?"</td><td>User input</td></tr>
+<tr><td>Context</td><td>Schedule data, user profile, location</td><td>Make response relevant</td></tr>
+<tr><td>Limits</td><td>Do not share other users' private data</td><td>Privacy and security</td></tr></table>
+<p><strong>Tips:</strong> Keep prompts short and specific, translate output if needed, and validate output before showing to user.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Practical: Chat Interface with AI" duration="30">
+<h2 is-upgraded>Step 1: Add dependencies</h2><p>Add to <code>pubspec.yaml</code>:</p><pre><code>dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+  flutter_secure_storage: ^9.0.0
+  riverpod: ^2.5.0
+</code></pre><h2 is-upgraded>Step 2: Create AI Service</h2><p>Create <code>lib/ai/ai_service.dart</code>:</p><pre><code>import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class AiService {
+  final _storage = const FlutterSecureStorage();
+  final _apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+  Future&lt;String> ask(String question) async {
+    final apiKey = await _storage.read(key: 'ai_api_key');
+    if (apiKey == null || apiKey.isEmpty) {
+      throw Exception('API key not available. Please set it in settings.');
+    }
+
+    final response = await http.post(
+      Uri.parse('$_apiUrl?key=$apiKey'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'contents': [{
+          'parts': [{'text': question}]
+        }]
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['candidates'][0]['content']['parts'][0]['text'];
+    } else {
+      throw Exception('Failed to call AI API: ${response.statusCode}');
+    }
+  }
+
+  Future&lt;void> saveApiKey(String key) async {
+    await _storage.write(key: 'ai_api_key', value: key);
+  }
+}
+</code></pre><h2 is-upgraded>Step 3: Create Chat Screen</h2><p>Create <code>lib/features/chat_screen.dart</code> with streaming response and loading indicator.</p>
+<aside class="warning"><p><strong>Security note:</strong> Never send NIK, phone number, address, or sensitive user data to AI API. Use anonymous data or internal IDs only.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="OCR, Speech-to-Text, and Image Understanding" duration="15">
+<h2 is-upgraded>OCR (Optical Character Recognition)</h2><ul>
+<li>Take photo from camera/gallery using <code>image_picker</code></li>
+<li>Send to AI API for text extraction</li>
+<li>Use for: student ID, receipts, documents, bulletin boards</li></ul>
+<h2 is-upgraded>Speech-to-Text</h2><ul>
+<li>Record user voice using <code>record</code> or <code>just_audio</code></li>
+<li>Convert to text via AI API</li>
+<li>Use for: fast input, accessibility</li></ul>
+<h2 is-upgraded>Image Understanding</h2><ul>
+<li>Upload image and ask AI for description</li>
+<li>Use for: product description, object identification, accessibility</li></ul>
+<pre><code>final result = await aiService.recognizeText(imageFile);
+final text = await aiService.speechToText(audioFile);
+</code></pre>
+</google-codelab-step>
+
+<google-codelab-step label="Privacy, Cost, Error Handling, and Fallback" duration="15">
+<h2 is-upgraded>Risk and Mitigation Table</h2><table><tr><th>Risk</th><th>Mitigation</th></tr>
+<tr><td>User data leakage</td><td>Never send sensitive data to AI API</td></tr>
+<tr><td>Cost spike</td><td>Limit requests per user/day, use local cache</td></tr>
+<tr><td>API error / down</td><td>Show friendly message, retry option, offline mode</td></tr>
+<tr><td>Irrelevant response</td><td>Apply validation and fallback to local data</td></tr></table>
+<h2 is-upgraded>Fallback Example</h2><pre><code>try {
+  final response = await aiService.ask(question);
+} catch (e) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: const Text('AI Service Busy'),
+      content: const Text('Try again later or use offline mode.'),
+    ),
+  );
+}
+</code></pre>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment and Reflection" duration="15">
+<h2 is-upgraded>Mini project / Industry Challenge</h2><ol type="1">
+<li>Integrate one AI feature (chat or OCR or Speech-to-Text) into an existing project.</li>
+<li>Include system prompt, user prompt, and initial AI output in <code>docs/ai-log.md</code>.</li>
+<li>Green-machine evidence: <code>flutter analyze</code> + <code>flutter test</code> in README.</li>
+<li>Risk table + privacy and cost mitigation in README.</li>
+<li>Push to <code>10-week-10-ai-feature-integration/</code> with <code>lib/</code>, <code>docs/</code>, <code>README.md</code>, <code>screenshots/</code>.</li></ol>
+<h2 is-upgraded>Reflection</h2><ul>
+<li>Which AI feature did you integrate and why?</li>
+<li>How do you protect user privacy when using AI API?</li>
+<li>What fallback do you provide if AI service errors?</li>
+<li>One thing you learned about AI feature UX on mobile?</li></ul>
+<h2 is-upgraded>Supporting references</h2><ul>
+<li><a href="../00-slides/Week_10_AI_Feature_Integration_Inter.html" target="_blank">Week 10 Slides: AI Feature Integration</a></li>
+<li><a href="https://ai.google.dev/" target="_blank">Google Gemini AI API</a></li>
+<li><a href="https://pub.dev/packages/flutter_secure_storage" target="_blank">flutter_secure_storage</a></li>
+<li><a href="https://pub.dev/packages/http" target="_blank">http package</a></li>
+<li><a href="https://riverpod.dev/docs/introduction/getting_started" target="_blank">Riverpod: Getting started</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">Dart Language Tour</a></li>
+</ul>
+</google-codelab-step>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script>
+<script src="../assets/codelab-elements/custom-elements.min.js"></script>
+<script src="../assets/codelab-elements/prettify.js"></script>
+<script src="../assets/codelab-elements/codelab-elements.js"></script>
+<script src="//support.google.com/inapp/api.js"></script>
+
+</body></html>
