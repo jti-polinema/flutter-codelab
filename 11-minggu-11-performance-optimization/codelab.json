@@ -3,13 +3,13 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2024-11-21T07:09:25Z",
-  "id": "12-state-streams-bloc",
-  "duration": 118,
-  "title": "#12 | Lanjutan State Management dengan Streams",
+  "updated": "2026-10-26T00:00:00Z",
+  "id": "11-minggu-11-performance-optimization",
+  "duration": 120,
+  "title": "#11 | Optimasi Performa",
   "authors": "Habibie Ed Dien",
-  "summary": "Mampu mengelola state dengan streams dan BLoC pattern di Flutter",
-  "source": "1-L6H7Ga8nH7ApniG91bvVvRgOXFAYqN1McfqEmHH5lI",
+  "summary": "Menggunakan Flutter DevTools untuk profiling, mengurangi widget rebuild, lazy loading, pagination, optimasi gambar, caching jaringan, dan memperbaiki bottleneck performa.",
+  "source": "11-performance-optimization",
   "theme": "mobileflutter",
   "status": [
     "published"
@@ -22,5 +22,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "12-state-streams-bloc"
+  "url": "11-minggu-11-performance-optimization"
 }

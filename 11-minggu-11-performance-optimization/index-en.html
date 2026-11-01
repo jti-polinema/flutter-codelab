@@ -1,0 +1,395 @@
+<!doctype html>
+
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F7DC9"><title>#11 | Performance Optimization</title>
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono"><link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"><link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head><body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="11-minggu-11-performance-optimization" title="#11 | Performance Optimization" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> October 26, 2026<br></p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<h2 is-upgraded>Learning objectives</h2><p>After completing this codelab, you will be able to:</p><ul>
+<li>use Flutter DevTools for CPU and memory profiling;</li>
+<li>identify and reduce unnecessary widget rebuilds;</li>
+<li>apply lazy loading, pagination, and image optimization;</li>
+<li>optimize networking with caching and offline-first strategies;</li>
+<li>fix performance bottlenecks in an existing application.</li></ul>
+<h2 is-upgraded>Preparation</h2><ul>
+<li>A laptop/PC and your completed Week 7–10 project (for example, <code>campus_notify</code> or the Clean Architecture refactor). This codelab focuses on optimizing the performance of an existing project.</li>
+<li>Flutter SDK, VS Code (Flutter/Dart extensions), Git, and Flutter DevTools.</li>
+<li>Understanding of Riverpod, the repository pattern, and the Week 7 dependency rule.</li>
+<li>An emulator or physical device running in debug/profile mode.</li></ul>
+<aside class="warning"><p><strong>AI policy.</strong> Week 11 is advanced material that permits AI when used wisely: AI may help analyze profiling results and suggest optimizations, but you must verify with actual profiling, test, refactor, and explain your decisions without relying on AI. Grades reward verification quality and rationale, not AI code volume.</p></aside>
+</google-codelab-step>
+
+
+<google-codelab-step label="Flutter Performance Optimization Concepts" duration="15">
+<h2 is-upgraded>1. Why Performance Optimization Matters</h2><p>Modern mobile apps must be responsive, battery-efficient, and smooth across device specifications. Poor performance leads to:</p><ul>
+<li>Frame drops (jank) — UI not smooth at 60/120 FPS</li>
+<li>High memory usage — app killed by the OS</li>
+<li>Battery drain — CPU/GPU overworked</li>
+<li>Poor user experience — uninstalls and low ratings</li></ul>
+<h2 is-upgraded>2. Flutter Rendering Pipeline</h2><pre><code>UI Thread (Dart)          Raster Thread (GPU)
++------------------+      +------------------+
+|  Build Widget    |      |                  |
+|  Layout          | ---> |  Composite       |
+|  Paint           |      |  Rasterize       |
++------------------+      +------------------+
+      |                          |
+      v                          v
+  Frame Budget: 16.67 ms (60 FPS) / 8.33 ms (120 FPS)
+</code></pre><ul>
+<li><strong>UI Thread</strong>: Dart code, build, layout, paint — must complete in < 16 ms</li>
+<li><strong>Raster Thread</strong>: GPU rendering — can become a bottleneck with large or complex images</li>
+<li><strong>Jank</strong>: Frame exceeds budget → frame drop occurs</li></ul>
+<h2 is-upgraded>3. Main Optimization Categories</h2><table><tr><th>Category</th><th>Focus</th><th>Tools</th></tr>
+<tr><td>CPU/Build</td><td>Widget rebuild, excessive layout, heavy computation</td><td>DevTools Performance, Timeline</td></tr>
+<tr><td>Memory</td><td>Leaks, large images, unbounded lists</td><td>DevTools Memory, Heap Snapshot</td></tr>
+<tr><td>Network</td><td>Repeated requests, large payloads, no cache</td><td>DevTools Network, Dio Interceptor</td></tr>
+<tr><td>Images</td><td>Wrong resolution, inefficient format</td><td>DevTools Memory, cached_network_image</td></tr></table>
+</google-codelab-step>
+
+<google-codelab-step label="Flutter DevTools: CPU and Memory Profiling" duration="25">
+<h2 is-upgraded>1. Opening DevTools</h2><pre><code># From project terminal
+flutter run --profile
+# Or
+flutter run -d <device_id> --profile
+
+# Open DevTools in browser (auto-opens or)
+# http://127.0.0.1:9100
+</code></pre><p><strong>Note:</strong> Use <code>--profile</code> mode (not <code>--debug</code> or <code>--release</code>) for accurate profiling. Debug mode has significant overhead.</p>
+<h2 is-upgraded>2. Performance Tab (CPU Profiling)</h2><ul>
+<li><strong>Flame Chart</strong>: Call stack visualization per frame — look for red frames (jank)</li>
+<li><strong>Timeline Events</strong>: Build, layout, paint, GC, HTTP events</li>
+<li><strong>Frame Chart</strong>: Bar per frame — green (<16 ms), yellow (16–32 ms), red (>32 ms)</li>
+<li><strong>Track: UI Thread</strong> — find slow <code>build</code>, <code>layout</code>, <code>paint</code></li>
+<li><strong>Track: Raster Thread</strong> — find slow <code>rasterize</code>, <code>image decode</code></li></ul>
+<h2 is-upgraded>3. Memory Tab (Memory Profiling)</h2><ul>
+<li><strong>Heap Size</strong>: Total allocated memory</li>
+<li><strong>Used/External</strong>: Dart memory + native (images, textures)</li>
+<li><strong>GC Events</strong>: Garbage collection — frequent GC = memory pressure</li>
+<li><strong>Heap Snapshot</strong>: Take snapshot → filter class → find unneeded instances</li>
+<li><strong>Leak Detection</strong>: Compare snapshots before/after navigation</li></ul>
+<h2 is-upgraded>4. Profiling Workflow</h2><ol type="1">
+<li>Run the app with <code>flutter run --profile</code></li>
+<li>Open DevTools → Performance tab</li>
+<li>Click <strong>Record</strong> → use the app normally (scroll, navigate, load data)</li>
+<li>Click <strong>Stop</strong> → analyze red/yellow frames</li>
+<li>Click a problematic frame → view Flame Chart → identify the top slow function</li>
+<li>Fix the code → repeat profiling to verify</li></ol>
+</google-codelab-step>
+
+<google-codelab-step label="Reducing Unnecessary Widget Rebuilds" duration="25">
+<h2 is-upgraded>1. Causes of Excessive Rebuilds</h2><ul>
+<li><code>setState</code> on a large root widget</li>
+<li>Provider/Riverpod listeners on widgets that do not need them</li>
+<li><code>ListView.builder</code> without <code>const</code> items</li>
+<li>Anonymous functions in the build method (new closure every frame)</li>
+<li>StatefulWidget that should be a StatelessWidget</li></ul>
+<h2 is-upgraded>2. Optimization Techniques</h2><h3 is-upgraded>A. Use <code>const</code> Constructors</h3><pre><code>// Before: rebuilds every parent rebuild
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      Text('Title'),           // not const
+      Icon(Icons.star),        // not const
+      MyCustomWidget(),        // not const
+    ],
+  );
+}
+
+// After: only rebuilds if parameters change
+Widget build(BuildContext context) {
+  return const Column(
+    children: [
+      Text('Title'),
+      Icon(Icons.star'),
+      MyCustomWidget(),
+    ],
+  );
+}
+</code></pre><h3 is-upgraded>B. Extract Widgets to Separate Classes</h3><pre><code>// Before: everything in one build method
+class MyPage extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(100, (i) => Text('Item $i')), // rebuilds all
+    );
+  }
+}
+
+// After: items separate, can be const
+class MyPage extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(100, (i) => const MyItem()), // only MyItem rebuilds
+    );
+  }
+}
+
+class MyItem extends StatelessWidget {
+  const MyItem();
+  Widget build(BuildContext context) => const Text('Item');
+}
+</code></pre><h3 is-upgraded>C. Use <code>RepaintBoundary</code> for Paint Isolation</h3><pre><code>// Only this area repaints when changed
+RepaintBoundary(
+  child: ExpensiveWidget(),
+)
+</code></pre><h3 is-upgraded>D. Riverpod: <code>select</code> and <code>ProviderScope</code> Override</h3><pre><code>// Only rebuilds when value.count changes, not the entire state
+final count = ref.watch(counterProvider.select((s) => s.count));
+
+// Or use Consumer with a specific builder
+Consumer(
+  builder: (context, ref, child) {
+    final value = ref.watch(provider);
+    return Text('$value');
+  },
+)
+</code></pre><h3 is-upgraded>E. Avoid Anonymous Functions in Build</h3><pre><code>// Bad: new closure every build
+onPressed: () => doSomething()
+
+// Good: method reference or tear-off
+onPressed: doSomething
+
+// Or use a pre-defined callback
+onPressed: _handlePress
+</code></pre>
+</google-codelab-step>
+
+<google-codelab-step label="Lazy Loading, Pagination, and Image Optimization" duration="20">
+<h2 is-upgraded>1. Lazy Loading with <code>ListView.builder</code></h2><p><code>ListView.builder</code> only builds visible items (viewport). Ensure:</p><ul>
+<li>Use <code>ListView.builder</code> not <code>ListView(children: [...])`</code></li>
+<li>Item widget uses <code>const</code> constructor</li>
+<li>Avoid <code>Expanded</code> or <code>Flexible</code> inside items unless needed</li></ul>
+<h2 is-upgraded>2. Pagination (Infinite Scroll)</h2><pre><code>class PaginatedList extends ConsumerStatefulWidget {
+  const PaginatedList();
+
+  @override
+  ConsumerState<PaginatedList> createState() => _PaginatedListState();
+}
+
+class _PaginatedListState extends ConsumerState<PaginatedList> {
+  final _scrollController = ScrollController();
+  final _items = <Item>[];
+  var _page = 1;
+  var _isLoading = false;
+  var _hasMore = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _loadPage();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      _loadPage();
+    }
+  }
+
+  Future<void> _loadPage() async {
+    if (_isLoading || !_hasMore) return;
+    _isLoading = true;
+    try {
+      final newItems = await ref.read(itemRepositoryProvider).fetchPage(_page);
+      if (newItems.isEmpty) {
+        _hasMore = false;
+      } else {
+        _items.addAll(newItems);
+        _page++;
+      }
+    } finally {
+      _isLoading = false;
+      if (mounted) setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: _items.length + (_hasMore ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index == _items.length) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ItemTile(item: _items[index]);
+      },
+    );
+  }
+}
+</code></pre><h2 is-upgraded>3. Image Optimization</h2><table><tr><th>Technique</th><th>Description</th><th>Package</th></tr>
+<tr><td>Server-side resize</td><td>Request appropriate size (thumbnail), not full-res</td><td>Backend/CDN</td></tr>
+<tr><td>Modern formats</td><td>WebP, AVIF smaller than JPEG/PNG</td><td>Server/CDN</td></tr>
+<tr><td>Local caching</td><td>Store images on disk, avoid re-download</td><td><code>cached_network_image</code></td></tr>
+<tr><td>Placeholders</td><td>Show blur/low-res first, then swap</td><td><code>fade_in_image</code>, <code>cached_network_image</code></td></tr>
+<tr><td>Precache</td><td>Load images before needed (e.g., next page)</td><td><code>precacheImage</code></td></tr>
+<tr><td>Memcache limits</td><td>Limit memory cache size</td><td><code>PaintingBinding.instance.imageCache</code></td></tr></table>
+<pre><code>// Example cached_network_image
+CachedNetworkImage(
+  imageUrl: item.imageUrl,
+  placeholder: (context, url) => Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Container(color: Colors.white),
+  ),
+  errorWidget: (context, url, error) => const Icon(Icons.error),
+  memCacheWidth: 300,  // decode at display size, not full-res
+  memCacheHeight: 200,
+  fadeInDuration: const Duration(milliseconds: 200),
+)
+</code></pre>
+</google-codelab-step>
+
+<google-codelab-step label="Network Optimization and Caching" duration="20">
+<h2 is-upgraded>1. Caching Strategies</h2><table><tr><th>Strategy</th><th>Best For</th><th>Implementation</th></tr>
+<tr><td>Cache-First</td><td>Rarely changing data (config, master data)</td><td>Read cache → if empty, fetch API → store cache</td></tr>
+<tr><td>Network-First</td><td>Critical real-time data (chat, prices, stock)</td><td>Fetch API → store cache → fallback to cache on failure</td></tr>
+<tr><td>Stale-While-Revalidate</td><td>Semi-real-time data (feed, lists)</td><td>Show cache → fetch background → update UI</td></tr>
+<tr><td>Cache-Only (Offline)</td><td>Full offline mode</td><td>Only read from local DB (Hive/SQLite/Drift)</td></tr></table>
+<h2 is-upgraded>2. Repository Implementation with Cache (Stale-While-Revalidate)</h2><pre><code>class ItemRepository {
+  final Dio _dio;
+  final Box<Item> _localBox; // Hive
+
+  ItemRepository(this._dio, this._localBox);
+
+  Future<List<Item>> getItems() async {
+    // 1. Show cache immediately (if exists)
+    final cached = _localBox.values.toList();
+    if (cached.isNotEmpty) {
+      _emitCached(cached);
+    }
+
+    // 2. Fetch fresh data in background
+    try {
+      final response = await _dio.get('/items');
+      final fresh = (response.data as List)
+          .map((e) => Item.fromJson(e))
+          .toList();
+
+      // 3. Update local cache
+      await _localBox.clear();
+      await _localBox.addAll(fresh);
+
+      // 4. Emit fresh data
+      _emitFresh(fresh);
+      return fresh;
+    } catch (e) {
+      // If error and no cache, throw error
+      if (cached.isEmpty) rethrow;
+      return cached; // Return cache as fallback
+    }
+  }
+}
+</code></pre><h2 is-upgraded>3. Dio Interceptor for Logging and Retry</h2><pre><code>final dio = Dio(BaseOptions(
+  baseUrl: 'https://api.example.com',
+  connectTimeout: const Duration(seconds: 10),
+  receiveTimeout: const Duration(seconds: 15),
+));
+
+// Retry interceptor
+dio.interceptors.add(RetryInterceptor(
+  dio: dio,
+  logPrint: print,
+  retries: 3,
+  retryDelays: [
+    const Duration(seconds: 1),
+    const Duration(seconds: 2),
+    const Duration(seconds: 5),
+  ],
+));
+
+// Cache interceptor (custom)
+dio.interceptors.add(CacheInterceptor(
+  storage: CacheStorage(),
+  policy: CachePolicy.staleWhileRevalidate,
+));
+</code></pre><h2 is-upgraded>4. Compression and Small Payloads</h2><ul>
+<li>Use <code>gzip</code> / <code>brotli</code> on server (header <code>Accept-Encoding</code>)</li>
+<li>Request only needed fields (GraphQL / query param <code>?fields=id,name,thumb</code>)</li>
+<li>Batch requests when possible</li>
+<li>Use ETag / If-None-Match for cache validation</li></ul>
+</google-codelab-step>
+
+<google-codelab-step label="Practical: Optimizing Real App Performance" duration="35">
+<h2 is-upgraded>Step 1: Baseline Profiling</h2><ol type="1">
+<li>Open your Week 7–10 project (for example, <code>campus_notify</code>)</li>
+<li>Run <code>flutter run --profile</code></li>
+<li>Open DevTools → Performance tab → click <strong>Record</strong></li>
+<li>Perform scenarios: open list, fast scroll, open detail, back, pull-to-refresh</li>
+<li>Click <strong>Stop</strong> → note: red/yellow frame count, average frame time, top functions in Flame Chart</li>
+<li>Save Flame Chart screenshot as <code>screenshots/before-profile.png</code></li>
+</ol>
+<h2 is-upgraded>Step 2: Identify Issues</h2><p>Based on profiling, identify at least 3 issues:</p><ul>
+<li>Excessive widget rebuilds (look for repeated <code>build</code> in Flame Chart)</li>
+<li>Large images not resized (look for <code>image decode</code> in Raster Thread)</li>
+<li>Repeated API requests without cache (look for repeated <code>HTTP</code> events)</li>
+<li>Lists not using builder (look for slow <code>Layout</code> during scroll)</li>
+<li>Memory leaks (Heap keeps growing in Memory tab during back-and-forth navigation)</li></ul>
+<p>Document findings in <code>docs/performance-findings.md</code></p>
+<h2 is-upgraded>Step 3: Apply Optimizations</h2><p>Select and apply at least 3 optimizations:</p><ol type="1">
+<li><strong>Const constructors</strong>: Add <code>const</code> to static widgets</li>
+<li><strong>Extract widgets</strong>: Break large widgets into small <code>const</code> widgets</li>
+<li><strong>RepaintBoundary</strong>: Wrap frequently repainting areas (charts, animations)</li>
+<li><strong>Riverpod select</strong>: Replace <code>ref.watch(provider)</code> with <code>ref.watch(provider.select(...))</code></li>
+<li><strong>ListView.builder</strong>: Ensure all lists use builder</li>
+<li><strong>CachedNetworkImage</strong>: Replace <code>Image.network</code> with <code>CachedNetworkImage</code> + <code>memCacheWidth/Height</code></li>
+<li><strong>Pagination</strong>: Add infinite scroll to long lists</li>
+<li><strong>Repository cache</strong>: Add stale-while-revalidate to repository</li>
+</ol>
+<h2 is-upgraded>Step 4: Verify with Profiling</h2><ol type="1">
+<li>Run <code>flutter run --profile</code> again</li>
+<li>Record the same scenarios</li>
+<li>Compare: fewer red/yellow frames, lower average frame time</li>
+<li>Save screenshot as <code>screenshots/after-profile.png</code></li>
+</ol>
+<h2 is-upgraded>Step 5: Memory Profiling</h2><ol type="1">
+<li>Open Memory tab in DevTools</li>
+<li>Take a <strong>Heap Snapshot</strong> on the list page</li>
+<li>Navigate to detail → back → repeat 5 times</li>
+<li>Take another snapshot → compare: any accumulating objects?</li>
+<li>If a leak is found: find unreleased references (controllers, listeners, stream subscriptions)</li>
+<li>Fix with proper <code>dispose()</code></li>
+</ol>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment and Reflection" duration="15">
+<h2 is-upgraded>Mini project / Industry Challenge</h2><ol type="1">
+<li>Optimize your Week 7–10 project performance with at least 3 techniques from this codelab.</li>
+<li>Document in <code>docs/performance-report.md</code>:
+   <ul>
+   <li>Baseline metrics (frame time, jank count, memory usage)</li>
+   <li>Profiling findings (Flame Chart before/after screenshots)</li>
+   <li>Applied optimizations + rationale</li>
+   <li>Verification results (metrics after)</li>
+   </ul>
+</li>
+<li>Include clean <code>flutter analyze</code> + <code>flutter test</code> in README.</li>
+<li>Push to <code>11-week-11-performance-optimization/</code> with <code>lib/</code>, <code>docs/</code>, <code>README.md</code>, <code>screenshots/</code>.</li></ol>
+<h2 is-upgraded>Reflection</h2><ul>
+<li>Which optimization had the biggest impact and why?</li>
+<li>How did you verify optimizations actually work (not placebo)?</li>
+<li>What trade-offs did you face (for example, code complexity vs performance)?</li>
+<li>When should premature optimization be avoided?</li></ul>
+<h2 is-upgraded>Supporting references</h2><ul>
+<li><a href="../00-slides/Week_11_Performance_Optimization_Inter.html" target="_blank">Week 11 Slides: Performance Optimization</a></li>
+<li><a href="https://docs.flutter.dev/tools/devtools/overview" target="_blank">Flutter DevTools Overview</a></li>
+<li><a href="https://docs.flutter.dev/perf/rendering/ui-performance" target="_blank">Flutter UI Performance</a></li>
+<li><a href="https://docs.flutter.dev/perf/best-practices" target="_blank">Flutter Performance Best Practices</a></li>
+<li><a href="https://pub.dev/packages/cached_network_image" target="_blank">cached_network_image</a></li>
+<li><a href="https://pub.dev/packages/dio" target="_blank">Dio HTTP Client</a></li>
+<li><a href="https://learnxinyminutes.com/dart/" target="_blank">Learn Dart in Y Minutes</a></li>
+<li><a href="https://dart.dev/guides/language/language-tour" target="_blank">Dart Language Tour</a></li>
+</ul>
+</google-codelab-step>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script>
+<script src="../assets/codelab-elements/custom-elements.min.js"></script>
+<script src="../assets/codelab-elements/prettify.js"></script>
+<script src="../assets/codelab-elements/codelab-elements.js"></script>
+<script src="//support.google.com/inapp/api.js"></script>
+
+</body></html>
