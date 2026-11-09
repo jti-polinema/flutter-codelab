@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4F7DC9">
+  <title>#12 | Testing and Quality Assurance</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head>
+<body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="12-minggu-12-testing-quality-assurance" title="#12 | Testing and Quality Assurance" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> November 9, 2026</p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<p>A feature that works on one device may still have hidden problems. In this codelab, you will write tests that check application behavior, catch regressions, and help keep code reliable as the app grows.</p>
+<h2 is-upgraded>Learning objectives</h2>
+<p>By the end of this codelab, you should be able to:</p>
+<ul>
+<li>choose between unit, widget, and integration tests for a feature;</li>
+<li>write unit tests for logic and edge cases;</li>
+<li>test Flutter widget output and user interactions;</li>
+<li>separate dependencies so code is easier to test, including with a fake repository;</li>
+<li>run integration tests and use code coverage as one way to assess your test suite.</li>
+</ul>
+<h2 is-upgraded>What you need</h2>
+<ul>
+<li>A Flutter project you have worked on, or a new project created with <code>flutter create testing_lab</code>.</li>
+<li>The Flutter SDK, Dart, VS Code or Android Studio, and an Android emulator or device.</li>
+<li>A working knowledge of Dart functions, classes, widgets, and Futures.</li>
+</ul>
+<aside class="warning"><p><strong>Using AI.</strong> You may ask AI for test ideas or help understanding a failure message. Still check that each test verifies the behavior you intend. A test that passes but would not fail when the feature breaks offers little protection.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="A testing strategy for Flutter apps" duration="10">
+<h2 is-upgraded>1. Choose the right kind of test</h2>
+<table>
+<tr><th>Type</th><th>What it checks</th><th>Example</th></tr>
+<tr><td>Unit</td><td>A function or object without rendering UI</td><td>Task-title validation or a business rule</td></tr>
+<tr><td>Widget</td><td>The output and interaction of one or more widgets</td><td>A form shows feedback for invalid input</td></tr>
+<tr><td>Integration</td><td>An end-to-end app flow on a device or emulator</td><td>A user adds a task and sees it in the list</td></tr>
+</table>
+<p>Unit tests are usually the fastest and easiest to maintain. Widget tests check UI without launching the app on a device. Integration tests cover a broader flow, but take longer to run and maintain.</p>
+<h2 is-upgraded>2. Make code easier to test</h2>
+<p>Business logic mixed into widgets and network calls is hard to test in isolation. Separate responsibilities: widgets handle presentation and interaction, while repositories handle data sources. Pass a repository through a constructor or abstraction so a test can replace it with controlled data.</p>
+<aside class="special"><p>Start with behavior that matters to users. Not every line needs its own test, but business rules, validation, and important flows should have clear checks.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Unit tests and edge cases" duration="15">
+<h2 is-upgraded>1. Test behavior</h2>
+<p>This example checks a simple rule: a task title is valid when it contains non-whitespace text.</p>
+<pre><code>bool isValidTaskTitle(String value) {
+  return value.trim().isNotEmpty;
+}
+</code></pre>
+<p>Create <code>test/is_valid_task_title_test.dart</code>. The <code>flutter_test</code> package is included in Flutter projects.</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:testing_lab/is_valid_task_title.dart';
+
+void main() {
+  group('isValidTaskTitle', () {
+    test('accepts a title with text', () {
+      expect(isValidTaskTitle('Learn Flutter'), isTrue);
+    });
+
+    test('rejects empty or whitespace-only text', () {
+      expect(isValidTaskTitle(''), isFalse);
+      expect(isValidTaskTitle('   '), isFalse);
+    });
+  });
+}
+</code></pre>
+<p>Replace the package name in the <code>import</code> statement with the name from your <code>pubspec.yaml</code>.</p>
+<h2 is-upgraded>2. Use Arrange, Act, Assert</h2>
+<ul>
+<li><strong>Arrange:</strong> prepare the required data and objects.</li>
+<li><strong>Act:</strong> call the function or perform the action under test.</li>
+<li><strong>Assert:</strong> check the result with <code>expect</code>.</li>
+</ul>
+<p>Add relevant edge cases, such as empty input, whitespace, boundary values, or expected failures. Do not test only the happy path.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Testing async code and dependencies" duration="15">
+<h2 is-upgraded>1. Define a data-source contract</h2>
+<p>Avoid relying on a live API in unit tests. Network access, authentication, and server data can change, making tests slow or inconsistent. Define a small contract for the feature:</p>
+<pre><code>abstract interface class TaskRepository {
+  Future&lt;List&lt;String&gt;&gt; getTasks();
+}
+
+class TaskService {
+  TaskService(this._repository);
+
+  final TaskRepository _repository;
+
+  Future&lt;List&lt;String&gt;&gt; loadTasks() {
+    return _repository.getTasks();
+  }
+}
+</code></pre>
+<h2 is-upgraded>2. Replace the API with a fake repository</h2>
+<p>A fake is a small implementation whose behavior is controlled by the test. It lets you check both success and failure without an internet connection.</p>
+<pre><code>class FakeTaskRepository implements TaskRepository {
+  FakeTaskRepository({this.tasks = const [], this.error});
+
+  final List&lt;String&gt; tasks;
+  final Exception? error;
+
+  @override
+  Future&lt;List&lt;String&gt;&gt; getTasks() async {
+    if (error != null) throw error!;
+    return tasks;
+  }
+}
+
+test('returns data from the repository', () async {
+  final service = TaskService(
+    FakeTaskRepository(tasks: ['Read the material']),
+  );
+
+  expect(await service.loadTasks(), ['Read the material']);
+});
+</code></pre>
+<p>Add a failure test to make sure an error is not silently turned into an empty list. Test the error behavior your application is designed to provide.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Widget testing" duration="20">
+<h2 is-upgraded>1. Build a widget and check its output</h2>
+<p>Widget tests run with <code>flutter_test</code>. Use <code>pumpWidget</code> to render the UI, then find elements and check what users can see.</p>
+<pre><code>testWidgets('shows the task page title', (tester) async {
+  await tester.pumpWidget(
+    const MaterialApp(
+      home: Scaffold(
+        body: Text('Task list'),
+      ),
+    ),
+  );
+
+  expect(find.text('Task list'), findsOneWidget);
+});
+</code></pre>
+<h2 is-upgraded>2. Test user interactions</h2>
+<p>To test a form or button, enter text with <code>enterText</code>, tap a control with <code>tap</code>, then call <code>pump</code> or <code>pumpAndSettle</code> to render the updated UI.</p>
+<pre><code>await tester.enterText(
+  find.byKey(const Key('task-title-field')),
+  'Read the material',
+);
+await tester.tap(find.byKey(const Key('save-task-button')));
+await tester.pumpAndSettle();
+
+expect(find.text('Read the material'), findsOneWidget);
+</code></pre>
+<p>Add a <code>Key</code> to a control when finding it by visible text or widget type is not clear enough. Also test important states such as invalid input, loading, empty data, and errors.</p>
+<aside class="warning"><p>Avoid fixed delays such as <code>Future.delayed</code> just to make a test pass. Use the time and animation controls provided by Flutter Test.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Integration and regression testing" duration="20">
+<h2 is-upgraded>1. Run a flow on a device</h2>
+<p>Integration tests check multiple parts of an app working together. Flutter provides the <code>integration_test</code> package. If it is not already in your project, add it under <code>dev_dependencies</code> in <code>pubspec.yaml</code>, then run <code>flutter pub get</code>:</p>
+<pre><code>dev_dependencies:
+  integration_test:
+    sdk: flutter
+</code></pre>
+<p>Put the test in <code>integration_test/app_test.dart</code> and initialize its binding as shown here:</p>
+<pre><code>import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:testing_lab/main.dart' as app;
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('a user can add a task', (tester) async {
+    app.main();
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const Key('task-title-field')),
+      'Read the material',
+    );
+    await tester.tap(find.byKey(const Key('save-task-button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Read the material'), findsOneWidget);
+  });
+}
+</code></pre>
+<p>Use keys that match your app. Run the test on a connected emulator or device:</p>
+<pre><code>flutter test integration_test/app_test.dart -d &lt;device_id&gt;
+</code></pre>
+<h2 is-upgraded>2. Prevent regressions with a test</h2>
+<p>When you find and fix a bug, add a test that fails before the fix and passes afterward. Run the full suite regularly with <code>flutter test</code>, not just the test you have just added.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Lab: build a test suite for a task feature" duration="30">
+<p>Use a key feature from your project. If you do not have one yet, make a simple task list. The goal is to test behavior from logic through the app flow, not to maximize the number of tests.</p>
+<ol>
+<li><strong>Describe the behavior:</strong> write down at least three scenarios, including an edge case and a failure.</li>
+<li><strong>Test the logic:</strong> write unit tests for validation or a business rule. Group related cases with <code>group</code>.</li>
+<li><strong>Test a dependency:</strong> isolate data access behind a repository and provide a fake for success and error cases.</li>
+<li><strong>Test the UI:</strong> check the initial display, invalid input, and a successful user action.</li>
+<li><strong>Test the main flow:</strong> write one integration test for an important flow across app components.</li>
+<li><strong>Run the checks:</strong> use <code>flutter test</code>, <code>flutter test integration_test/app_test.dart -d &lt;device_id&gt;</code>, and <code>flutter analyze</code>. Resolve failures before moving on.</li>
+</ol>
+<p>When a test fails, read the output to identify the test and unmet condition. Check that the cause is not test order, shared data, or network dependence.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Coverage, assignment, and reflection" duration="5">
+<h2 is-upgraded>1. Treat coverage as a clue</h2>
+<p>To generate a coverage report for unit and widget tests, run:</p>
+<pre><code>flutter test --coverage
+</code></pre>
+<p>Coverage shows which parts of the code ran during tests; it does not guarantee that all behavior was checked. Review important branches and edge cases instead of adding assertions-free tests just to raise a percentage.</p>
+<h2 is-upgraded>2. Assignment</h2>
+<ol>
+<li>Add unit and widget tests for a key feature in your project, including a success case, invalid input, and a relevant error.</li>
+<li>Add one integration test for the main flow. If you cannot run it on a device, describe the blocker and include the command you tried.</li>
+<li>Record your scenarios, <code>flutter test</code> results, analysis results, and unresolved findings in <code>README.md</code>.</li>
+<li>Submit your changes through the Git repository as directed by your instructor.</li>
+</ol>
+<h2 is-upgraded>Reflection</h2>
+<ul>
+<li>Which bug would have been easiest to miss without the tests you wrote?</li>
+<li>Where did you need a fake, and how did it make the test more consistent?</li>
+<li>What did the widget and integration tests each tell you about your feature?</li>
+</ul>
+<h2 is-upgraded>Supporting references</h2>
+<ul>
+<li><a href="../00-slides/Week_12_Testing_Quality_Assurance_Inter.html" target="_blank">Week 12 Slides: Testing and Quality Assurance</a></li>
+<li><a href="https://docs.flutter.dev/testing/overview" target="_blank">Testing Flutter apps</a></li>
+<li><a href="https://docs.flutter.dev/cookbook/testing/widget/introduction" target="_blank">Introduction to widget testing</a></li>
+<li><a href="https://docs.flutter.dev/testing/integration-tests" target="_blank">Integration testing</a></li>
+<li><a href="https://pub.dev/packages/test" target="_blank">Dart test package</a></li>
+</ul>
+</google-codelab-step>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script>
+<script src="../assets/codelab-elements/custom-elements.min.js"></script>
+<script src="../assets/codelab-elements/prettify.js"></script>
+<script src="../assets/codelab-elements/codelab-elements.js"></script>
+<script src="//support.google.com/inapp/api.js"></script>
+</body>
+</html>
