@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4F7DC9">
+  <title>#13 | CI/CD and Automation</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head>
+<body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="13-minggu-13-ci-cd-automation" title="#13 | CI/CD and Automation" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> November 13, 2026</p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<p>Repeated manual checks are easy to miss and difficult to reproduce. In this codelab, you will set up a CI/CD pipeline that consistently runs Flutter checks, tests, and builds with GitHub Actions.</p>
+<h2 is-upgraded>Learning objectives</h2>
+<ul>
+<li>explain the CI/CD flow from a commit to an application artifact;</li>
+<li>create a workflow for formatting, analysis, tests, and Android builds;</li>
+<li>store APK/AAB files as reviewable artifacts;</li>
+<li>use versioning and understand the limits of secret storage.</li>
+</ul>
+<h2 is-upgraded>What you need</h2>
+<ul>
+<li>A Flutter project with at least one test that passes locally.</li>
+<li>Git and a GitHub account; the project must be pushed to a repository.</li>
+<li>Flutter SDK, Dart, and basic familiarity with YAML and Git branches.</li>
+</ul>
+<aside class="warning"><p><strong>Security:</strong> never put passwords, private tokens, or keystores in source code. A value passed with <code>--dart-define</code> and compiled into an app is not a secret.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Understanding CI/CD and the workflow" duration="10">
+<h2 is-upgraded>1. CI and CD</h2>
+<p><strong>Continuous integration (CI)</strong> runs automated checks when changes are proposed or pushed. <strong>Continuous delivery/deployment (CD)</strong> automates release preparation or delivery. A good pipeline makes important steps repeatable and its results reviewable.</p>
+<ol>
+<li>A commit or pull request triggers the workflow.</li>
+<li>A runner checks out the source and sets up Flutter.</li>
+<li>Formatting, static analysis, and tests run.</li>
+<li>If checks pass, the app is built and its artifacts are stored.</li>
+</ol>
+<h2 is-upgraded>2. Events and permissions</h2>
+<p>Use <code>pull_request</code> to check changes before merging and <code>push</code> to check the main branch. Grant only the minimum permissions required. Pull requests from forks do not receive repository GitHub Secrets.</p>
+<aside class="special"><p>A CI job that only reads code usually needs only <code>contents: read</code>. Do not grant write access without a clear requirement.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Creating a Flutter CI workflow" duration="20">
+<h2 is-upgraded>1. Add the workflow file</h2>
+<p>At the project root, create <code>.github/workflows/flutter-ci.yml</code>. Change the branch name if your default branch is not <code>main</code>.</p>
+<pre><code>name: Flutter CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze --fatal-infos
+      - run: flutter test --coverage
+</code></pre>
+<h2 is-upgraded>2. Check locally</h2>
+<p>Before pushing, run the same formatting, analysis, and test commands on your project. Fix failures; do not remove checks just to make the workflow green.</p>
+<aside class="warning"><p>If the project is not Dart-formatted yet, run <code>dart format .</code> and review the changes before committing.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Building and storing APK/AAB files" duration="15">
+<h2 is-upgraded>1. Add build steps</h2>
+<p>After the tests pass, add these steps to the same job:</p>
+<pre><code>      - run: flutter build apk --release
+      - run: flutter build appbundle --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-builds
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 7
+</code></pre>
+<ul>
+<li>APKs are convenient for installation and internal testing.</li>
+<li>AAB is the distribution format used in Google Play workflows.</li>
+<li>Download artifacts from the workflow run on the <strong>Actions</strong> tab.</li>
+</ul>
+<aside class="warning"><p>A successful build does not automatically mean it is ready to publish. Signing, app configuration, permissions, and target-device testing still need review. This workflow does not upload the app to Play Store.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Versions, secrets, and security" duration="10">
+<h2 is-upgraded>1. Versioning</h2>
+<p>In <code>pubspec.yaml</code>, a version such as <code>1.2.0+15</code> means app version <code>1.2.0</code> and build number <code>15</code>. Follow semantic versioning: major for incompatible changes, minor for compatible features, and patch for fixes. Increment the build number for each new upload.</p>
+<p>Use a tag such as <code>v1.2.0</code> to connect source, pipeline logs, and artifacts. Make sure the tag points to a commit that passed the checks.</p>
+<h2 is-upgraded>2. Secrets and configuration</h2>
+<ul>
+<li>Store private tokens, passwords, or signing material in GitHub Actions Secrets, not in the repository.</li>
+<li>Never print secrets to logs or send them to untrusted processes.</li>
+<li>An API URL and environment name are usually public configuration, not credentials.</li>
+<li>Values passed through <code>--dart-define</code> can be extracted from a client app.</li>
+</ul>
+<p>For signed releases, follow Flutter's official signing guide and inject sensitive material only into a restricted release workflow. Do not expose a production keystore to pull-request workflows.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Running and evaluating the pipeline" duration="10">
+<h2 is-upgraded>1. Run the workflow</h2>
+<ol>
+<li>Commit the workflow file and push it to GitHub.</li>
+<li>Open the <strong>Actions</strong> tab and select the relevant run.</li>
+<li>Review each step. Confirm that a test failure makes the job fail.</li>
+<li>Download the artifact and record the commit that produced it.</li>
+</ol>
+<h2 is-upgraded>2. Assignment</h2>
+<ol>
+<li>Add a CI workflow to your Flutter project with formatting, analysis, and tests.</li>
+<li>Build an APK and AAB and store both as artifacts.</li>
+<li>Run the workflow on a pull request or push to the main branch; include evidence of the result and commit.</li>
+<li>Document the next version, checks performed, and any security risks that remain.</li>
+</ol>
+<h2 is-upgraded>Reflection</h2>
+<ul>
+<li>What problem was detected automatically before changes were merged?</li>
+<li>What information would help you investigate a failed build?</li>
+<li>What still needs approval or manual review before a release?</li>
+</ul>
+<h2 is-upgraded>Supporting references</h2>
+<ul>
+<li><a href="../00-slides/Week_13_CICD_Automation_Inter.html" target="_blank">Week 13 Slides: CI/CD and Automation</a></li>
+<li><a href="https://docs.github.com/actions" target="_blank">GitHub Actions documentation</a></li>
+<li><a href="https://docs.flutter.dev/deployment/cd" target="_blank">Continuous delivery with Flutter</a></li>
+<li><a href="https://docs.flutter.dev/deployment/android" target="_blank">Build and release an Android app</a></li>
+<li><a href="https://docs.github.com/actions/security-guides/using-secrets-in-github-actions" target="_blank">Using secrets in GitHub Actions</a></li>
+<li><a href="https://semver.org/" target="_blank">Semantic Versioning</a></li>
+</ul>
+</google-codelab-step>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script>
+<script src="../assets/codelab-elements/custom-elements.min.js"></script>
+<script src="../assets/codelab-elements/prettify.js"></script>
+<script src="../assets/codelab-elements/codelab-elements.js"></script>
+<script src="//support.google.com/inapp/api.js"></script>
+</body>
+</html>

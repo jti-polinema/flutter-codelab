@@ -3,13 +3,11 @@
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2025-10-06T07:08:30Z",
-  "id": "07-manajemen-plugin",
-  "duration": 270,
-  "title": "#07 | Manajemen Plugin",
-  "authors": "Habibie Ed Dien",
-  "summary": "- Mahasiswa mampu menjelaskan manfaat plugin\n- Mahasiswa mampu memasang plugin ke dalam project flutter\n- Mahasiswa mampu memanfaatkan plugin dalam aplikasi",
-  "source": "1LZCARxvXpkQB9OVMLa_wlK_F3aitjsM6HADFDPLSKAI",
+  "updated": "2026-11-13T06:22:00Z",
+  "id": "13-minggu-13-ci-cd-automation",
+  "duration": 70,
+  "title": "#13 | CI/CD dan Otomatisasi",
+  "summary": "- Menjelaskan alur CI/CD dari commit hingga artefak aplikasi\n- Membuat workflow GitHub Actions untuk analisis, test, dan build Flutter\n- Menghasilkan APK/AAB dan menyimpan artefak build\n- Memahami versioning serta pengelolaan secret",
   "theme": "mobileflutter",
   "status": [
     "published"
@@ -22,5 +20,5 @@
   ],
   "feedback": "https://github.com/jti-polinema/flutter-codelab/issues",
   "ga": "G-H7507PFEJB",
-  "url": "07-manajemen-plugin"
+  "url": "13-minggu-13-ci-cd-automation"
 }
