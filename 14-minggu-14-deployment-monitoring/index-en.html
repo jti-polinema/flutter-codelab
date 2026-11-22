@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4F7DC9">
+  <title>#14 | Deployment and Monitoring</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="../assets/codelab-elements/codelab-elements.css">
+</head>
+<body>
+<google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+<google-codelab codelab-gaid="G-H7507PFEJB" id="14-minggu-14-deployment-monitoring" title="#14 | Deployment and Monitoring" environment="web" feedback-link="https://github.com/jti-polinema/flutter-codelab/issues">
+
+<google-codelab-step label="Welcome" duration="5">
+<p><strong>Last updated:</strong> November 22, 2026</p>
+<p><a href="index.html" lang="id">Bahasa Indonesia</a> | <a href="index-en.html" lang="en">English</a></p>
+<p>Last week, you automated checks and produced an app artifact. Now you will prepare a limited beta release, collect feedback, and monitor crashes and feature usage after release.</p>
+<h2 is-upgraded>Learning objectives</h2>
+<ul>
+<li>explain the path from a release candidate to beta testing;</li>
+<li>prepare an app version and Android App Bundle (AAB) for internal testing;</li>
+<li>configure Firebase Crashlytics and Analytics for testing;</li>
+<li>review release signals and decide what to do next using evidence;</li>
+<li>use AI responsibly when analyzing logs.</li>
+</ul>
+<h2 is-upgraded>What you need</h2>
+<ul>
+<li>A Flutter project that builds and has passing tests.</li>
+<li>A Git repository and access to the CI pipeline from the previous week.</li>
+<li>A Firebase project for Android; prepare Google Play Console access if available.</li>
+<li>An Android device for beta testing. Do not use production data.</li>
+</ul>
+<aside class="warning"><p><strong>Note:</strong> Internal distribution is still an app release. Use invited testers, protect signing keys, and do not put personal or secret data in logs.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Understanding release and monitoring" duration="10">
+<h2 is-upgraded>1. From CI to beta release</h2>
+<p>The CI pipeline from last week produces a checked build. To test it with a limited audience, create a traceable release candidate, distribute it through a testing track, and observe the results.</p>
+<ol>
+<li>Confirm that the candidate commit passes analysis and tests.</li>
+<li>Increment the build number and create a release AAB.</li>
+<li>Upload the AAB to an internal testing track and invite testers.</li>
+<li>Collect relevant reports, crashes, and usage signals.</li>
+<li>Reproduce issues, fix them, and decide whether to continue the release.</li>
+</ol>
+<h2 is-upgraded>2. Testing tracks</h2>
+<p>Google Play provides testing tracks for different audiences and processes. Internal testing is suitable for initial checks by a small group. Account requirements and Play Console processes can change; follow the latest instructions in the console.</p>
+<aside class="special"><p>If Play Console access is unavailable, use Firebase App Distribution to distribute a private test build. Document the service and its limitations.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Preparing a release candidate" duration="15">
+<h2 is-upgraded>1. Record the version and commit</h2>
+<p>In <code>pubspec.yaml</code>, a version such as <code>1.0.0+21</code> specifies app version <code>1.0.0</code> and build number <code>21</code>. Increment the build number for every new upload. Link the candidate to a Git commit or tag and describe changes/limitations in the release notes.</p>
+<h2 is-upgraded>2. Run checks and build</h2>
+<pre><code>flutter pub get
+dart format --output=none --set-exit-if-changed .
+flutter analyze --fatal-infos
+flutter test
+flutter build appbundle --release</code></pre>
+<ul>
+<li>Confirm analysis and tests pass on the commit to be released.</li>
+<li>Review release and signing configuration using Flutter documentation.</li>
+<li>The AAB is usually created under <code>build/app/outputs/bundle/release/</code>.</li>
+<li>Keep the AAB with its commit notes and CI results; do not share it publicly.</li>
+</ul>
+<aside class="warning"><p>Never put a keystore, password, or token in the repository or logs. Do not treat values compiled into an app as secrets.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Distributing through internal testing" duration="15">
+<h2 is-upgraded>1. Play Console</h2>
+<ol>
+<li>Create or select an app in Play Console, then open the <strong>Internal testing</strong> track.</li>
+<li>Add testers through an allowed email list or group.</li>
+<li>Create a release, upload the AAB, add release notes, and review any warnings.</li>
+<li>Start the internal rollout and share the opt-in link only with testers.</li>
+<li>Ask testers to install the app and check key flows on their devices.</li>
+</ol>
+<h2 is-upgraded>2. Private distribution alternative</h2>
+<p>If you do not have Play Console access, use Firebase App Distribution or another instructor-approved private method. Record the testers and build version. This alternative still requires installation and testing evidence.</p>
+<h2 is-upgraded>3. Record evidence</h2>
+<p>For each report, write down the version/build, device and OS, reproduction steps, expected result, actual result, and sanitized evidence. Never ask testers to send credentials or personal data.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Collecting crashes and Analytics events" duration="20">
+<h2 is-upgraded>1. Set up Firebase</h2>
+<p>Follow the official FlutterFire guide to connect the app to Firebase. Add the packages below and complete platform configuration before initializing Firebase:</p>
+<pre><code>flutter pub add firebase_crashlytics firebase_analytics
+flutterfire configure</code></pre>
+<p>Register error handlers after <code>Firebase.initializeApp()</code>, for example near the start of <code>main()</code>:</p>
+<p>Import <code>dart:ui</code> for <code>PlatformDispatcher</code>, along with the Firebase packages used below.</p>
+<pre><code>FlutterError.onError =
+    FirebaseCrashlytics.instance.recordFlutterFatalError;
+PlatformDispatcher.instance.onError = (error, stack) {
+  FirebaseCrashlytics.instance.recordError(
+    error, stack, fatal: true,
+  );
+  return true;
+};</code></pre>
+<p>Follow Firebase documentation for imports, Gradle configuration, and current platform steps. Verify a test error appears under the correct version in the Crashlytics dashboard.</p>
+<h2 is-upgraded>2. Log a non-sensitive event</h2>
+<pre><code>await FirebaseAnalytics.instance.logEvent(
+  name: 'beta_feedback_sent',
+  parameters: {'screen_name': 'home'},
+);</code></pre>
+<p>Log actions that help evaluate the app, not form contents, email addresses, tokens, or personal identifiers. Document event and parameter meanings.</p>
+<aside class="warning"><p>Test fatal crashes only on a test build/device. Avoid sending personal data to Analytics, Crashlytics, or AI.</p></aside>
+</google-codelab-step>
+
+<google-codelab-step label="Testing telemetry and making release decisions" duration="15">
+<h2 is-upgraded>1. Verify telemetry</h2>
+<ol>
+<li>Run the test build and trigger a planned, non-sensitive Analytics event.</li>
+<li>Send one synthetic non-fatal error to confirm Crashlytics receives a report.</li>
+<li>To test a fatal crash, follow official test instructions on a test device only.</li>
+<li>Wait for processing, then check the event, app version, device, and stack trace.</li>
+<li>Confirm the report contains no credentials or personal data.</li>
+</ol>
+<h2 is-upgraded>2. Monitor and triage</h2>
+<p>Compare crash-free users/sessions, new issues, affected users, versions, and tester reports. Aggregate data is a signal, not standalone proof of root cause. Reproduce the bug and match it with a stack trace before drawing conclusions.</p>
+<p>If an issue affects a key flow or creates user risk, stop expanding distribution and follow the track stop/rollback procedure. Record the reason, evidence, owner, and fix version.</p>
+<h2 is-upgraded>3. AI and logs</h2>
+<p>Before asking AI to analyze logs, remove tokens, email addresses, user IDs, private URLs, and sensitive payloads. Ask for hypotheses with evidence and reproduction steps; verify the result against code, tests, and a device.</p>
+</google-codelab-step>
+
+<google-codelab-step label="Assignment, reflection, and references" duration="10">
+<h2 is-upgraded>Assignment</h2>
+<ol>
+<li>Prepare a beta candidate with a recorded version/build number, commit, AAB, and check results.</li>
+<li>Distribute it through Internal testing or Firebase App Distribution and test it on a device.</li>
+<li>Configure Crashlytics and one non-sensitive Analytics event; verify them in the dashboard.</li>
+<li>Create <code>docs/release-report.md</code> with distribution evidence, test results, findings, impact, decisions, and next steps.</li>
+<li>Record any AI usage, sanitized log context, and how AI suggestions were verified.</li>
+</ol>
+<p>If service access is unavailable, document an alternative demonstration and its limitations. Do not claim dashboard or distribution evidence that was not actually produced.</p>
+<h2 is-upgraded>Reflection</h2>
+<ul>
+<li>What evidence is needed before expanding a beta release?</li>
+<li>How would you decide to hold or continue a release?</li>
+<li>What data does a monitoring service not need to receive?</li>
+</ul>
+<h2 is-upgraded>Supporting references</h2>
+<ul>
+<li><a href="../00-slides/Week_14_Deployment_Monitoring_Inter.html" target="_blank">Week 14 Slides: Deployment and Monitoring (English)</a></li>
+<li><a href="https://docs.flutter.dev/deployment/android" target="_blank">Flutter: Build and release an Android app</a></li>
+<li><a href="https://support.google.com/googleplay/android-developer/answer/9845334" target="_blank">Google Play: Internal testing</a></li>
+<li><a href="https://firebase.google.com/docs/crashlytics/flutter/get-started" target="_blank">Firebase Crashlytics for Flutter</a></li>
+<li><a href="https://firebase.google.com/docs/analytics/get-started?platform=flutter" target="_blank">Firebase Analytics for Flutter</a></li>
+<li><a href="https://firebase.google.com/docs/app-distribution" target="_blank">Firebase App Distribution</a></li>
+</ul>
+</google-codelab-step>
+</google-codelab>
+<script src="../assets/codelab-elements/native-shim.js"></script>
+<script src="../assets/codelab-elements/custom-elements.min.js"></script>
+<script src="../assets/codelab-elements/prettify.js"></script>
+<script src="../assets/codelab-elements/codelab-elements.js"></script>
+<script src="//support.google.com/inapp/api.js"></script>
+</body>
+</html>
